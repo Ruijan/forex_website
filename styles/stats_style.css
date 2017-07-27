@@ -1,0 +1,89 @@
+#conteneur
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.element
+{
+	width:100%;
+	margin: 10px;
+}
+.element table{
+	width: 100%;
+	max-width: 700px;
+}
+.used
+{
+	background-color: red;
+}
+.free
+{
+	background-color: #ADFF2F;
+}
+
+thead.thead-inverse{
+	text-align: center;
+	background-color: #373a3c;
+	color: white;
+}
+table{
+	margin: auto; 
+	margin-bottom: 20px;
+}
+header{
+	text-align:center;
+}
+input{
+	width: 50%;
+}
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+h2{
+	text-align: center;
+}
+.data{
+	text-align: right;
+	min-width: 50px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.center{
+	text-align: center;
+}
+table{
+	width: 100%;
+}
+.eventwon{
+	background-color: #58FA58;
+}
+.eventfailed{
+	background-color: #FA5858;
+}
+.eventinprogress{
+	background-color: #FE9A2E;
+}
+.eventunplayable{
+	background-color: grey;
+}
+.tradeinprogress{
+	background-color: #58FAF4;
+}
+
+th{
+	size: 20px;
+}
