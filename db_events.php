@@ -34,13 +34,6 @@ class Event
     public $t_u;
     public $actual = NULL;
     public $previous = NULL;
-    public $dv_p_tm5 = 0;
-    public $dv_p_t0 = 0;
-    public $prediction = -1;
-    public $p_proba = -1;
-    public $label = -1;
-    public $av_success = -1;
-    public $gain = 0;
     public $state = 0;
     public $next_event = 0;
 
@@ -274,19 +267,3 @@ class Event
         <th>Pred. prob.</th><th>Label</th><th>Av. Success</th><th>Gain</th><th>State</th></tr>";
     }
 }
-/*$e = new Event();
-$mysqli = connect_database();
-$e->display();
-$e->fillFromPost();
-echo '==================================<br/>';
-$e->display();
-$e->tryAddingEventToDB($mysqli);
-echo '==================================<br/>';
-$e->display();
-echo '<table>';
-Event::displayHeadersAsRow();
-$e->displayAsRow();
-$e->done=true;
-$e->modifyInDB($mysqli);
-$e->displayAsRow();
-echo '</table>';*/
