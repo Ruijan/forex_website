@@ -18,7 +18,8 @@ class EventTest extends PHPUnit_Framework_TestCase
         $this->event_id = 68956;
         $this->announced_time = new DateTime("NOW");
         $this->previous = 0.01;
-        $this->event = new Event($this->event_id, $this->news_id, $this->announced_time, $this->previous);
+        $this->next_event = 50;
+        $this->event = new Event($this->event_id, $this->news_id, $this->announced_time, $this->previous, $this->next_event);
     }
 
     protected function tearDown()
@@ -40,6 +41,7 @@ class EventTest extends PHPUnit_Framework_TestCase
         assert($this->event->getEventId() == $this->event_id, "Event ID should be equal");
         assert($this->event->getAnnouncedTime() == $this->announced_time, "Event Announced time should be equal");
         assert($this->event->getPrevious() == $this->previous, "Event previous value should be equal");
+        assert($this->event->getNextEvent() == $this->next_event, "Next event time value should be equal");
     }
     
     public function test_setIdWithWrongArgument_expectError(){

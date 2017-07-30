@@ -4,6 +4,7 @@ class Trade
 {
     private $id = null;
     private $id_db_event = null;
+    private $creation_time = null;
     private $open_time = null;
     private $close_time = null;
     private $dv_p_tm5 = null;
@@ -16,6 +17,7 @@ class Trade
     
     public function getId(){return $this->id;}
     public function getIDDBEvent(){return $this->id_db_event;}
+    public function getCreationTime(){return $this->creation_time;}
     public function getOpenTime(){return $this->open_time;}
     public function getCloseTime(){return $this->close_time;}
     public function getDv_p_tm5(){return $this->dv_p_tm5;}
@@ -41,6 +43,16 @@ class Trade
         }
     }
 
+    private function setCreationTime($creation_time)
+    {
+        if(is_a($creation_time, 'DateTime')){
+            $this->creation_time = $creation_time;
+        }
+        else{
+            throw new ErrorException("Wrong type for creation_time. Expected DateTime got: ".gettype($creation_time));
+        }
+    }
+    
     private function setOpenTime($open_time)
     {
         if(is_a($open_time, 'DateTime')){
@@ -131,9 +143,11 @@ class Trade
         }
     }
 
-    public function __construct($id_db_event)
+    public function __construct($id_db_event, $creation_time)
     {
         $this->id_db_event = $id_db_event;
+        $this->setCreationTime($creation_time);
+        
     }
     
     public function isInitialized()
@@ -159,16 +173,9 @@ class Trade
         $this->setState(1);
     }
     
-    static public function createWithIdAndEventID($id, $id_db_event)
-    {
-        $trade = new Trade($id_db_event);
-        $trade->setId($id);
-        return $trade;
-    }
-    
     static public function createTradeFromDbArray($result)
     {
-        $trade = new Trade($result["ID_DB_EVENT"]);
+        $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]));
         $trade->setId((int)$result["ID"]);
         $trade->setOpenTime(new DateTime($result["OPEN_TIME"]));
         $trade->setCloseTime(new DateTime($result["CLOSE_TIME"]));

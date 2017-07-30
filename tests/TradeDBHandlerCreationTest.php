@@ -30,16 +30,30 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     }
     
     public function test_addingTrade_expectIncrementInSize(){
-        $id = $this->tradeDBHandler->addTrade(Trade::createWithIdAndEventID(1, 999));
+        $trade = new Trade(999, new DateTime('NOW'));
+        $id = $this->tradeDBHandler->addTrade($trade);
         assert($this->tradeDBHandler->getTableSize() == 1);
         assert($id != 2);
         assert($id == 1);
     }
     
     public function test_removingTrade_expectDecrementationInSize(){
-        $id = $this->tradeDBHandler->addTrade(Trade::createWithIdAndEventID(1, 999));
+        $trade = new Trade(999, new DateTime('NOW'));
+        $id = $this->tradeDBHandler->addTrade($trade);
         $this->tradeDBHandler->removeTradeById($id);
         assert($this->tradeDBHandler->getTableSize() == 0);
+    }
+    
+    public function test_addingTrade_expectExactParameters(){
+        $trade = new Trade(60, new DateTime('NOW'));
+        $id = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($id);
+        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        assert($trade->getCreationTime() == $db_trade->getCreationTime(), "Expect same Creation Time: ".
+            $trade->getCreationTime()->format('Y-m-d H:i:s'). " got ".
+            $trade->getCreationTime()->format('Y-m-d H:i:s'));
+        assert($trade->getId() == $db_trade->getId(), "Expect same ID");
+        assert($trade->getIDDBEvent() == $db_trade->getIDDBEvent(), "Expect same event Id");
     }
     
     public function test_openTrade_shouldUpdateOpenTime(){
@@ -60,7 +74,7 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
 
     private function openTrade()
     {
-        $trade = new Trade(60);
+        $trade = new Trade(60, new DateTime('NOW'));
         $id = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($id);
         $trade->open(new DateTime('NOW'));
@@ -96,7 +110,7 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     }
 
     public function test_predictTrade_shouldUpdatePredictPProbaState(){
-        $trade = new Trade(60);
+        $trade = new Trade(60, new DateTime('NOW'));
         $id = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($id);
         $trade->predict(1, 0.75);

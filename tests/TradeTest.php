@@ -11,9 +11,10 @@ class TradeTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->id_db_event = 50;
+        $this->creation_time = new DateTime('NOW');
         // TODO Auto-generated TradeTest::setUp()
-        $this->trade = new Trade($this->id_db_event);
-        $this->trade->__construct($this->id_db_event);
+        $this->trade = new Trade($this->id_db_event, $this->creation_time);
+        $this->trade->__construct($this->id_db_event, $this->creation_time);
     }
 
     protected function tearDown()
@@ -40,6 +41,7 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->setId(5);
         assert($this->trade->isInitialized());
         assert($this->trade->getId()==5);
+        assert($this->trade->getCreationTime() == $this->creation_time);
     }
     
     public function test__initializationWithWrongArgument_expectError()

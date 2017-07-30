@@ -36,6 +36,7 @@ class TradeDBHandler
             $query = "CREATE TABLE ".$this->table_name." (
                         ID int(11) AUTO_INCREMENT,
                         ID_DB_EVENT int(11) NOT NULL,
+                        CREATION_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         OPEN_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         CLOSE_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         DV_P_TM5 double NULL,
@@ -73,9 +74,10 @@ class TradeDBHandler
     public function addTrade($trade){
         if($this->doesTableExists()){
             $query = "INSERT INTO ".$this->table_name." 
-                        (ID, ID_DB_EVENT, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
+                        (ID, ID_DB_EVENT, CREATION_TIME, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
                         PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, STATE) 
-                        VALUES (NULL,'".$trade->getIDDBEvent()."',NULL,NULL,NULL,NULL,NULL,
+                        VALUES (NULL,'".$trade->getIDDBEvent()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
+                        NULL,NULL,NULL,NULL,NULL,
                         NULL, NULL, NULL, NULL)";
             if($this->mysqli->query($query) === FALSE){
                 echo "Error: " . $query . "<br>" . $this->mysqli->error;

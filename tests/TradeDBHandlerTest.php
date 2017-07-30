@@ -7,16 +7,9 @@ require_once '../connect.php';
 class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
 {
 
-    /**
-     *
-     * @var TradeDBHandler
-     */
     protected $tradeDBHandler;
     protected $mysqli;
 
-    /**
-     * Prepares the environment before running a test.
-     */
     protected function setUp()
     {
         parent::setUp();
