@@ -39,10 +39,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated TradeDBHandlerTest::tearDown()
         
-        if($this->tradeDBHandler->doesTableExists())
-        {
-            $this->mysqli->query("DROP TABLE trades_".$this->currency);
-        }
+        $this->deleteTableIfExists();
         $this->tradeDBHandler = null;
         $this->mysqli->close();
         parent::tearDown();
@@ -63,26 +60,37 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         assert($this->tradeDBHandler->table_name == "trades_".$this->currency);
     }
     
-    public function test_createTable(){
+    public function test__createTable(){
         $this->tradeDBHandler->createTable();
         assert($this->tradeDBHandler->doesTableExists());
     }
     
-    public function test_deleteTable(){
+    public function test__deleteTable(){
         $this->tradeDBHandler->createTable();
         $this->tradeDBHandler->deleteTable();
         assert(!$this->tradeDBHandler->doesTableExists());
     }
     
-    public function test_checkSize_shouldThrowError(){
+    public function test__checkSizeInEmptyDB_shouldThrowError(){
+        $this->deleteTableIfExists();
         $this->expectExceptionMessage('Table does not exists.');
         $this->tradeDBHandler->getTableSize();
     }
     
-    public function test_tryAddEvent_shouldThrowError(){
+    public function test__tryAddEvent_shouldThrowError(){
+        $this->deleteTableIfExists();
         $this->expectExceptionMessage('Table does not exists.');
         $this->tradeDBHandler->addTrade(null);
     }
+    
+    private function deleteTableIfExists()
+    {
+        if($this->tradeDBHandler->doesTableExists())
+        {
+            $this->mysqli->query("DROP TABLE trades_".$this->currency);
+        }
+    }
+
     
     
     

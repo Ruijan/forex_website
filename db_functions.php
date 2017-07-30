@@ -1,5 +1,5 @@
 <?php
-require_once("db_events.php");
+require_once("Event.php");
 
 function createEvent($mysqli){
 	$dom = new DOMDocument('1.0');
