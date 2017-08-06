@@ -21,7 +21,13 @@
  * deleteTowersDepedency($mysqli, $id_user)
  * updateUserLastConnectionTime($mysqli, $id_game, $time)
  */
-require("connect.php");
+
+
+abstract class EventState
+{
+    const Pending = 0;
+    const Updated = 1;
+}
 
 class Event
 {
@@ -31,11 +37,12 @@ class Event
     public $news_id;
     public $announced_time;
     public $real_time;
+    public $next_event = 0;
     public $actual = 0;
     public $previous = 0;
-    public $state = 0;
-    public $next_event = 0;
-
+    public $state = EventState::Pending;
+    
+   
     // method declaration
     function __construct($event_id, $news_id, $announced_time, $previous, $next_event) {
         $this->setEventId($event_id);
@@ -155,6 +162,15 @@ class Event
     public function update($actual, $real_time){
         $this->setActual($actual);
         $this->setRealTime($real_time);
-        $this->setState(1);
+        $this->setState(EventState::Updated);
+    }
+    
+    static function getStringFromState($state){
+        switch($state){
+            case EventState::Pending:
+                return "Pending";
+            case EventState::Updated:
+                return "Passed";
+        }
     }
 }

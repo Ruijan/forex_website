@@ -117,6 +117,19 @@ class TradeDBHandler
         }
     }
     
+    public function fillTradeWithMarketInfo($trade){
+        if($this->doesTableExists()){
+            $query = "UPDATE ".$this->table_name." SET DV_P_TM5 = ".$trade->getDv_p_tm5().",
+                        DV_P_T0 = ".$trade->getDv_p_t0().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+            if($this->mysqli->query($query) === FALSE){
+                echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            }
+        }
+        else{
+            throw new ErrorException("Table does not exists.");
+        }
+    }
+    
     public function predictTrade($trade){
         if($this->doesTableExists()){
             $query = "UPDATE ".$this->table_name." SET PREDICTION = ".$trade->getPrediction().",
@@ -157,6 +170,52 @@ class TradeDBHandler
             }
         }
         else{
+            throw new ErrorException("Table does not exists.");
+        }
+    }
+    
+    public function getTradesFromTo($from, $to, $state=-1){
+        $this->throwIfWrongArgumentType($from, $to, $state);
+        $this->throwIfTableDoesNotExist();
+        $query = $this->buildSelectQueryFromToState($from, $to, $state);
+        $trades = [];
+        if($result = $this->mysqli->query($query)){
+            while($row = $result->fetch_array())
+            {
+                $trades[] = Trade::createTradeFromDbArray($row);
+            }
+        }
+        else{
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }
+        return $trades;
+    }
+    
+    private function buildSelectQueryFromToState($from, $to, $state)
+    {
+        $state_suffix = "";
+        if($state != -1){
+            $state_suffix = " AND STATE=".$state;
+        }
+        $this->throwIfTableDoesNotExist();
+        $query = "SELECT * FROM ".$this->table_name." WHERE DATEDIFF(CREATION_TIME,'".$from->format('Y-m-d H:i:s').
+        "') >= 0 AND DATEDIFF(CREATION_TIME,'".$to->format('Y-m-d H:i:s').
+        "') <= 0".$state_suffix;
+        return $query;
+    }
+    
+    private function throwIfWrongArgumentType($from, $to, $state)
+    {
+        if(!is_a($from, 'DateTime') || !is_a($to, 'DateTime')){
+            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($from)." and ".gettype($to));
+        }
+        if(!is_int($state)){
+            throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));
+        }
+    }
+    
+    private function throwIfTableDoesNotExist(){
+        if(!$this->doesTableExists()){
             throw new ErrorException("Table does not exists.");
         }
     }

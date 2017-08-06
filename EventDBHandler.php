@@ -46,80 +46,114 @@ class EventDBHandler
     }
     
     public function getTableSize(){
-        if($this->doesTableExists()){
-            $sql1 = $this->mysqli->query("SELECT * FROM events");
-            $row_count= mysqli_num_rows($sql1);
-            return $row_count;
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
-        }
+        $this->throwIfTableDoesNotExist();
+        $sql1 = $this->mysqli->query("SELECT * FROM events");
+        $row_count= mysqli_num_rows($sql1);
+        return $row_count;
     }
     
     public function addEvent($event){
-        if($this->doesTableExists()){
-            $query = "INSERT INTO events
-                        (ID, ID_EVENT, ID_NEWS, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,
-                        NEXT_EVENT, STATE)
-                        VALUES (NULL,".$event->getEventId().",".$event->getNewsId().",
-                        '".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."',
-                        '".$event->getRealTime()->format('Y-m-d H:i:s')."',".$event->getActual().", 
-                        ".$event->getPrevious().", ".$event->getNextEvent().", ".$event->getId().")";
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-            else{
-                return $this->mysqli->insert_id;
-            }
+        $this->throwIfTableDoesNotExist();
+        $query = "INSERT INTO events
+                    (ID, ID_EVENT, ID_NEWS, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,
+                    NEXT_EVENT, STATE)
+                    VALUES (NULL,".$event->getEventId().",".$event->getNewsId().",
+                    '".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."',
+                    '".$event->getRealTime()->format('Y-m-d H:i:s')."',".$event->getActual().", 
+                    ".$event->getPrevious().", ".$event->getNextEvent().", ".$event->getState().")";
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
         else{
-            throw new ErrorException("Table does not exists.");
+            return $this->mysqli->insert_id;
         }
     }
     
     public function removeEventById($id){
-        if($this->doesTableExists()){
-            $query = "DELETE FROM events
-                        WHERE ID=".$id;
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
-        }
+        $this->throwIfTableDoesNotExist();
+        $query = "DELETE FROM events
+                    WHERE ID=".$id;
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }    
     }
     
     public function getEventById($id){
-        if($this->doesTableExists()){
-            $query = "SELECT * FROM events WHERE ID=".$id;
-            if($result = $this->mysqli->query($query)){
-                while($row = $result->fetch_array())
-                {
-                    return Event::createEventFromDbArray($row);
-                }
-            }
-            else{
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        $this->throwIfTableDoesNotExist();
+        $query = "SELECT * FROM events WHERE ID=".$id;
+        if($result = $this->mysqli->query($query)){
+            while($row = $result->fetch_array())
+            {
+                return Event::createEventFromDbArray($row);
             }
         }
         else{
-            throw new ErrorException("Table does not exists.");
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
     }
     
     public function updateEvent($event){
-        if($this->doesTableExists()){
-            $query = "UPDATE events SET ACTUAL = ".$event->getActual().",
-                    REAL_TIME='".$event->getRealTime()->format('Y-m-d H:i:s')."', 
-                    STATE=".$event->getState()." WHERE ID=".$event->getId();
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        $this->throwIfTableDoesNotExist();
+        $query = "UPDATE events SET ACTUAL = ".$event->getActual().",
+                REAL_TIME='".$event->getRealTime()->format('Y-m-d H:i:s')."', 
+                STATE=".$event->getState()." WHERE ID=".$event->getId();
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }
+    }
+    
+    public function emptyTable(){
+        $this->throwIfTableDoesNotExist();
+        $query = "TRUNCATE TABLE events";
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }
+    }
+    
+    public function getEventsFromTo($from, $to, $state=-1){
+        $this->throwIfWrongArgumentType($from, $to, $state);
+        $query = $this->buildSelectQueryFromToState($from, $to, $state);
+        $events = [];
+        if($result = $this->mysqli->query($query)){
+            while($row = $result->fetch_array())
+            {
+                $events[] = Event::createEventFromDbArray($row);
             }
         }
         else{
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }
+        return $events;
+    }
+    
+    private function buildSelectQueryFromToState($from, $to, $state)
+    {
+        $state_suffix = "";
+        if($state != -1){
+            $state_suffix = " AND STATE=".$state;
+        }
+        $this->throwIfTableDoesNotExist();
+        $query = "SELECT * FROM events WHERE DATEDIFF(ANNOUNCED_TIME,'".$from->format('Y-m-d H:i:s').
+        "') >= 0 AND DATEDIFF(ANNOUNCED_TIME,'".$to->format('Y-m-d H:i:s').
+        "') <= 0".$state_suffix;
+        return $query;
+    }
+    
+    private function throwIfWrongArgumentType($from, $to, $state)
+    {
+        if(!is_a($from, 'DateTime') || !is_a($to, 'DateTime')){
+            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($from)." and ".gettype($to));
+        }
+        if(!is_int($state)){
+            throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));
+        }
+    }
+ 
+    private function throwIfTableDoesNotExist(){
+        if(!$this->doesTableExists()){
             throw new ErrorException("Table does not exists.");
         }
     }
 }
+
 

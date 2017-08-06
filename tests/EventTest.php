@@ -95,5 +95,18 @@ class EventTest extends PHPUnit_Framework_TestCase
         assert($this->event->getRealTime() == $real_time, "Real Times should be equal");
         assert($this->event->getState() == 1, "State should have been updated to 1");
     }
+    
+    public function test__compare(){
+        $event = new Event($this->event_id, $this->news_id, $this->announced_time, $this->previous, $this->next_event);
+        assert($this->event == $event);
+    }
+    
+    public function test__getStringFromEventInitializedState(){
+        assert(Event::getStringFromState(EventState::Pending) == "Pending");
+    }
+    
+    public function test__getStringFromEventUpdatedState(){
+        assert(Event::getStringFromState(EventState::Updated) == "Passed");
+    }
 }
 

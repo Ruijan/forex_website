@@ -1,5 +1,13 @@
 <?php
 
+abstract class TradeState{
+    const Initialized = 0;
+    const Filled = 1;
+    const Predicted = 2;
+    const Open = 3;
+    const Close = 4;
+}
+
 class Trade
 {
     private $id = null;
@@ -7,13 +15,13 @@ class Trade
     private $creation_time = null;
     private $open_time = null;
     private $close_time = null;
-    private $dv_p_tm5 = null;
-    private $dv_p_t0 = null;
-    private $prediction = null;
-    private $p_proba = null;
-    private $gain = null;
-    private $commission = null;
-    private $state = 0;
+    private $dv_p_tm5 = 0;
+    private $dv_p_t0 = 0;
+    private $prediction = 0;
+    private $p_proba = 0;
+    private $gain = 0;
+    private $commission = 0;
+    private $state = TradeState::Initialized;
     
     public function getId(){return $this->id;}
     public function getIDDBEvent(){return $this->id_db_event;}
@@ -96,7 +104,13 @@ class Trade
     public function setPrediction($prediction)
     {
         if(is_int($prediction)){
-            $this->prediction = $prediction;
+            if ($prediction >= 0 and $prediction <=1){
+                $this->prediction = $prediction;
+            }
+            else{
+                throw new ErrorException("Prediction value out of range:".$prediction.". Shoudl be 0 or 1");
+            }
+            
         }
         else{
             throw new ErrorException("Wrong type for prediction. Expected int got: ".gettype($prediction));
@@ -106,7 +120,12 @@ class Trade
     public function setP_proba($p_proba)
     {
         if(is_float($p_proba) or is_double($p_proba)){
-            $this->p_proba = $p_proba;
+            if ($p_proba >= 0 and $p_proba <=1){
+                $this->p_proba = $p_proba;
+            }
+            else{
+                throw new ErrorException("Prediction probability out of range:".$p_proba.". Should be between 0 and 1");
+            }
         }
         else{
             throw new ErrorException("Wrong type for p_proba. Expected float or double got: ".gettype($p_proba));
@@ -159,26 +178,37 @@ class Trade
         $this->setGain($gain);
         $this->setCommission($commission);
         $this->setCloseTime($close_time);
-        $this->setState(3);
+        $this->setState(TradeState::Close);
     }
     
     public function open($open_time){
         $this->setOpenTime($open_time);
-        $this->setState(2);
+        $this->setState(TradeState::Open);
     }
     
     public function predict($prediction, $p_predict){
         $this->setPrediction($prediction);
         $this->setP_proba($p_predict);
-        $this->setState(1);
+        $this->setState(TradeState::Predicted);
     }
+    
+    public function fillMarketInfo($dv_p_tm5, $dv_p_t0){
+        $this->setDv_p_t0($dv_p_t0);
+        $this->setDv_p_tm5($dv_p_tm5);
+        $this->setState(TradeState::Filled);
+    }
+    
     
     static public function createTradeFromDbArray($result)
     {
         $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]));
         $trade->setId((int)$result["ID"]);
-        $trade->setOpenTime(new DateTime($result["OPEN_TIME"]));
-        $trade->setCloseTime(new DateTime($result["CLOSE_TIME"]));
+        if((int)$result["STATE"] >= TradeState::Open){
+            $trade->setOpenTime(new DateTime($result["OPEN_TIME"]));
+        }
+        if((int)$result["STATE"] >= TradeState::Close){
+            $trade->setCloseTime(new DateTime($result["CLOSE_TIME"]));
+        }
         $trade->setDv_p_tm5((float)$result["DV_P_TM5"]);
         $trade->setDv_p_t0((float)$result["DV_P_T0"]);
         $trade->setPrediction((int)$result["PREDICTION"]);
@@ -187,6 +217,21 @@ class Trade
         $trade->setCommission((float)$result["COMMISSION"]);
         $trade->setState((int)$result["STATE"]);
         return $trade;
+    }
+    
+    static public function getStringFromState($state){
+        switch($state){
+            case TradeState::Initialized:
+                return "Initialized";
+            case TradeState::Filled:
+                return "Market filled";
+            case TradeState::Predicted:
+                return "Predicted";
+            case TradeState::Open:
+                return "Open";
+            case TradeState::Close:
+                return "Close";
+        }
     }
     
     

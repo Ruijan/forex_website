@@ -32,9 +32,9 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     public function test_addingTrade_expectIncrementInSize(){
         $trade = new Trade(999, new DateTime('NOW'));
         $id = $this->tradeDBHandler->addTrade($trade);
-        assert($this->tradeDBHandler->getTableSize() == 1);
-        assert($id != 2);
-        assert($id == 1);
+        $id = $this->tradeDBHandler->addTrade($trade);
+        assert($this->tradeDBHandler->getTableSize() == 2);
+        assert($id == 2);
     }
     
     public function test_removingTrade_expectDecrementationInSize(){
@@ -45,9 +45,7 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     }
     
     public function test_addingTrade_expectExactParameters(){
-        $trade = new Trade(60, new DateTime('NOW'));
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $trade->setId($id);
+        $trade = $this->createDummyTrade();
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         assert($trade->getCreationTime() == $db_trade->getCreationTime(), "Expect same Creation Time: ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'). " got ".
@@ -55,6 +53,15 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         assert($trade->getId() == $db_trade->getId(), "Expect same ID");
         assert($trade->getIDDBEvent() == $db_trade->getIDDBEvent(), "Expect same event Id");
     }
+    
+    private function createDummyTrade()
+    {
+        $trade = new Trade(60, new DateTime('NOW'));
+        $id = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($id);
+        return $trade;
+    }
+
     
     public function test_openTrade_shouldUpdateOpenTime(){
         $trade = $this->openTrade();
@@ -108,6 +115,23 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $trade->close(0.50, 0.12, $close_time->add(new DateInterval('PT' . $minutes_to_add . 'M')));
         return $trade;
     }
+    
+    public function test_fillMarketTrade_shouldUpdateMarketState(){
+        $trade = new Trade(60, new DateTime('NOW'));
+        $id = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($id);
+        $trade->fillMarketInfo(0.005, 0.0001);
+        $this->tradeDBHandler->fillTradeWithMarketInfo($trade);
+        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        $this->checkIfFilledDBTradeEqualTrade($trade, $db_trade);
+    }
+    
+    private function checkIfFilledDBTradeEqualTrade($trade, $db_trade)
+    {
+        assert($db_trade->getDv_p_tm5() == $trade->getDv_p_tm5(), "Expect equal p_prediction in DB");
+        assert($db_trade->getDv_p_t0() == $trade->getDv_p_t0(), "Expect equal prediction in DB");
+        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 1");
+    }
 
     public function test_predictTrade_shouldUpdatePredictPProbaState(){
         $trade = new Trade(60, new DateTime('NOW'));
@@ -118,14 +142,98 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         $this->checkIfPredictedDBTradeEqualTrade($trade, $db_trade);
     }
+    
     private function checkIfPredictedDBTradeEqualTrade($trade, $db_trade)
     {
         assert($db_trade->getP_proba() == $trade->getP_proba(), "Expect equal p_prediction in DB");
         assert($db_trade->getPrediction() == $trade->getPrediction(), "Expect equal prediction in DB");
-        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 1");
+        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 2");
     }
-
     
+    public function test__getTradesFromToWithBadArguments_ShouldThrow(){
+        $from = "coucou";
+        $to = 32;
+        $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
+            " and ".gettype($to));
+        $events = $this->tradeDBHandler->getTradesFromTo($from, $to);
+    }
+    
+    public function test__getTradesFromToStateWithBadArguments_ShouldThrow(){
+        $from = new DateTime("2017-08-03");
+        $to = new DateTime("2017-08-05");
+        $state = "5";
+        $this->expectExceptionMessage("Wrong type for state. Expected int got: ".gettype($state));
+        $events = $this->tradeDBHandler->getTradesFromTo($from, $to, $state);
+    }
+    
+    public function test__getTradesFromTo(){
+        $from = new DateTime("2017-08-03");
+        $to = new DateTime("2017-08-05");
+        
+        $all_trades = $this->generateDummyTrades();
+        $trades_to_get = [$all_trades[0], $all_trades[1], $all_trades[2]];
+        $this->addListOfTrades($all_trades);
+        $trades = $this->tradeDBHandler->getTradesFromTo($from, $to);
+        
+        $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
+        assert(sizeof($trades) == sizeof($trades_to_get),
+            "Different number of trades expected. Expected ".sizeof($trades_to_get)." got ".sizeof($trades));
+        assert($all_here, "Trades were not equals");
+    }
+    
+    public function test__getTradesFromToState(){
+        $from = new DateTime("2017-08-03");
+        $to = new DateTime("2017-08-06");
+        $state = TradeState::Open;
+        
+        $all_trades = $this->generateDummyTrades();
+        $trades_to_get = [$all_trades[2]];
+        $this->addListOfTrades($all_trades);
+        $all_trades[2]->fillMarketInfo(0.002,0.003);
+        $all_trades[2]->predict(1, 0.75);
+        $all_trades[2]->open(new DateTime("2017-08-05 17:30:00"));
+        $this->tradeDBHandler->fillTradeWithMarketInfo($all_trades[2]);
+        $this->tradeDBHandler->predictTrade($all_trades[2]);
+        $this->tradeDBHandler->openTrade($all_trades[2]);
+        $trades = $this->tradeDBHandler->getTradesFromTo($from, $to, $state);
+        $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
+        assert(sizeof($trades) == sizeof($trades_to_get),
+            "Different number of trades expected. Expected ".sizeof($trades_to_get)." got ".sizeof($trades));
+        assert($all_here, "Trades were not equals");
+    }
+    
+    private function areListOfTradesEquals($trades_to_get, $trades)
+    {
+        $all_here = sizeof($trades) == sizeof($trades_to_get);
+        foreach($trades as $trade){
+            $tradeHere = false;
+            foreach($trades_to_get as $expected_trade){
+                if($expected_trade == $trade){
+                    $tradeHere = true;
+                }
+            }
+            $all_here = $tradeHere ? $all_here : $tradeHere;
+        }
+        return $all_here;
+    }
+    
+    private function addListOfTrades($trades){
+        foreach($trades as $trade){
+            $trade->setId($this->tradeDBHandler->addTrade($trade));
+        }
+    }
+    
+    private function generateDummyTrades()
+    {
+        $all_trades = [];
+        $all_trades[] = new Trade(65, new DateTime("2017-08-03 00:30:00"));
+        $all_trades[] = new Trade(35, new DateTime("2017-08-05 17:30:00"));
+        $all_trades[] = new Trade(61, new DateTime("2017-08-04 18:05:00"));
+        $all_trades[] = new Trade(30, new DateTime("2017-08-02 00:30:00"));
+        $all_trades[] = new Trade(1, new DateTime("2017-08-10 00:30:00"));
+        $all_trades[] = new Trade(5, new DateTime("2017-08-01 00:30:00"));
+        return $all_trades;
+    }
 }
 
 ?>

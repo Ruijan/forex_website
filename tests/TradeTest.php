@@ -32,7 +32,6 @@ class TradeTest extends PHPUnit_Framework_TestCase
 
     public function test__emptyConstructor()
     {
-        
         assert(!$this->trade->isInitialized());
     }
     
@@ -51,18 +50,6 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->setId($id);
     }
     
-    /*public function test_setOpenTimeWithWrongArgument_expectError(){
-        $this->trade->setId(5);
-        $this->expectExceptionMessage("Wrong type for open_time. Expected DateTime got: ".gettype(10));
-        $this->trade->setOpenTime(10);
-    }
-    
-    public function test_setCloseTimeWithWrongArgument_expectError(){
-        $this->trade->setId(5);
-        $this->expectExceptionMessage("Wrong type for close_time. Expected DateTime got: ".gettype(10));
-        $this->trade->setCloseTime(10);
-    }*/
-    
     public function test_setDVPTM5WithWrongArgument_expectError(){
         $this->expectExceptionMessage("Wrong type for dv_p_tm5. Expected float or double got: ".gettype("string"));
         $this->trade->setDv_p_tm5("string");
@@ -78,9 +65,19 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->setPrediction(0.5);
     }
     
+    public function test_setPredictionWithWrongResult_expectError(){
+        $this->expectExceptionMessage("Prediction value out of range:2. Shoudl be 0 or 1");
+        $this->trade->setPrediction(2);
+    }
+    
     public function test_setPredictionProbaWithWrongArgument_expectError(){
         $this->expectExceptionMessage("Wrong type for p_proba. Expected float or double got: ".gettype("0.5"));
         $this->trade->setP_proba("0.5");
+    }
+    
+    public function test_setPredictionProbaWithOutOfRangeProba_expectError(){
+        $this->expectExceptionMessage("Prediction probability out of range:1.2. Should be between 0 and 1");
+        $this->trade->setP_proba(1.2);
     }
     
     public function test_setGainWithWrongArgument_expectError(){
@@ -107,14 +104,14 @@ class TradeTest extends PHPUnit_Framework_TestCase
         assert($this->trade->getGain() == $gain, "Expect equal gain");
         assert($this->trade->getCommission() == $commission, "Expect equal commission");
         assert($this->trade->getCloseTime() == $close_time, "Expect equal close time");
-        assert($this->trade->getState() == 3, "Expect sate to be 3");
+        assert($this->trade->getState() == TradeState::Close, "Expect sate to be 4");
     }
     
     public function test_openTrade(){
         $open_time = new DateTime('NOW');
         $this->trade->open($open_time);
         assert($this->trade->getOpenTime() == $open_time, "Expect equal open time");
-        assert($this->trade->getState() == 2, "Expect sate to be 2");
+        assert($this->trade->getState() == TradeState::Open, "Expect sate to be 3");
     }
     
     public function test_predictTrade(){
@@ -123,7 +120,36 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->predict($prediction, $p_proba);
         assert($this->trade->getPrediction() == $prediction, "Expect equal close time");
         assert($this->trade->getP_proba() == $p_proba, "Expect equal p_proba");
-        assert($this->trade->getState() == 1, "Expect state to be 1");
+        assert($this->trade->getState() == TradeState::Predicted, "Expect state to be 2");
+    }
+    
+    public function test_fillMarketInfoTrade(){
+        $dv_p_t0 = 0.00500;
+        $dv_p_tm5 = 0.00200;
+        $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
+        assert($this->trade->getDv_p_t0() == $dv_p_t0, "Expect equal dv_p_t0 time");
+        assert($this->trade->getDv_p_tm5() == $dv_p_tm5, "Expect equal dv_p_tm5");
+        assert($this->trade->getState() == TradeState::Filled, "Expect state to be 1");
+    }
+    
+    public function test__getStringFromTradeInitializedState(){
+        assert(Trade::getStringFromState(TradeState::Initialized) == "Initialized");
+    }
+    
+    public function test__getStringFromTradeFilledState(){
+        assert(Trade::getStringFromState(TradeState::Filled) == "Market filled");
+    }
+    
+    public function test__getStringFromTradePredictedState(){
+        assert(Trade::getStringFromState(TradeState::Predicted) == "Predicted");
+    }
+    
+    public function test__getStringFromTradeOpenState(){
+        assert(Trade::getStringFromState(TradeState::Open) == "Open");
+    }
+    
+    public function test__getStringFromTradeCloseState(){
+        assert(Trade::getStringFromState(TradeState::Close) == "Close");
     }
 }
 
