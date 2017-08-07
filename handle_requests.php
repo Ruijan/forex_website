@@ -1,5 +1,5 @@
 <?php
-	require_once("db_events.php");
+	require_once("Event.php");
 	require_once("db_functions.php");
 	function handleRequest(){
 		$action = null;
