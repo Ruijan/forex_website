@@ -175,27 +175,56 @@ class Trade
     }
     
     public function close($gain, $commission, $close_time){
-        $this->setGain($gain);
-        $this->setCommission($commission);
-        $this->setCloseTime($close_time);
-        $this->setState(TradeState::Close);
+        if($this->state == TradeState::Open){
+            $this->setGain($gain);
+            $this->setCommission($commission);
+            $this->setCloseTime($close_time);
+            $this->setState(TradeState::Close);
+        }
+        else{
+            throw new ErrorException("Cannot switch to close state. Actual state is : ".
+                Trade::getStringFromState($this->getState()).". Next expected state is ".
+                Trade::getStringFromState($this->getState()+1));
+        }
     }
     
     public function open($open_time){
-        $this->setOpenTime($open_time);
-        $this->setState(TradeState::Open);
+        if($this->state == TradeState::Predicted){
+            $this->setOpenTime($open_time);
+            $this->setState(TradeState::Open);
+        }
+        else{
+            throw new ErrorException("Cannot switch to open state. Actual state is : ".
+                Trade::getStringFromState($this->getState()).". Next expected state is ".
+                Trade::getStringFromState($this->getState()+1));
+        }
     }
     
     public function predict($prediction, $p_predict){
-        $this->setPrediction($prediction);
-        $this->setP_proba($p_predict);
-        $this->setState(TradeState::Predicted);
+        if($this->state == TradeState::Filled){
+            $this->setPrediction($prediction);
+            $this->setP_proba($p_predict);
+            $this->setState(TradeState::Predicted);
+        }
+        else{
+            throw new ErrorException("Cannot switch to predicted state. Actual state is : ".
+                Trade::getStringFromState($this->getState()).". Next expected state is ".
+                Trade::getStringFromState($this->getState()+1));
+        }
+        
     }
     
     public function fillMarketInfo($dv_p_tm5, $dv_p_t0){
-        $this->setDv_p_t0($dv_p_t0);
-        $this->setDv_p_tm5($dv_p_tm5);
-        $this->setState(TradeState::Filled);
+        if($this->state == TradeState::Initialized){
+            $this->setDv_p_t0($dv_p_t0);
+            $this->setDv_p_tm5($dv_p_tm5);
+            $this->setState(TradeState::Filled);
+        }
+        else{
+            throw new ErrorException("Cannot switch to initialized state. Actual state is : ".
+                Trade::getStringFromState($this->getState()).". Next expected state is ".
+                Trade::getStringFromState($this->getState()+1));
+        }
     }
     
     

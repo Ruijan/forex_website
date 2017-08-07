@@ -97,9 +97,15 @@ class TradeTest extends PHPUnit_Framework_TestCase
     }
     
     public function test_closeTrade(){
+        $prediction = 1;
+        $p_proba = 0.76;
+        $open_time = new DateTime('NOW');
         $gain = 0.50;
         $commission = 0.12;
         $close_time = new DateTime('NOW');
+        $this->trade->fillMarketInfo(0.005, 0.00010);
+        $this->trade->predict($prediction, $p_proba);
+        $this->trade->open($open_time);
         $this->trade->close($gain, $commission, $close_time);
         assert($this->trade->getGain() == $gain, "Expect equal gain");
         assert($this->trade->getCommission() == $commission, "Expect equal commission");
@@ -107,20 +113,58 @@ class TradeTest extends PHPUnit_Framework_TestCase
         assert($this->trade->getState() == TradeState::Close, "Expect sate to be 4");
     }
     
+    public function test_closeTradeWhenNotOpenShouldThrow(){
+        $gain = 0.50;
+        $commission = 0.12;
+        $close_time = new DateTime('NOW');
+        
+        $this->expectExceptionMessage("Cannot switch to close state. Actual state is : ".
+            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
+            Trade::getStringFromState($this->trade->getState()+1));
+        
+        $this->trade->close($gain, $commission, $close_time);
+    }
+    
     public function test_openTrade(){
+        $prediction = 1;
+        $p_proba = 0.76;
         $open_time = new DateTime('NOW');
+        $this->trade->fillMarketInfo(0.005, 0.00010);
+        $this->trade->predict($prediction, $p_proba);
         $this->trade->open($open_time);
         assert($this->trade->getOpenTime() == $open_time, "Expect equal open time");
         assert($this->trade->getState() == TradeState::Open, "Expect sate to be 3");
     }
     
+    public function test_openTradeWhenNotPredictedShouldThrow(){
+        $open_time = new DateTime('NOW');
+        
+        $this->expectExceptionMessage("Cannot switch to open state. Actual state is : ".
+            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
+            Trade::getStringFromState($this->trade->getState()+1));
+        
+        $this->trade->open($open_time);
+    }
+    
     public function test_predictTrade(){
         $prediction = 1;
         $p_proba = 0.76;
+        $this->trade->fillMarketInfo(0.005, 0.00010);
         $this->trade->predict($prediction, $p_proba);
         assert($this->trade->getPrediction() == $prediction, "Expect equal close time");
         assert($this->trade->getP_proba() == $p_proba, "Expect equal p_proba");
         assert($this->trade->getState() == TradeState::Predicted, "Expect state to be 2");
+    }
+    
+    public function test_predictTradeWhenNotFilledShouldThrow(){
+        $prediction = 1;
+        $p_proba = 0.76;
+        
+        $this->expectExceptionMessage("Cannot switch to predicted state. Actual state is : ".
+            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
+            Trade::getStringFromState($this->trade->getState()+1));
+        
+        $this->trade->predict($prediction, $p_proba);
     }
     
     public function test_fillMarketInfoTrade(){
@@ -130,6 +174,20 @@ class TradeTest extends PHPUnit_Framework_TestCase
         assert($this->trade->getDv_p_t0() == $dv_p_t0, "Expect equal dv_p_t0 time");
         assert($this->trade->getDv_p_tm5() == $dv_p_tm5, "Expect equal dv_p_tm5");
         assert($this->trade->getState() == TradeState::Filled, "Expect state to be 1");
+    }
+    
+    public function test_fillTradeWhenInPredictedStateShouldThrow(){
+        $dv_p_t0 = 0.00500;
+        $dv_p_tm5 = 0.00200;
+        $prediction = 1;
+        $p_proba = 0.76;
+        $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
+        $this->trade->predict($prediction, $p_proba);
+        $this->expectExceptionMessage("Cannot switch to initialized state. Actual state is : ".
+            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
+            Trade::getStringFromState($this->trade->getState()+1));
+        
+        $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
     }
     
     public function test__getStringFromTradeInitializedState(){

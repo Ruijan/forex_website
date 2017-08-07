@@ -65,7 +65,6 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     
     public function test_openTrade_shouldUpdateOpenTime(){
         $trade = $this->openTrade();
-        $this->tradeDBHandler->openTrade($trade);
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         $this->checkIfOpenDBTradeEqualTrade($trade, $db_trade);
     }
@@ -84,14 +83,15 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $trade = new Trade(60, new DateTime('NOW'));
         $id = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($id);
+        $trade->fillMarketInfo(0.0005, 0.0001);
+        $trade->predict(1, 0.05);
         $trade->open(new DateTime('NOW'));
+        $this->tradeDBHandler->openTrade($trade);
         return $trade;
     }
 
     public function test_closeTrade_shouldUpdateCloseTimeGainCommissionState(){
         $trade = $this->openCloseTrade();
-        $this->tradeDBHandler->openTrade($trade);
-        $this->tradeDBHandler->closeTrade($trade);
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         $this->checkIfClosedDBtradeEqualTrade($trade, $db_trade);
     }
@@ -113,6 +113,7 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $minutes_to_add = 45;
         $close_time = $trade->getOpenTime();
         $trade->close(0.50, 0.12, $close_time->add(new DateInterval('PT' . $minutes_to_add . 'M')));
+        $this->tradeDBHandler->closeTrade($trade);
         return $trade;
     }
     
@@ -137,6 +138,7 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $trade = new Trade(60, new DateTime('NOW'));
         $id = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($id);
+        $trade->fillMarketInfo(0.0005, 0.0001);
         $trade->predict(1, 0.75);
         $this->tradeDBHandler->predictTrade($trade);
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
