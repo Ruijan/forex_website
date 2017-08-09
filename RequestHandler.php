@@ -17,6 +17,7 @@ class RequestHandler{
     private $request;
     private $eventDBHandler;
     private $eventParser;
+    private $tradeDBHandler;
     
     static public function getRequestTypeFromString($strRequest){
         switch($strRequest){
@@ -55,12 +56,56 @@ class RequestHandler{
         $this->setRequest($request);
     }
     
-    public function init($eventDBHandler, $eventParser){
-        $this->eventDBHandler = $eventDBHandler;
-        $this->eventParser = $eventParser;
+    public function initTodayEventsHandler($eventDBHandler, $eventParser){
+        $this->setEventDBHandler($eventDBHandler);
+        $this->setEventParser($eventParser);
+    }
+    
+    public function initUpdateMarketHandler($tradeDBHandler){
+        $this->setTradeDBHandler($tradeDBHandler);
     }
     
     public function getRequest(){return $this->request;}
+    
+    public function isCorrectlyInitialized(){
+        switch($this->request){
+            case Request::TODAY_EVENTS:
+                return $this->eventDBHandler != null and $this->eventParser != null;
+            case Request::UPDATE_MARKET:
+                return $this->tradeDBHandler != null;
+        }
+        throw new ErrorException("Request not handled by initialization checker");
+    }
+    
+    public function setEventDBHandler($eventDBHandler){
+        if(is_a($eventDBHandler, 'EventDBHandler')){
+            $this->eventDBHandler = $eventDBHandler;
+        }
+        else{
+            throw new ErrorException("Wrong type for eventDBHandler. Expected EventDBHandler got: ".
+                gettype($eventDBHandler));
+        }
+    }
+    
+    public function setEventParser($eventParser){
+        if(is_a($eventParser, 'EventParser')){
+            $this->eventParser = $eventParser;
+        }
+        else{
+            throw new ErrorException("Wrong type for eventParser. Expected EventParser got: ".
+                gettype($eventParser));
+        }
+    }
+    
+    public function setTradeDBHandler($tradeDBHandler){
+        if(is_a($tradeDBHandler, 'TradeDBHandler')){
+            $this->tradeDBHandler = $tradeDBHandler;
+        }
+        else{
+            throw new ErrorException("Wrong type for tradeDBHandler. Expected TradeDBHandler got: ".
+                gettype($tradeDBHandler));
+        }
+    }
     
     private function setRequest($request){
         if(is_int($request)){
@@ -77,18 +122,44 @@ class RequestHandler{
     }
     
     public function execute(){
+        if(!$this->isCorrectlyInitialized()){
+            throw new ErrorException("Error in the Initialization");
+        }
         switch($this->request){
             case Request::TODAY_EVENTS:
                 $this->eventDBHandler->createTable();
                 $this->eventParser->retrieveTableOfEvents();
                 $this->eventParser->createEventsFromTable();
                 $events = $this->eventParser->getEvents();
-                foreach($events as $event){
-                    $this->eventDBHandler->addEvent($event);
-                }
+                $today_UTC = DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
+                $db_events = $this->eventDBHandler->getEventsFromTo($today_UTC, $today_UTC);
                 
+                foreach($events as $event){
+                    $event->setId($this->eventDBHandler->tryAddingEvent($event));
+                    $this->updateEvent($db_events);
+                }
+                break;
+            case Request::UPDATE_MARKET:
+                $this->tradeDBHandler->createTable();
         }
-        
     }
+    
+    private function updateEvent($db_events)
+    {
+        $events_to_remove = [];
+        if(sizeof($db_events) > 0){
+            foreach ($db_events as $db_event){
+                if($event->getId() == $db_event->getId()){
+                    $events_to_remove[] = $db_event;
+                    if($db_event->getState() != $event->getState()){
+                        $this->eventDBHandler->updateEvent($event);
+                    }
+                }
+                $event_index++;
+            }
+            $db_event = array_diff($db_event, $events_to_remove);
+        }
+    }
+
     
 }

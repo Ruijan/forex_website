@@ -70,7 +70,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->tradeDBHandler->getTableSize();
     }
     
-    public function test__tryAddEvent_shouldThrowError(){
+    public function test__tryAddEventInNonExistingTable_shouldThrowError(){
         $this->deleteTableIfExists();
         $this->expectExceptionMessage('Table does not exists.');
         $this->tradeDBHandler->addTrade(null);

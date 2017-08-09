@@ -30,11 +30,16 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     }
     
     public function test_addingTrade_expectIncrementInSize(){
-        $trade = new Trade(999, new DateTime('NOW'));
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $id = $this->tradeDBHandler->addTrade($trade);
+        $trade1 = $this->createRandomDummyTrade();
+        $trade2 = $this->createRandomDummyTrade();
         assert($this->tradeDBHandler->getTableSize() == 2);
-        assert($id == 2);
+        assert($trade2->getId() == 2);
+    }
+    
+    public function test_getTradeByEventID(){
+        $trade1 = $this->createRandomDummyTrade();
+        $trade2 = $this->createRandomDummyTrade();
+        assert($this->tradeDBHandler->getTradeByEventId($trade2->getIDDBEvent()) == $trade2);
     }
     
     public function test_removingTrade_expectDecrementationInSize(){
@@ -45,13 +50,18 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     }
     
     public function test_addingTrade_expectExactParameters(){
-        $trade = $this->createDummyTrade();
+        $trade = $this->createRandomDummyTrade();
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         assert($trade->getCreationTime() == $db_trade->getCreationTime(), "Expect same Creation Time: ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'). " got ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'));
         assert($trade->getId() == $db_trade->getId(), "Expect same ID");
         assert($trade->getIDDBEvent() == $db_trade->getIDDBEvent(), "Expect same event Id");
+    }
+    
+    public function test_tryAddingTradeSecondTime_SizeShouldBeOne(){
+        $this->tryCreatingTwoSameDummyTrades();
+        assert($this->tradeDBHandler->getTableSize() == 1);
     }
     
     private function createDummyTrade()
@@ -61,8 +71,23 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $trade->setId($id);
         return $trade;
     }
-
     
+    private function tryCreatingTwoSameDummyTrades()
+    {
+        $trade1 = new Trade(60, new DateTime('NOW'));
+        $trade2 = new Trade(60, new DateTime('NOW'));
+        $trade1->setId($this->tradeDBHandler->addTrade($trade1));
+        $trade2->setId($this->tradeDBHandler->tryAddingTrade($trade2));
+    }
+    
+    private function createRandomDummyTrade()
+    {
+        $trade = new Trade(rand(1,10000), new DateTime('NOW'));
+        $id = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($id);
+        return $trade;
+    }
+
     public function test_openTrade_shouldUpdateOpenTime(){
         $trade = $this->openTrade();
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());

@@ -22,8 +22,8 @@ class EventDBHandler
         if(!$this->doesTableExists()){
             
             $query = "CREATE TABLE events (
-                        ID int(11) AUTO_INCREMENT,
-                        ID_EVENT int(11) NOT NULL,
+                        ID int(11) AUTO_INCREMENT UNIQUE,
+                        ID_EVENT int(11) NOT NULL UNIQUE,
                         ID_NEWS int(11) NOT NULL,
                         ANNOUNCED_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         REAL_TIME datetime DEFAULT '0000-00-00 00:00:00',
@@ -62,10 +62,19 @@ class EventDBHandler
                     '".$event->getRealTime()->format('Y-m-d H:i:s')."',".$event->getActual().", 
                     ".$event->getPrevious().", ".$event->getNextEvent().", ".$event->getState().")";
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Event already in table: ". $this->mysqli->error);
         }
         else{
             return $this->mysqli->insert_id;
+        }
+    }
+    
+    public function tryAddingEvent($event){
+        try{
+            return $this->addEvent($event);
+        }
+        catch(Exception $e){
+            return $this->getEventByEventId($event->getEventId())->getId();
         }
     }
     
@@ -81,6 +90,20 @@ class EventDBHandler
     public function getEventById($id){
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM events WHERE ID=".$id;
+        if($result = $this->mysqli->query($query)){
+            while($row = $result->fetch_array())
+            {
+                return Event::createEventFromDbArray($row);
+            }
+        }
+        else{
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }
+    }
+    
+    public function getEventByEventId($id){
+        $this->throwIfTableDoesNotExist();
+        $query = "SELECT * FROM events WHERE ID_EVENT=".$id;
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
             {

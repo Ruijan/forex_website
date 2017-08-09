@@ -32,10 +32,9 @@ class TradeDBHandler
     
     public function createTable(){
         if(!$this->doesTableExists()){
-          
             $query = "CREATE TABLE ".$this->table_name." (
-                        ID int(11) AUTO_INCREMENT,
-                        ID_DB_EVENT int(11) NOT NULL,
+                        ID int(11) AUTO_INCREMENT UNIQUE,
+                        ID_DB_EVENT int(11) NOT NULL UNIQUE,
                         CREATION_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         OPEN_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         CLOSE_TIME datetime DEFAULT '0000-00-00 00:00:00',
@@ -61,59 +60,52 @@ class TradeDBHandler
     }
     
     public function getTableSize(){
-        if($this->doesTableExists()){
-            $sql1 = $this->mysqli->query("SELECT * FROM ".$this->table_name);
-            $row_count= mysqli_num_rows($sql1);
-            return $row_count;
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
-        }
+        $this->throwIfTableDoesNotExist();
+        $sql1 = $this->mysqli->query("SELECT * FROM ".$this->table_name);
+        $row_count= mysqli_num_rows($sql1);
+        return $row_count;
     }
     
     public function addTrade($trade){
-        if($this->doesTableExists()){
-            $query = "INSERT INTO ".$this->table_name." 
-                        (ID, ID_DB_EVENT, CREATION_TIME, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
-                        PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, STATE) 
-                        VALUES (NULL,'".$trade->getIDDBEvent()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
-                        NULL,NULL,NULL,NULL,NULL,
-                        NULL, NULL, NULL, NULL)";
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-            else{
-                return $this->mysqli->insert_id;
-            }
+        $this->throwIfTableDoesNotExist();
+        $query = "INSERT INTO ".$this->table_name." 
+                    (ID, ID_DB_EVENT, CREATION_TIME, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
+                    PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, STATE) 
+                    VALUES (NULL,'".$trade->getIDDBEvent()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
+                    NULL,NULL,NULL,NULL,NULL,
+                    NULL, NULL, NULL, NULL)";
+        if($this->mysqli->query($query) === FALSE){
+            throw new ErrorException("Event already in table: ".$this->mysqli->error);
         }
         else{
-            throw new ErrorException("Table does not exists.");
+            return $this->mysqli->insert_id;
+        }
+    }
+    
+    public function tryAddingTrade($trade){
+        try{
+            return $this->addTrade($trade);
+        }
+        catch(Exception $e){
+            return $this->getTradeByEventID($trade->getIDDBEvent())->getId();
         }
     }
     
     public function removeTradeById($id){
-        if($this->doesTableExists()){
-            $query = "DELETE FROM ".$this->table_name."
-                        WHERE ID=".$id;
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
+        $this->throwIfTableDoesNotExist();
+        $query = "DELETE FROM ".$this->table_name."
+                    WHERE ID=".$id;
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
     }
     
     public function openTrade($trade){
-        if($this->doesTableExists()){
-            $query = "UPDATE ".$this->table_name." SET OPEN_TIME = '".$trade->getOpenTime()->format('Y-m-d H:i:s')."', 
-                        STATE=".$trade->getState()." WHERE ID=".$trade->getId();
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
+        $this->throwIfTableDoesNotExist();
+        $query = "UPDATE ".$this->table_name." SET OPEN_TIME = '".$trade->getOpenTime()->format('Y-m-d H:i:s')."', 
+                    STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
     }
     
@@ -131,46 +123,48 @@ class TradeDBHandler
     }
     
     public function predictTrade($trade){
-        if($this->doesTableExists()){
-            $query = "UPDATE ".$this->table_name." SET PREDICTION = ".$trade->getPrediction().",
-                        PREDICTION_PROBA = ".$trade->getP_proba().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
+        $this->throwIfTableDoesNotExist();
+        $query = "UPDATE ".$this->table_name." SET PREDICTION = ".$trade->getPrediction().",
+                    PREDICTION_PROBA = ".$trade->getP_proba().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
     }
     
     public function closeTrade($trade){
-        if($this->doesTableExists()){
-            $query = "UPDATE ".$this->table_name." SET CLOSE_TIME = '".$trade->getCloseTime()->format('Y-m-d H:i:s')."',
-                        GAIN=".$trade->getGain().", COMMISSION=".$trade->getCommission().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
+        $this->throwIfTableDoesNotExist();
+        $query = "UPDATE ".$this->table_name." SET CLOSE_TIME = '".$trade->getCloseTime()->format('Y-m-d H:i:s')."',
+                    GAIN=".$trade->getGain().", COMMISSION=".$trade->getCommission().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+        if($this->mysqli->query($query) === FALSE){
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
     }
     
     public function getTradeByID($id){
-        if($this->doesTableExists()){
-            $query = "SELECT * FROM ".$this->table_name." WHERE ID=".$id;
-            if($result = $this->mysqli->query($query)){
-                while($row = $result->fetch_array())
-                {
-                    return Trade::createTradeFromDbArray($row);
-                }
-            }
-            else{
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        $this->throwIfTableDoesNotExist();
+        $query = "SELECT * FROM ".$this->table_name." WHERE ID=".$id;
+        if($result = $this->mysqli->query($query)){
+            while($row = $result->fetch_array())
+            {
+                return Trade::createTradeFromDbArray($row);
             }
         }
         else{
-            throw new ErrorException("Table does not exists.");
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+        }
+    }
+    
+    public function getTradeByEventId($id){
+        $this->throwIfTableDoesNotExist();
+        $query = "SELECT * FROM ".$this->table_name." WHERE ID_DB_EVENT=".$id;
+        if($result = $this->mysqli->query($query)){
+            while($row = $result->fetch_array())
+            {
+                return Trade::createTradeFromDbArray($row);
+            }
+        }
+        else{
+            echo "Error: " . $query . "<br>" . $this->mysqli->error;
         }
     }
     

@@ -57,6 +57,12 @@ class EventDBHandlerCreationTest extends EventDBHandlerTest
         assert($db_event->getNextEvent() == $this->event->getNextEvent());
     }
     
+    public function test__tryAddingSameEvent_ExpectSameDBSize(){
+        $trade1 = $this->createDummyEvent();
+        $trade2 = $this->createDummyEvent();
+        assert($this->eventDBHandler->getTableSize() == 1);
+    }
+    
     public function test__updateEvent_expectSameValueInDBandEvent(){
         $id = $this->eventDBHandler->addEvent($this->event);
         $this->event->setId($id);
@@ -76,8 +82,10 @@ class EventDBHandlerCreationTest extends EventDBHandlerTest
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
-    public function addRandomEvent(){
-        $event = new Event(254, 65954, new DateTime("NOW"), 0.01, 500);
+    public function test_getEventByEventID(){
+        $event1 = $this->createRandomDummyEvent();
+        $event2 = $this->createRandomDummyEvent();
+        assert($this->eventDBHandler->getEventByEventId($event2->getEventId()) == $event2);
     }
     
     public function test__getEventsFromTo(){
@@ -149,27 +157,39 @@ class EventDBHandlerCreationTest extends EventDBHandlerTest
         }
     }
     
+    private function createDummyEvent(){
+        $event = new Event(254, 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
+        $event->setId($this->eventDBHandler->tryAddingEvent($event));
+        return $event;
+    }
+    
+    private function createRandomDummyEvent(){
+        $event = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
+        $event->setId($this->eventDBHandler->tryAddingEvent($event));
+        return $event;
+    }
+    
     private function generateDummyEvents()
     {
         $all_events = [];
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
         return $all_events;
     }
     
     private function generateEventsWithDifferentStates()
     {
         $all_events = [];
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-04 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-03 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(254, 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 12:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 12:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
+        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
         $all_events[0]->update(325, new DateTime("2017-08-03 00:31:00"));
         $all_events[3]->update(325, new DateTime("2017-08-03 12:35:00"));
         return $all_events;
