@@ -82,11 +82,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         {
             $this->mysqli->query("DROP TABLE trades_".$this->currency);
         }
-    }
-
-    
-    
-    
+    }  
 }
 
 

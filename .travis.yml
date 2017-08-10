@@ -1,13 +1,16 @@
 language: php
 
 php:
- - 7.1
+ - 5.6.20
 
 services:
  - mysql
 
 before_install:
  - mysql -e 'CREATE DATABASE IF NOT EXISTS forex;'
+
+install:
+ - composer require --dev phpunit/phpunit ^5.5.21
 
 script: phpunit --configuration phpunit.xml --coverage-text
 

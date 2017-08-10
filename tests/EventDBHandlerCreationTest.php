@@ -6,10 +6,7 @@ require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 
 
 
-/**
- * EventDBHandler test case.
- */
-class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
+class EventDBHandlerCreationTest extends TestCase
 {
     protected function setUp()
     {
@@ -138,7 +135,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     public function test__getEventsFromToWithBadArguments_ShouldThrow(){
         $from = "coucou";
         $to = 32;
-        $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
+        expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
             " and ".gettype($to));
         $events = $this->eventDBHandler->getEventsFromTo($from, $to);
     }
