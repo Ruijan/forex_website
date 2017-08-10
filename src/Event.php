@@ -1,32 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: MSI-GP60
- * Date: 7/15/2016
- * Time: 8:09 PM
- *
- * =========================================================
- * FUNCTIONS
- * connect_database()
- * createNewUser($mysqli, $id, $name)
- * createSettingsDepedency($mysqli, $id_user)
- * createTowersDepedency($mysqli, $id_user)
- * getUserSetting($mysqli, $id_user, $setting)
- * getUserTowerData($mysqli, $id_user, $tower_name)
- * isUserExist($mysqli, $id, $name)
- * checkUserParameter($mysqli, $id_game, $column_name, $value)
- * deleteUserByID($mysqli, $id)
- * deleteUserByGameID($mysqli, $id_game)
- * deleteSettingsDepedency($mysqli, $id_user)
- * deleteTowersDepedency($mysqli, $id_user)
- * updateUserLastConnectionTime($mysqli, $id_game, $time)
- */
-
 
 abstract class EventState
 {
-    const Pending = 0;
-    const Updated = 1;
+    const PENDING = 0;
+    const UPDATED = 1;
 }
 
 class Event
@@ -40,7 +17,7 @@ class Event
     public $next_event = 0;
     public $actual = 0;
     public $previous = 0;
-    public $state = EventState::Pending;
+    public $state = EventState::PENDING;
     
    
     // method declaration
@@ -162,14 +139,14 @@ class Event
     public function update($actual, $real_time){
         $this->setActual($actual);
         $this->setRealTime($real_time);
-        $this->setState(EventState::Updated);
+        $this->setState(EventState::UPDATED);
     }
     
     static function getStringFromState($state){
         switch($state){
-            case EventState::Pending:
+            case EventState::PENDING:
                 return "Pending";
-            case EventState::Updated:
+            case EventState::UPDATED:
                 return "Passed";
         }
     }

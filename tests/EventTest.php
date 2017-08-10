@@ -102,11 +102,11 @@ class EventTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getStringFromEventInitializedState(){
-        assert(Event::getStringFromState(EventState::Pending) == "Pending");
+        assert(Event::getStringFromState(EventState::PENDING) == "Pending");
     }
     
     public function test__getStringFromEventUpdatedState(){
-        assert(Event::getStringFromState(EventState::Updated) == "Passed");
+        assert(Event::getStringFromState(EventState::UPDATED) == "Passed");
     }
 }
 
