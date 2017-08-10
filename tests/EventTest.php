@@ -1,6 +1,5 @@
 <?php
-
-require_once('../Event.php');
+require_once(str_replace("tests", "src", __DIR__."/").'Event.php');
 /**
  * Event test case.
  */

@@ -1,6 +1,6 @@
 <?php
-require_once '../TradeDBHandler.php';
-require_once '../connect.php';
+require_once(str_replace("tests", "src", __DIR__."/").'TradeDBHandler.php');
+require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 /**
  * TradeDBHandler test case.
  */
@@ -70,7 +70,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->tradeDBHandler->getTableSize();
     }
     
-    public function test__tryAddEvent_shouldThrowError(){
+    public function test__tryAddEventInNonExistingTable_shouldThrowError(){
         $this->deleteTableIfExists();
         $this->expectExceptionMessage('Table does not exists.');
         $this->tradeDBHandler->addTrade(null);
@@ -82,11 +82,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         {
             $this->mysqli->query("DROP TABLE trades_".$this->currency);
         }
-    }
-
-    
-    
-    
+    }  
 }
 
 

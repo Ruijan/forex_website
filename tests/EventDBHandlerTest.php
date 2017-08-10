@@ -1,7 +1,7 @@
 <?php
 
-require_once '../EventDBHandler.php';
-require_once '../connect.php';
+require_once(str_replace("tests", "src", __DIR__."/").'EventDBHandler.php');
+require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 
 /**
  * EventDBHandler test case.
@@ -17,7 +17,6 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated EventDBHandlerTest::setUp()
         $this->mysqli = connect_database();
         $this->eventDBHandler = new EventDBHandler($this->mysqli);
-        $this->eventDBHandler->__construct($this->mysqli);
         $this->deleteTableIfExists();
     }
 

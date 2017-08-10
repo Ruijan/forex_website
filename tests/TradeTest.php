@@ -1,5 +1,5 @@
 <?php
-require_once '../Trade.php';
+require_once(str_replace("tests", "src", __DIR__."/").'Trade.php');
 /**
  * Trade test case.
  */
