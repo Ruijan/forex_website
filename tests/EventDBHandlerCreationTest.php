@@ -123,7 +123,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     public function test__getEventsFromToState(){
         $from = new DateTime("2017-08-03");
         $to = new DateTime("2017-08-05");
-        $state = EventState::Updated;
+        $state = EventState::UPDATED;
         
         $all_events = $this->generateEventsWithDifferentStates();
         $events_to_get = [$all_events[0], $all_events[3]];
