@@ -9,7 +9,7 @@ abstract class EventState
 class Event
 {
     // property declaration
-    public $id = 0;
+    public $identifier = 0;
     public $event_id;
     public $news_id;
     public $announced_time;
@@ -30,7 +30,7 @@ class Event
         $this->setNextEvent($next_event);
         
     }
-    public function getId(){return $this->id;}
+    public function getId(){return $this->identifier;}
     public function getNewsId(){return $this->news_id;}
     public function getEventId(){return $this->event_id;}
     public function getAnnouncedTime(){return $this->announced_time;}
@@ -40,89 +40,71 @@ class Event
     public function getNextEvent(){return $this->next_event;}
     public function getState(){return $this->state;}
     
-    public function setId($id){
-        if(is_int($id)){
-            $this->id = $id;
+    public function setId($identifier){
+        if(!is_int($identifier)){
+            throw new ErrorException("Wrong type for id. Expected int got: ".gettype($identifier));
         }
-        else{
-            throw new ErrorException("Wrong type for id. Expected int got: ".gettype($id));
-        }
+        $this->identifier = $identifier;
     }
     
     public function setEventId($event_id){
-        if(is_int($event_id)){
-            $this->event_id = $event_id;
-        }
-        else{
+        if(!is_int($event_id)){
             throw new ErrorException("Wrong type for event_id. Expected int got: ".gettype($event_id));
         }
+        $this->event_id = $event_id;
     }
     
     public function setNewsId($news_id){
-        if(is_int($news_id)){
-            $this->news_id = $news_id;
-        }
-        else{
+        if(!is_int($news_id)){
             throw new ErrorException("Wrong type for news_id. Expected int got: ".gettype($news_id));
         }
+        $this->news_id = $news_id;
     }
     
     public function setAnnouncedTime($actual_time){
-        if(is_a($actual_time, 'DateTime')){
-            $this->announced_time = $actual_time;
-        }
-        else{
+        if(!is_a($actual_time, 'DateTime')){
             throw new ErrorException("Wrong type for actual_time. Expected DateTime got: ".gettype($actual_time));
         }
+        $this->announced_time = $actual_time;
     }
     
     public function setRealTime($real_time){
-        if(is_a($real_time, 'DateTime')){
-            $this->real_time = $real_time;
-        }
-        else{
+        if(!is_a($real_time, 'DateTime')){
             throw new ErrorException("Wrong type for real_time. Expected DateTime got: ".gettype($real_time));
         }
+        $this->real_time = $real_time;
     }
     
     public function setActual($actual)
     {
-        if(is_float($actual) or is_int($actual) or is_double($actual)){
-            $this->actual = $actual;
-        }
-        else{
+        if(!is_float($actual) && !is_int($actual) && !is_double($actual)){
             throw new ErrorException("Wrong type for actual. Expected float or double or int got: ".gettype($actual));
         }
+        $this->actual = $actual;
     }
     
     public function setPrevious($previous)
     {
-        if(is_float($previous) or is_int($previous) or is_double($previous)){
-            $this->previous = $previous;
-        }
-        else{
+        if(!is_float($previous) && !is_int($previous) && !is_double($previous)){
             throw new ErrorException("Wrong type for previous. Expected float or double or int got: ".gettype($previous));
         }
+        $this->previous = $previous;
     }
     
     public function setNextEvent($next_event)
     {
-        if(is_int($next_event) and $next_event >= 0){
-            $this->next_event = $next_event;
-        }
-        else{
+        if(!is_int($next_event) or $next_event < 0){
             throw new ErrorException("Wrong type for next_event. Expected int got: ".gettype($next_event));
         }
+        $this->next_event = $next_event;
     }
     
     public function setState($state)
     {
-        if(is_int($state) and $state >= 0){
-            $this->state = $state;
-        }
-        else{
+        if(!is_int($state) or $state < 0){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));
         }
+        $this->state = $state;
     }
     
     static public function createEventFromDbArray($result)
