@@ -1,6 +1,7 @@
 <?php
 require_once(str_replace("tests", "src", __DIR__."/").'TradeDBHandler.php');
 require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
+require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 /**
  * TradeDBHandler test case.
  */

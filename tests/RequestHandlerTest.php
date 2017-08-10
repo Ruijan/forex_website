@@ -8,6 +8,8 @@ require_once(str_replace("tests", "src", __DIR__."/").'EventParser.php');
 
 require_once(str_replace("tests", "src", __DIR__."/").'TradeDBHandler.php');
 
+require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
+
 /**
  * RequestHandler test case.
  */

@@ -2,6 +2,7 @@
 
 require_once(str_replace("tests", "src", __DIR__."/").'EventDBHandler.php');
 require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
+require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 
 /**
  * EventDBHandler test case.

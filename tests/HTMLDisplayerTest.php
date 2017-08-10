@@ -1,6 +1,7 @@
 <?php
 
 require_once(str_replace("tests", "src", __DIR__."/").'HTMLDisplayer.php');
+require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 
 /**
  * HTMLDisplayer test case.
