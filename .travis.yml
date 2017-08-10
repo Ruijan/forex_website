@@ -6,6 +6,9 @@ php:
 services:
  - mysql
 
+before_install:
+ - mysql -e 'CREATE DATABASE IF NOT EXISTS forex;'
+
 script: phpunit --configuration phpunit.xml --coverage-text
 
 after_success: "sbt coveralls"
