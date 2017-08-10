@@ -1,5 +1,5 @@
 <?php
-require_once '../src/EventParser.php';
+require_once(str_replace("tests", "src", __DIR__."/").'EventParser.php');
 /**
  * EventParser test case.
  */

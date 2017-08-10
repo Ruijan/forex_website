@@ -1,8 +1,8 @@
 <?php
 
-require_once '../src/Event.php';
-require_once '../src/EventDBHandler.php';
-require_once '../src/connect.php';
+require_once(str_replace("tests", "src", __DIR__."/").'Event.php');
+require_once(str_replace("tests", "src", __DIR__."/").'EventDBHandler.php');
+require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 
 
 

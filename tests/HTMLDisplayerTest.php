@@ -1,6 +1,6 @@
 <?php
 
-require_once "../src/HTMLDisplayer.php";
+require_once(str_replace("tests", "src", __DIR__."/").'HTMLDisplayer.php');
 
 /**
  * HTMLDisplayer test case.

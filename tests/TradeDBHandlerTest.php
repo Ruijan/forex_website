@@ -1,6 +1,6 @@
 <?php
-require_once '../src/TradeDBHandler.php';
-require_once '../src/connect.php';
+require_once(str_replace("tests", "src", __DIR__."/").'TradeDBHandler.php');
+require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 /**
  * TradeDBHandler test case.
  */

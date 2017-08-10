@@ -1,12 +1,12 @@
 <?php
-require_once '../src/connect.php';
+require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 
-require_once '../src/RequestHandler.php';
+require_once(str_replace("tests", "src", __DIR__."/").'RequestHandler.php');
 
-require_once '../src/EventDBHandler.php';
-require_once '../src/EventParser.php';
+require_once(str_replace("tests", "src", __DIR__."/").'EventDBHandler.php');
+require_once(str_replace("tests", "src", __DIR__."/").'EventParser.php');
 
-require_once '../src/TradeDBHandler.php';
+require_once(str_replace("tests", "src", __DIR__."/").'TradeDBHandler.php');
 
 /**
  * RequestHandler test case.
