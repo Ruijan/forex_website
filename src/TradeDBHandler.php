@@ -1,6 +1,6 @@
 <?php
 
-require_once "../Trade.php";
+require_once "Trade.php";
 
 class TradeDBHandler
 {

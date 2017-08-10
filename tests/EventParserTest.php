@@ -1,5 +1,5 @@
 <?php
-require_once '../EventParser.php';
+require_once '../src/EventParser.php';
 /**
  * EventParser test case.
  */

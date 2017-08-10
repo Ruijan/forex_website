@@ -1,6 +1,6 @@
 <?php
 
-require_once('../Event.php');
+require_once('../src/Event.php');
 /**
  * Event test case.
  */

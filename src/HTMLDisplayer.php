@@ -1,5 +1,5 @@
 <?php
-require_once('calendar/classes/tc_calendar.php');
+require_once('../calendar/classes/tc_calendar.php');
 require_once('Trade.php');
 require_once('Event.php');
 

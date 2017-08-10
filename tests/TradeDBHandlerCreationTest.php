@@ -1,6 +1,6 @@
 <?php
 require_once 'TradeDBHandlerTest.php';
-require_once '../Trade.php';
+require_once '../src/Trade.php';
 
 class TradeDBHandlerCreationTest extends TradeDBHandlerTest
 {

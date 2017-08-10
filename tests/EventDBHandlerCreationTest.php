@@ -1,6 +1,8 @@
 <?php
-require_once 'EventDBHandlerTest.php';
-require_once '../Event.php';
+
+require_once '../src/Event.php';
+require_once '../src/EventDBHandler.php';
+require_once '../src/connect.php';
 
 
 
@@ -13,13 +15,11 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->event = new Event(254, 65954, new DateTime("NOW"), 0.01, 500);
-        $this->deleteTableIfExists();
-        $this->eventDBHandler->createTable();
     }
     
     protected function tearDown()
     {
-        $this->deleteTableIfExists();
+        $this->eventDBHandler->emptyTable();
         parent::tearDown();
     }
     
@@ -27,10 +27,12 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     {
         $this->mysqli = connect_database();
         $this->eventDBHandler = new EventDBHandler($this->mysqli);
+        $this->eventDBHandler->createTable();
     }
     
     public function __destruct()
     {
+        $this->deleteTableIfExists();
         $this->eventDBHandler = null;
     }
     
@@ -41,7 +43,6 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
             $this->mysqli->query("DROP TABLE events");
         }
     }
-    
     
     public function test__isTableEmpty()
     {

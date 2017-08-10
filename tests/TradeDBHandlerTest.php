@@ -1,6 +1,6 @@
 <?php
-require_once '../TradeDBHandler.php';
-require_once '../connect.php';
+require_once '../src/TradeDBHandler.php';
+require_once '../src/connect.php';
 /**
  * TradeDBHandler test case.
  */

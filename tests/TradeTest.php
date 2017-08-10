@@ -1,5 +1,5 @@
 <?php
-require_once '../Trade.php';
+require_once '../src/Trade.php';
 /**
  * Trade test case.
  */

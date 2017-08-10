@@ -3,4 +3,4 @@ language: php
 php:
  - 5.5
 
-script: ./All_tests
+script: phpunit ./tests/EventTest.php

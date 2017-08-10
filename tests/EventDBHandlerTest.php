@@ -1,7 +1,7 @@
 <?php
 
-require_once '../EventDBHandler.php';
-require_once '../connect.php';
+require_once '../src/EventDBHandler.php';
+require_once '../src/connect.php';
 
 /**
  * EventDBHandler test case.

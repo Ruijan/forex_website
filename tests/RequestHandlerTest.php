@@ -1,12 +1,12 @@
 <?php
-require_once '../connect.php';
+require_once '../src/connect.php';
 
-require_once '../RequestHandler.php';
+require_once '../src/RequestHandler.php';
 
-require_once '../EventDBHandler.php';
-require_once '../EventParser.php';
+require_once '../src/EventDBHandler.php';
+require_once '../src/EventParser.php';
 
-require_once '../TradeDBHandler.php';
+require_once '../src/TradeDBHandler.php';
 
 /**
  * RequestHandler test case.

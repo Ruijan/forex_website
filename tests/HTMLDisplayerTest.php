@@ -1,6 +1,6 @@
 <?php
 
-require_once "../HTMLDisplayer.php";
+require_once "../src/HTMLDisplayer.php";
 
 /**
  * HTMLDisplayer test case.
