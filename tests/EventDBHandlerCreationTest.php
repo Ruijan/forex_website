@@ -7,24 +7,39 @@ require_once '../Event.php';
 /**
  * EventDBHandler test case.
  */
-class EventDBHandlerCreationTest extends EventDBHandlerTest
+class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
         parent::setUp();
         $this->event = new Event(254, 65954, new DateTime("NOW"), 0.01, 500);
+        $this->deleteTableIfExists();
         $this->eventDBHandler->createTable();
     }
     
     protected function tearDown()
     {
-        $this->eventDBHandler->deleteTable();
+        $this->deleteTableIfExists();
         parent::tearDown();
     }
     
     public function __construct()
     {
-        // TODO Auto-generated constructor
+        $this->mysqli = connect_database();
+        $this->eventDBHandler = new EventDBHandler($this->mysqli);
+    }
+    
+    public function __destruct()
+    {
+        $this->eventDBHandler = null;
+    }
+    
+    private function deleteTableIfExists()
+    {
+        if($this->eventDBHandler->doesTableExists())
+        {
+            $this->mysqli->query("DROP TABLE events");
+        }
     }
     
     

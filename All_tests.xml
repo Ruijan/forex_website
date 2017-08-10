@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="C:\xampp\htdocs\Pixelnos\forex\tests" tests="100" assertions="83" failures="0" errors="0" time="40.624296">
+    <testsuite name="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" tests="12" assertions="4" failures="0" errors="0" time="14.626694">
+      <testcase name="test__isTableEmpty" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="47" assertions="0" time="0.495357"/>
+      <testcase name="test__addingEvent_expectIncrementInSize" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="52" assertions="0" time="0.581937"/>
+      <testcase name="test__removingEvent_expectDecrementationInSize" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="59" assertions="0" time="1.123372"/>
+      <testcase name="test__addingEvent_expectSameValueInDBandEvent" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="65" assertions="0" time="0.994667"/>
+      <testcase name="test__tryAddingSameEvent_ExpectSameDBSize" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="76" assertions="0" time="1.313528"/>
+      <testcase name="test__updateEvent_expectSameValueInDBandEvent" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="82" assertions="0" time="1.383241"/>
+      <testcase name="test__emptyTable" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="95" assertions="0" time="1.716177"/>
+      <testcase name="test_getEventByEventID" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="101" assertions="0" time="1.421247"/>
+      <testcase name="test__getEventsFromTo" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="107" assertions="0" time="1.333346"/>
+      <testcase name="test__getEventsFromToState" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="122" assertions="0" time="2.467937"/>
+      <testcase name="test__getEventsFromToWithBadArguments_ShouldThrow" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="138" assertions="2" time="0.863462"/>
+      <testcase name="test__getEventsFromToStateWithBadArguments_ShouldThrow" class="EventDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerCreationTest.php" line="146" assertions="2" time="0.932423"/>
+    </testsuite>
+    <testsuite name="EventDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerTest.php" tests="4" assertions="4" failures="0" errors="0" time="1.553916">
+      <testcase name="test__createTable" class="EventDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerTest.php" line="44" assertions="0" time="0.592020"/>
+      <testcase name="test__deleteTable" class="EventDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerTest.php" line="49" assertions="0" time="0.955559"/>
+      <testcase name="test__checkSizeInEmptyDB_shouldThrowError" class="EventDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerTest.php" line="55" assertions="2" time="0.003179"/>
+      <testcase name="test__tryAddEvent_shouldThrowError" class="EventDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventDBHandlerTest.php" line="61" assertions="2" time="0.003158"/>
+    </testsuite>
+    <testsuite name="EventParserTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventParserTest.php" tests="3" assertions="0" failures="0" errors="0" time="2.919214">
+      <testcase name="test__construct" class="EventParserTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventParserTest.php" line="54" assertions="0" time="0.000607"/>
+      <testcase name="test__retrieveTableOfEvents" class="EventParserTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventParserTest.php" line="60" assertions="0" time="2.111207"/>
+      <testcase name="test__createEventsFromTable" class="EventParserTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventParserTest.php" line="66" assertions="0" time="0.807400"/>
+    </testsuite>
+    <testsuite name="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" tests="14" assertions="18" failures="0" errors="0" time="0.013780">
+      <testcase name="test__construct" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="38" assertions="0" time="0.000518"/>
+      <testcase name="test_setIdWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="47" assertions="2" time="0.000512"/>
+      <testcase name="test_setEventIdWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="52" assertions="2" time="0.002494"/>
+      <testcase name="test_setNewsIdWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="57" assertions="2" time="0.001874"/>
+      <testcase name="test_setTimeAnnouncedWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="62" assertions="2" time="0.000711"/>
+      <testcase name="test_setRealTimeWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="67" assertions="2" time="0.000621"/>
+      <testcase name="test_setActualWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="71" assertions="2" time="0.000982"/>
+      <testcase name="test_setPreviousWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="75" assertions="2" time="0.000632"/>
+      <testcase name="test_setStateWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="80" assertions="2" time="0.000639"/>
+      <testcase name="test_setNextEventsWithWrongArgument_expectError" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="85" assertions="2" time="0.000554"/>
+      <testcase name="test_update" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="90" assertions="0" time="0.001083"/>
+      <testcase name="test__compare" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="99" assertions="0" time="0.001925"/>
+      <testcase name="test__getStringFromEventInitializedState" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="104" assertions="0" time="0.000727"/>
+      <testcase name="test__getStringFromEventUpdatedState" class="EventTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\EventTest.php" line="108" assertions="0" time="0.000508"/>
+    </testsuite>
+    <testsuite name="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" tests="6" assertions="2" failures="0" errors="0" time="0.002872">
+      <testcase name="test__constructSuccess" class="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" line="46" assertions="0" time="0.000640"/>
+      <testcase name="test__constructFailureWithBadTypeExpectThrow" class="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" line="51" assertions="2" time="0.000438"/>
+      <testcase name="test__simpleDisplayTrade" class="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" line="57" assertions="0" time="0.000428"/>
+      <testcase name="test__tableDisplayTrade" class="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" line="69" assertions="0" time="0.000413"/>
+      <testcase name="test__simpleDisplayEvent" class="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" line="88" assertions="0" time="0.000456"/>
+      <testcase name="test__tableDisplayEvent" class="SimpleHTMLDisplayerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\HTMLDisplayerTest.php" line="97" assertions="0" time="0.000497"/>
+    </testsuite>
+    <testsuite name="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" tests="12" assertions="15" failures="0" errors="0" time="0.015957">
+      <testcase name="test__getRequestTypeFromValidString_UpdateMarket" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="53" assertions="0" time="0.000438"/>
+      <testcase name="test__getRequestTypeFromInvalidStringShouldThrow" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="67" assertions="2" time="0.000373"/>
+      <testcase name="test__construct" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="72" assertions="0" time="0.000390"/>
+      <testcase name="test__setBadRequestTypeShouldThrow" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="78" assertions="2" time="0.000372"/>
+      <testcase name="test__setBadRequestShouldThrow" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="84" assertions="2" time="0.000371"/>
+      <testcase name="test__setWrongTypeEventDBHandlerShouldThrow" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="89" assertions="2" time="0.003750"/>
+      <testcase name="test__setWrongTypeEventParserShouldThrow" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="98" assertions="2" time="0.000469"/>
+      <testcase name="test__setWrongTypeTradeParserShouldThrow" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="107" assertions="2" time="0.001341"/>
+      <testcase name="test__checkBadInitWhenTodayEvents" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="116" assertions="0" time="0.000406"/>
+      <testcase name="test__checkBadInitWhenUpdateMarket" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="125" assertions="0" time="0.000415"/>
+      <testcase name="test__executeWithTodayEventsRequest_NoUpdate" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="132" assertions="2" time="0.006121"/>
+      <testcase name="test__executeWithUpdateMarketRequest" class="RequestHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\RequestHandlerTest.php" line="168" assertions="1" time="0.001511"/>
+    </testsuite>
+    <testsuite name="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" tests="19" assertions="8" failures="0" errors="0" time="19.820448">
+      <testcase name="test_isTableEmpty" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="27" assertions="0" time="1.555242"/>
+      <testcase name="test_addingTrade_expectIncrementInSize" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="32" assertions="0" time="1.058730"/>
+      <testcase name="test_getTradeByEventID" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="39" assertions="0" time="1.090968"/>
+      <testcase name="test_removingTrade_expectDecrementationInSize" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="45" assertions="0" time="1.165574"/>
+      <testcase name="test_addingTrade_expectExactParameters" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="52" assertions="0" time="0.800154"/>
+      <testcase name="test_tryAddingTradeSecondTime_SizeShouldBeOne" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="62" assertions="0" time="0.871353"/>
+      <testcase name="test_openTrade_shouldUpdateOpenTime" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="91" assertions="0" time="1.065365"/>
+      <testcase name="test_closeTrade_shouldUpdateCloseTimeGainCommissionState" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="118" assertions="0" time="1.051485"/>
+      <testcase name="test_fillMarketTrade_shouldUpdateMarketState" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="145" assertions="0" time="1.006935"/>
+      <testcase name="test_predictTrade_shouldUpdatePredictPProbaState" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="162" assertions="0" time="1.124547"/>
+      <testcase name="test__getTradesFromToWithBadArguments_ShouldThrow" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="180" assertions="2" time="1.117812"/>
+      <testcase name="test__getTradesFromToStateWithBadArguments_ShouldThrow" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="188" assertions="2" time="0.851359"/>
+      <testcase name="test__getTradesFromTo" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="196" assertions="0" time="1.499552"/>
+      <testcase name="test__getTradesFromToState" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="211" assertions="0" time="1.604897"/>
+      <testcase name="test__construct" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="50" assertions="0" time="0.804408"/>
+      <testcase name="test__createTable" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="56" assertions="0" time="0.778970"/>
+      <testcase name="test__deleteTable" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="61" assertions="0" time="1.034664"/>
+      <testcase name="test__checkSizeInEmptyDB_shouldThrowError" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="67" assertions="2" time="0.714721"/>
+      <testcase name="test__tryAddEventInNonExistingTable_shouldThrowError" class="TradeDBHandlerCreationTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerCreationTest.php" line="73" assertions="2" time="0.623712"/>
+    </testsuite>
+    <testsuite name="TradeDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerTest.php" tests="5" assertions="4" failures="0" errors="0" time="1.648196">
+      <testcase name="test__construct" class="TradeDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerTest.php" line="50" assertions="0" time="0.004530"/>
+      <testcase name="test__createTable" class="TradeDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerTest.php" line="56" assertions="0" time="0.703876"/>
+      <testcase name="test__deleteTable" class="TradeDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerTest.php" line="61" assertions="0" time="0.932540"/>
+      <testcase name="test__checkSizeInEmptyDB_shouldThrowError" class="TradeDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerTest.php" line="67" assertions="2" time="0.003082"/>
+      <testcase name="test__tryAddEventInNonExistingTable_shouldThrowError" class="TradeDBHandlerTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeDBHandlerTest.php" line="73" assertions="2" time="0.004168"/>
+    </testsuite>
+    <testsuite name="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" tests="25" assertions="28" failures="0" errors="0" time="0.023218">
+      <testcase name="test__emptyConstructor" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="33" assertions="0" time="0.000471"/>
+      <testcase name="test__initialization" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="38" assertions="0" time="0.000356"/>
+      <testcase name="test__initializationWithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="46" assertions="2" time="0.000769"/>
+      <testcase name="test_setDVPTM5WithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="53" assertions="2" time="0.001064"/>
+      <testcase name="test_setDVPT0WithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="58" assertions="2" time="0.000824"/>
+      <testcase name="test_setPredictionWithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="63" assertions="2" time="0.000745"/>
+      <testcase name="test_setPredictionWithWrongResult_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="68" assertions="2" time="0.000807"/>
+      <testcase name="test_setPredictionProbaWithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="73" assertions="2" time="0.000700"/>
+      <testcase name="test_setPredictionProbaWithOutOfRangeProba_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="78" assertions="2" time="0.000533"/>
+      <testcase name="test_setGainWithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="83" assertions="2" time="0.001729"/>
+      <testcase name="test_setCommissionWithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="88" assertions="2" time="0.000804"/>
+      <testcase name="test_setStateWithWrongArgument_expectError" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="94" assertions="2" time="0.000764"/>
+      <testcase name="test_closeTrade" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="99" assertions="0" time="0.003897"/>
+      <testcase name="test_closeTradeWhenNotOpenShouldThrow" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="116" assertions="2" time="0.000856"/>
+      <testcase name="test_openTrade" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="128" assertions="0" time="0.000716"/>
+      <testcase name="test_openTradeWhenNotPredictedShouldThrow" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="139" assertions="2" time="0.000575"/>
+      <testcase name="test_predictTrade" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="149" assertions="0" time="0.000408"/>
+      <testcase name="test_predictTradeWhenNotFilledShouldThrow" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="159" assertions="2" time="0.001693"/>
+      <testcase name="test_fillMarketInfoTrade" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="170" assertions="0" time="0.001077"/>
+      <testcase name="test_fillTradeWhenInPredictedStateShouldThrow" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="179" assertions="2" time="0.000809"/>
+      <testcase name="test__getStringFromTradeInitializedState" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="193" assertions="0" time="0.000668"/>
+      <testcase name="test__getStringFromTradeFilledState" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="197" assertions="0" time="0.000697"/>
+      <testcase name="test__getStringFromTradePredictedState" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="201" assertions="0" time="0.000720"/>
+      <testcase name="test__getStringFromTradeOpenState" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="205" assertions="0" time="0.000759"/>
+      <testcase name="test__getStringFromTradeCloseState" class="TradeTest" file="C:\xampp\htdocs\Pixelnos\forex\tests\TradeTest.php" line="209" assertions="0" time="0.000776"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

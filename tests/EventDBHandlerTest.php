@@ -17,7 +17,6 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated EventDBHandlerTest::setUp()
         $this->mysqli = connect_database();
         $this->eventDBHandler = new EventDBHandler($this->mysqli);
-        $this->eventDBHandler->__construct($this->mysqli);
         $this->deleteTableIfExists();
     }
 
