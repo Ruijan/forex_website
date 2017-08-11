@@ -159,7 +159,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             $this->requestHandler->execute();
         }
         catch(Exception $e){
-            echo 'Message: ' .$e->getMessage();
+            throw new ErrorException('Message: ' .$e->getMessage());
             assert(false);
         }
         assert(true);
@@ -183,7 +183,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             $this->requestHandler->execute();
         }
         catch(Exception $e){
-            echo 'Message: ' .$e->getMessage();
+            throw new ErrorException('Message: ' .$e->getMessage());
             assert(false);
         }
         assert(true);

@@ -137,28 +137,26 @@ class TradeDBHandler
     public function getTradeByID($identifier){
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM ".$this->table_name." WHERE ID=".$identifier;
-        if($result = $this->mysqli->query($query)){
-            while($row = $result->fetch_array())
-            {
-                return Trade::createTradeFromDbArray($row);
-            }
-        }
-        else{
+        $result = $this->mysqli->query($query);
+        if(!$result){
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
+        }
+        while($row = $result->fetch_array())
+        {
+            return Trade::createTradeFromDbArray($row);
         }
     }
     
     public function getTradeByEventId($identifier){
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM ".$this->table_name." WHERE ID_DB_EVENT=".$identifier;
-        if($result = $this->mysqli->query($query)){
-            while($row = $result->fetch_array())
-            {
-                return Trade::createTradeFromDbArray($row);
-            }
-        }
-        else{
+        $result = $this->mysqli->query($query);
+        if(!$result){
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
+        }
+        while($row = $result->fetch_array())
+        {
+            return Trade::createTradeFromDbArray($row);
         }
     }
     
@@ -167,14 +165,13 @@ class TradeDBHandler
         $this->throwIfTableDoesNotExist();
         $query = $this->buildSelectQueryFromToState($fromDate, $toDate, $state);
         $trades = [];
-        if($result = $this->mysqli->query($query)){
-            while($row = $result->fetch_array())
-            {
-                $trades[] = Trade::createTradeFromDbArray($row);
-            }
-        }
-        else{
+        $result = $this->mysqli->query($query);
+        if(!$result){
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
+        }
+        while($row = $result->fetch_array())
+        {
+            $trades[] = Trade::createTradeFromDbArray($row);
         }
         return $trades;
     }
