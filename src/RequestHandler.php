@@ -94,7 +94,7 @@ class RequestHandler{
     }
     
     public function setTradeDBHandler($tradeDBHandler){
-        if(is_a($tradeDBHandler, 'TradeDBHandler')){
+        if(!is_a($tradeDBHandler, 'TradeDBHandler')){
             throw new ErrorException("Wrong type for tradeDBHandler. Expected TradeDBHandler got: ".
                 gettype($tradeDBHandler));
         }
