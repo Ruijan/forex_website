@@ -112,7 +112,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getInvalidEventEventIdShouldThrow(){
-        $this->expectExceptionMessage("Event does not exists, id:".(50));
+        $this->expectExceptionMessage("Event does not exists, event id:".(50));
         $this->eventDBHandler->getEventByEventId(50);
     }
     

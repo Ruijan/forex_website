@@ -19,7 +19,6 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->mysqli = connect_database();
         $this->currency = "EUR_USD";
         $this->tradeDBHandler = new TradeDBHandler($this->mysqli, $this->currency);
-        $this->tradeDBHandler->__construct($this->mysqli, $this->currency);
         if($this->tradeDBHandler->doesTableExists())
         {
             $this->mysqli->query("DROP TABLE trades_".$this->currency);
@@ -47,6 +46,9 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated constructor
     }
 
+    public function test__constructTableShouldNotExists(){
+        assert($this->tradeDBHandler->doesTableExists() == False);
+    }
 
     public function test__construct()
     {

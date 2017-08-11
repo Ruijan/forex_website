@@ -3,11 +3,18 @@ require_once 'TradeDBHandlerTest.php';
 require_once(str_replace("tests", "src", __DIR__."/").'Trade.php');
 require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 
-class TradeDBHandlerCreationTest extends TradeDBHandlerTest
+class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
         parent::setUp();
+        $this->mysqli = connect_database();
+        $this->currency = "EUR_USD";
+        $this->tradeDBHandler = new TradeDBHandler($this->mysqli, $this->currency);
+        if($this->tradeDBHandler->doesTableExists())
+        {
+            $this->mysqli->query("DROP TABLE trades_".$this->currency);
+        }
         $this->tradeDBHandler->createTable();
         
     }
@@ -15,8 +22,10 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     protected function tearDown()
     {
         // TODO Auto-generated TradeDBHandlerTest::tearDown()
-        
         $this->tradeDBHandler->deleteTable();
+        $this->deleteTableIfExists();
+        $this->tradeDBHandler = null;
+        $this->mysqli->close();
         parent::tearDown();
     }
     
@@ -261,6 +270,14 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
         $all_trades[] = new Trade(1, new DateTime("2017-08-10 00:30:00"));
         $all_trades[] = new Trade(5, new DateTime("2017-08-01 00:30:00"));
         return $all_trades;
+    }
+    
+    private function deleteTableIfExists()
+    {
+        if($this->tradeDBHandler->doesTableExists())
+        {
+            $this->mysqli->query("DROP TABLE trades_".$this->currency);
+        }
     }
 }
 

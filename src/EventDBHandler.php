@@ -109,6 +109,7 @@ class EventDBHandler
             {
                 return Event::createEventFromDbArray($row);
             }
+            throw new Exception("Event does not exists, event id:".$identifier);
         }
         else{
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);

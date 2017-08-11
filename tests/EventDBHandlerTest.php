@@ -25,6 +25,7 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         $this->deleteTableIfExists();
         $this->eventDBHandler = null;
+        $this->mysqli->close();
         parent::tearDown();
     }
     
