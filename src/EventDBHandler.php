@@ -91,10 +91,10 @@ class EventDBHandler
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM events WHERE ID=".$identifier;
         if($result = $this->mysqli->query($query)){
-            while($row = $result->fetch_array())
-            {
+            while($row = $result->fetch_array()){
                 return Event::createEventFromDbArray($row);
             }
+            throw new Exception("Event does not exists, id:".$identifier);
         }
         else{
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
@@ -133,9 +133,9 @@ class EventDBHandler
         }
     }
     
-    public function getEventsFromTo($from, $to, $state=-1){
-        $this->throwIfWrongArgumentType($from, $to, $state);
-        $query = $this->buildSelectQueryFromToState($from, $to, $state);
+    public function getEventsFromTo($fromDate, $toDate, $state=-1){
+        $this->throwIfWrongArgumentType($fromDate, $toDate, $state);
+        $query = $this->buildSelectQueryFromToState($fromDate, $toDate, $state);
         $events = [];
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
@@ -149,23 +149,23 @@ class EventDBHandler
         return $events;
     }
     
-    private function buildSelectQueryFromToState($from, $to, $state)
+    private function buildSelectQueryFromToState($fromDate, $toDate, $state)
     {
         $state_suffix = "";
         if($state != -1){
             $state_suffix = " AND STATE=".$state;
         }
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM events WHERE DATEDIFF(ANNOUNCED_TIME,'".$from->format('Y-m-d H:i:s').
-        "') >= 0 AND DATEDIFF(ANNOUNCED_TIME,'".$to->format('Y-m-d H:i:s').
+        $query = "SELECT * FROM events WHERE DATEDIFF(ANNOUNCED_TIME,'".$fromDate->format('Y-m-d H:i:s').
+        "') >= 0 AND DATEDIFF(ANNOUNCED_TIME,'".$toDate->format('Y-m-d H:i:s').
         "') <= 0".$state_suffix;
         return $query;
     }
     
-    private function throwIfWrongArgumentType($from, $to, $state)
+    private function throwIfWrongArgumentType($fromDate, $toDate, $state)
     {
-        if(!is_a($from, 'DateTime') || !is_a($to, 'DateTime')){
-            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($from)." and ".gettype($to));
+        if(!is_a($fromDate, 'DateTime') || !is_a($toDate, 'DateTime')){
+            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate)." and ".gettype($toDate));
         }
         if(!is_int($state)){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));

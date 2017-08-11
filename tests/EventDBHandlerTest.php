@@ -40,8 +40,11 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated constructor
     }
-
     
+    public function test__constructTableShouldNotExists(){
+        assert($this->eventDBHandler->doesTableExists() == False);
+    }
+
     public function test__createTable(){
         $this->eventDBHandler->createTable();
         assert($this->eventDBHandler->doesTableExists());
