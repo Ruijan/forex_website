@@ -121,7 +121,8 @@ class Trade
     public function setCommission($commission)
     {
         if(!is_float($commission) and !is_int($commission) and !is_double($commission)){
-            throw new ErrorException("Wrong type for commission. Expected float or double or int got: ".gettype($commission));
+            throw new ErrorException("Wrong type for commission. Expected float or double or int got: "
+                .gettype($commission));
         }
         $this->commission = $commission;
     }

@@ -866,7 +866,7 @@ class TcCalendar{
 						$return_arr[] = array();
 						if($this_v != "")
 						{
-							$j = $this->generateDictFromJsonString($return_arr, $this_v);
+						    $return_arr[] = $this->generateDictFromJsonString($return_arr, $this_v);
 						}
 					}
 					return $return_arr;
@@ -884,9 +884,7 @@ class TcCalendar{
         		$this_arr[$j] = substr($this_arr[$j], 1, strlen($this_arr[$j])-2);
         	}
         }
-
-        $return_arr[] = $this_arr;
-        return $j;
+        return $this_arr;
     }
 
 

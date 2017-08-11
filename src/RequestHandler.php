@@ -78,47 +78,37 @@ class RequestHandler{
     }
     
     public function setEventDBHandler($eventDBHandler){
-        if(is_a($eventDBHandler, 'EventDBHandler')){
-            $this->eventDBHandler = $eventDBHandler;
-        }
-        else{
+        if(!is_a($eventDBHandler, 'EventDBHandler')){
             throw new ErrorException("Wrong type for eventDBHandler. Expected EventDBHandler got: ".
                 gettype($eventDBHandler));
         }
+        $this->eventDBHandler = $eventDBHandler;
     }
     
     public function setEventParser($eventParser){
-        if(is_a($eventParser, 'EventParser')){
-            $this->eventParser = $eventParser;
-        }
-        else{
+        if(!is_a($eventParser, 'EventParser')){
             throw new ErrorException("Wrong type for eventParser. Expected EventParser got: ".
                 gettype($eventParser));
         }
+        $this->eventParser = $eventParser;
     }
     
     public function setTradeDBHandler($tradeDBHandler){
         if(is_a($tradeDBHandler, 'TradeDBHandler')){
-            $this->tradeDBHandler = $tradeDBHandler;
-        }
-        else{
             throw new ErrorException("Wrong type for tradeDBHandler. Expected TradeDBHandler got: ".
                 gettype($tradeDBHandler));
         }
+        $this->tradeDBHandler = $tradeDBHandler;
     }
     
     private function setRequest($request){
-        if(is_int($request)){
-            if($this->doesRequestExist($request)){
-                $this->request = $request;
-            }
-            else{
-                throw new ErrorException("Invalid Request type");
-            }
-        }
-        else{
+        if(!is_int($request)){
             throw new ErrorException("Wrong type for request. Expected int got: ".gettype($request));
         }
+        if(!$this->doesRequestExist($request)){
+            throw new ErrorException("Invalid Request type");
+        }
+        $this->request = $request;
     }
     
     public function execute(){

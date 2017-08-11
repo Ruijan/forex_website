@@ -26,12 +26,10 @@ class SimpleHTMLDisplayer
     
     public function setDisplayMode($displayMode){
         if(is_int($displayMode)){
-            if($displayMode == DisplayMode::SIMPLE || $displayMode == DisplayMode::TABLE){
-                $this->displayMode = $displayMode;
-            }
-            else{
+            if($displayMode != DisplayMode::SIMPLE && $displayMode != DisplayMode::TABLE){
                 throw new ErrorException("Display Mode unknown.");
             }
+            $this->displayMode = $displayMode;
         }
         else{
             throw new ErrorException("Wrong type for displayMode. Expected int got: ".gettype($displayMode));
