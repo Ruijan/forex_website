@@ -152,7 +152,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $to = 32;
         $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
             " and ".gettype($to));
-        $events = $this->eventDBHandler->getEventsFromTo($from, $to);
+        $this->eventDBHandler->getEventsFromTo($from, $to);
     }
     
     public function test__getEventsFromToStateWithBadArguments_ShouldThrow(){
@@ -160,7 +160,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $to = new DateTime("2017-08-05");
         $state = "5";
         $this->expectExceptionMessage("Wrong type for state. Expected int got: ".gettype($state));
-        $events = $this->eventDBHandler->getEventsFromTo($from, $to, $state);
+        $this->eventDBHandler->getEventsFromTo($from, $to, $state);
     }
     
     private function areListOfEventsEquals($events_to_get, $events)
