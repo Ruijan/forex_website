@@ -17,12 +17,10 @@ class EventParser
     public function getEvents(){return $this->events;}
     
     public function setLink($link){
-        if(is_string($link)){
-            $this->link = $link;
-        }
-        else{
+        if(!is_string($link)){
             throw new ErrorException("Wrong type for link. Expected string got: ".gettype($link));
         }
+        $this->link = $link;
     }
     
     public function retrieveTableOfEvents(){
@@ -106,10 +104,10 @@ class EventParser
     
     public function getFloatFromString($string){
         $value = "";
-        for($i = 0; $i < strlen($string); $i += 1){
-            $c = $string[$i];
-            if(is_numeric($c) or $c == '.' or $c == '-'){
-                $value = $value.$c;
+        for($index = 0; $index < strlen($string); $index += 1){
+            $character = $string[$index];
+            if(is_numeric($character) or $character == '.' or $character == '-'){
+                $value = $value.$character;
             }
         }
         return (float)$value;

@@ -78,18 +78,18 @@ class EventDBHandler
         }
     }
     
-    public function removeEventById($id){
+    public function removeEventById($identifier){
         $this->throwIfTableDoesNotExist();
         $query = "DELETE FROM events
-                    WHERE ID=".$id;
+                    WHERE ID=".$identifier;
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }    
     }
     
-    public function getEventById($id){
+    public function getEventById($identifier){
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM events WHERE ID=".$id;
+        $query = "SELECT * FROM events WHERE ID=".$identifier;
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
             {
@@ -97,13 +97,13 @@ class EventDBHandler
             }
         }
         else{
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
-    public function getEventByEventId($id){
+    public function getEventByEventId($identifier){
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM events WHERE ID_EVENT=".$id;
+        $query = "SELECT * FROM events WHERE ID_EVENT=".$identifier;
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
             {
@@ -111,7 +111,7 @@ class EventDBHandler
             }
         }
         else{
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
@@ -121,7 +121,7 @@ class EventDBHandler
                 REAL_TIME='".$event->getRealTime()->format('Y-m-d H:i:s')."', 
                 STATE=".$event->getState()." WHERE ID=".$event->getId();
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
@@ -129,7 +129,7 @@ class EventDBHandler
         $this->throwIfTableDoesNotExist();
         $query = "TRUNCATE TABLE events";
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
@@ -144,7 +144,7 @@ class EventDBHandler
             }
         }
         else{
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
         return $events;
     }
