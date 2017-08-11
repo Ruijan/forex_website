@@ -374,98 +374,46 @@ class TcCalendar{
         $params = array();
 		$params[] = "objname=".$this->objname;
 
-		$param = $this->day;
-		if($param != "") $params[] = "selected_day=".$param;
-
-		$param = $this->month;
-		if($param != "") $params[] = "selected_month=".$param;
-
-		$param = $this->year;
-		if($param != "") $params[] = "selected_year=".$param;
-
-		$param = $this->year_start_input;
-		if($param != "") $params[] = "year_start=".$param;
-
-		$param = $this->year_end_input;
-		if($param != "") $params[] = "year_end=".$param;
+		if($this->day != "") $params[] = "selected_day=".$this->day;
+		if($this->month != "") $params[] = "selected_month=".$this->month;
+		if($this->year != "") $params[] = "selected_year=".$this->year;
+		if($this->year_start_input != "") $params[] = "year_start=".$this->year_start_input;
+		if($this->year_end_input != "") $params[] = "year_end=".$this->year_end_input;
 
 		$param = ($this->date_picker) ? 1 : 0;
 		if($param != "") $params[] = "dp=".$param;
 
-		$param = $this->time_allow1;
-		if($param != "") $params[] = "da1=".$param;
-
-		$param = $this->time_allow2;
-		if($param != "") $params[] = "da2=".$param;
-
-		$param = $this->show_not_allow;
-		if($param != "") $params[] = "sna=".$param;
-
-		$param = $this->auto_submit;
-		if($param != "") $params[] = "aut=".$param;
-
-		$param = $this->form_container;
-		if($param != "") $params[] = "frm=".$param;
-
-		$param = $this->target_url;
-		if($param != "") $params[] = "tar=".$param;
-
-		$param = $this->show_input;
-		if($param != "") $params[] = "inp=".$param;
-
-		$param = $this->date_format;
-		if($param != "") $params[] = "fmt=".$param;
+		if($this->time_allow1 != "") $params[] = "da1=".$this->time_allow1;
+		if($this->time_allow2 != "") $params[] = "da2=".$this->time_allow2;
+		if($this->show_not_allow != "") $params[] = "sna=".$this->show_not_allow;
+		if($this->auto_submit != "") $params[] = "aut=".$this->auto_submit;
+		if($this->form_container != "") $params[] = "frm=".$this->form_container;
+		if($this->target_url != "") $params[] = "tar=".$this->target_url;
+		if($this->show_input != "") $params[] = "inp=".$this->show_input;
+		if($this->date_format != "") $params[] = "fmt=".$this->date_format;
 
 		$param = implode(",", $this->dsb_days);
 		if($param != "") $params[] = "dis=".$param;
 
-		$param = $this->date_pair1;
-		if($param != "") $params[] = "pr1=".$param;
-
-		$param = $this->date_pair2;
-		if($param != "") $params[] = "pr2=".$param;
-
-		$param = $this->date_pair_value;
-		if($param != "") $params[] = "prv=".$param;
-
-		$param = $this->path;
-		if($param != "") $params[] = "pth=".$param;
+		if($this->date_pair1 != "") $params[] = "pr1=".$this->date_pair1;
+		if($this->date_pair2 != "") $params[] = "pr2=".$this->date_pair2;
+		if($this->date_pair_value != "") $params[] = "prv=".$this->date_pair_value;
+		if($this->path != "") $params[] = "pth=".$this->path;
 
 		$param = htmlspecialchars($this->check_json_encode($this->sp_dates), ENT_QUOTES);
 		if($param != "") $params[] = "spd=".$param;
-
-		$param = $this->sp_type;
-		if($param != "") $params[] = "spt=".$param;
+		if($this->sp_type != "") $params[] = "spt=".$this->sp_type;
 
 		$param = rawurlencode($this->tc_onchanged);
 		if($param != "") $params[] = "och=".$param;
-
-		$param = $this->startDate;
-		if($param != "") $params[] = "str=".$param;
-
-		$param = $this->rtl;
-		if($param != "") $params[] = "rtl=".$param;
-
-		$param = $this->show_week;
-		if($param != "") $params[] = "wks=".$param;
-
-		$param = $this->interval;
-		if($param != "") $params[] = "int=".$param;
-
-		$param = $this->auto_hide;
-		if($param != "") $params[] = "hid=".$param;
-
-		$param = $this->auto_hide_time;
-		if($param != "") $params[] = "hdt=".$param;
-
-		$param = $this->timezone;
-		if($param != "") $params[] = "tmz=".$param;
-
-		//$param = $this->system_timezone;
-		//if($param != "") $params[] = "stz=".$param;
-
-		$param = $this->theme;
-		if($param != "") $params[] = "thm=".$param;
+		if($this->startDate != "") $params[] = "str=".$this->startDate;
+		if($this->rtl != "") $params[] = "rtl=".$this->rtl;
+		if($$this->show_week != "") $params[] = "wks=".$this->show_week;
+		if($this->interval != "") $params[] = "int=".$this->interval;
+		if($this->auto_hide != "") $params[] = "hid=".$this->auto_hide;
+		if($this->auto_hide_time != "") $params[] = "hdt=".$this->auto_hide_time;
+		if($this->timezone != "") $params[] = "tmz=".$this->timezone;
+		if($this->theme != "") $params[] = "thm=".$this->theme;
         return $params;
     }
 
@@ -475,11 +423,15 @@ class TcCalendar{
 		$total_days = $this->total_days($this->month, $this->year);
 
 		$str = "";
-		$str .= "<select name=\"".$this->objname."_day\" id=\"".$this->objname."_day\" onChange=\"javascript:tc_setDay('".$this->objname."', this[this.selectedIndex].value);\" class=\"tcday\"".($this->rtl ? " dir=\"rtl\"" : "").">";
+		$str .= "<select name=\"".$this->objname."_day\" id=\""
+		    .$this->objname."_day\" onChange=\"javascript:tc_setDay('"
+		        .$this->objname."', this[this.selectedIndex].value);\" class=\"tcday\""
+		            .($this->rtl ? " dir=\"rtl\"" : "").">";
 		$str .= "<option value=\"00\"".($this->rtl ? " dir=\"rtl\"" : "").">Day</option>";
 		for($i=1; $i<=$total_days; $i++){
 			$selected = ((int)$this->day == $i) ? " selected='selected'" : "";
-			$str .= "<option value=\"".str_pad($i, 2 , "0", STR_PAD_LEFT)."\"".$selected.($this->rtl ? " dir=\"rtl\"" : "").">".$i."</option>";
+			$str .= "<option value=\"".str_pad($i, 2 , "0", STR_PAD_LEFT)."\""
+			    .$selected.($this->rtl ? " dir=\"rtl\"" : "").">".$i."</option>";
 		}
 		$str .= "</select> ";
 
@@ -489,13 +441,17 @@ class TcCalendar{
 	//write the select box of months
 	function writeMonth(){
 		$str = "";
-		$str .= "<select name=\"".$this->objname."_month\" id=\"".$this->objname."_month\" onChange=\"javascript:tc_setMonth('".$this->objname."', this[this.selectedIndex].value);\" class=\"tcmonth\"".($this->rtl ? " dir=\"rtl\"" : "").">";
+		$str .= "<select name=\"".$this->objname."_month\" id=\""
+		    .$this->objname."_month\" onChange=\"javascript:tc_setMonth('"
+		        .$this->objname."', this[this.selectedIndex].value);\" class=\"tcmonth\""
+		            .($this->rtl ? " dir=\"rtl\"" : "").">";
 		$str .= "<option value=\"00\"".($this->rtl ? " dir=\"rtl\"" : "").">Month</option>";
 
 		$monthnames = $this->getMonthNames();
 		for($i=1; $i<=sizeof($monthnames); $i++){
 			$selected = ((int)$this->month == $i) ? " selected='selected'" : "";
-			$str .= "<option value=\"".str_pad($i, 2, "0", STR_PAD_LEFT)."\"".$selected.($this->rtl ? " dir=\"rtl\"" : "").">".$monthnames[$i-1]."</option>";
+			$str .= "<option value=\"".str_pad($i, 2, "0", STR_PAD_LEFT)."\"".$selected.(
+			    $this->rtl ? " dir=\"rtl\"" : "").">".$monthnames[$i-1]."</option>";
 		}
 		$str .= "</select> ";
 
@@ -506,7 +462,10 @@ class TcCalendar{
 	function writeYear(){
 		$str = "";
 		//echo("<input type=\"textbox\" name=\"".$this->objname."_year\" id=\"".$this->objname."_year\" value=\"$this->year\" maxlength=4 size=5 onBlur=\"javascript:tc_setYear('".$this->objname."', this.value, '$this->path');\" onKeyPress=\"javascript:if(yearEnter(event)){ tc_setYear('".$this->objname."', this.value, '$this->path'); return false; }\"> ");
-		$str .= "<select name=\"".$this->objname."_year\" id=\"".$this->objname."_year\" onChange=\"javascript:tc_setYear('".$this->objname."', this[this.selectedIndex].value);\" class=\"tcyear\"".($this->rtl ? " dir=\"rtl\"" : "").">";
+		$str .= "<select name=\"".$this->objname."_year\" id=\""
+		    .$this->objname."_year\" onChange=\"javascript:tc_setYear('"
+		        .$this->objname."', this[this.selectedIndex].value);\" class=\"tcyear\""
+		            .($this->rtl ? " dir=\"rtl\"" : "").">";
 		$str .= "<option value=\"0000\"".($this->rtl ? " dir=\"rtl\"" : "").">Year</option>";
 
 		$year_start = $this->year_start;
@@ -538,7 +497,8 @@ class TcCalendar{
 	function eHidden($suffix, $value) {
 		if(trim($value) != ""){
 			if($suffix) $suffix = "_".$suffix;
-			return "<input type=\"hidden\" name=\"".$this->objname.$suffix."\" id=\"".$this->objname.$suffix."\" value=\"".$value."\" />";
+			return "<input type=\"hidden\" name=\"".$this->objname.$suffix."\" id=\""
+			    .$this->objname.$suffix."\" value=\"".$value."\" />";
 		}
 	}
 
@@ -623,7 +583,8 @@ class TcCalendar{
 	}
 
 	function getMonthNames(){
-		return array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+		return array("January", "February", "March", "April", "May", "June", "July", "August", 
+		    "September", "October", "November", "December");
 	}
 
 	//-------------------------------
@@ -657,7 +618,8 @@ class TcCalendar{
 			$this->time_allow1 = $time_from;
 			$year = $this->mydate->getDate('Y', $time_from);
 			if($this->year_start && $year > $this->year_start) $this->year_start = $year; 
-			if($time_to == null && !$this->year_end) $this->year_end = $this->year_start + $this->year_display_from_current;
+			if($time_to == null && !$this->year_end) $this->year_end = $this->year_start 
+			+ $this->year_display_from_current;
 		}
 
 		if ($time_to>0) {
@@ -665,7 +627,8 @@ class TcCalendar{
 		    $year = $this->mydate->getDate('Y', $time_to);
 		    if($this->year_end && $year < $this->year_end) $this->year_end = $year;
 		    //setup year start from year end    
-		    if($time_from == null && !$this->year_start) $this->year_start = $this->year_end - $this->year_display_from_current; 
+		    if($time_from == null && !$this->year_start) $this->year_start = 
+		    $this->year_end - $this->year_display_from_current; 
 		}
 
 		$this->show_not_allow = $show_not_allow;
@@ -678,7 +641,8 @@ class TcCalendar{
 	}
 
 	function getDate(){
-		return str_pad($this->year, 4, "0", STR_PAD_LEFT)."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-".str_pad($this->day, 2, "0", STR_PAD_LEFT);
+		return str_pad($this->year, 4, "0", STR_PAD_LEFT)."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-"
+		    .str_pad($this->day, 2, "0", STR_PAD_LEFT);
 	}
 
 	function showInput($flag){
@@ -749,12 +713,13 @@ class TcCalendar{
 	
 
 	function checkDefaultDateValid(){
-		$date_str = $this->year."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-".str_pad($this->day, 2, "0", STR_PAD_LEFT);
+		$date_str = $this->year."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-"
+		    .str_pad($this->day, 2, "0", STR_PAD_LEFT);
 		//check if set date is in year interval
 		$start_interval = $this->year_start."-01-01";
 		$end_interval = $this->year_end."-12-31";
 
-		if(!$this->isDateInInterval()){
+		if(!$this->isDateInInterval($start_interval, $end_interval, $date_str)){
 		    return false;
 		}
 
@@ -818,7 +783,8 @@ class TcCalendar{
     {
         //check with allow date
 		if($this->time_allow1 && $this->time_allow2){
-			if($this->mydate->dateBefore($this->time_allow1, $date_str, false) || $this->mydate->dateAfter($this->time_allow2, $date_str, false)){
+			if($this->mydate->dateBefore($this->time_allow1, $date_str, false) || 
+			    $this->mydate->dateAfter($this->time_allow2, $date_str, false)){
 				return false;
 			}
 		}elseif($this->time_allow1){
@@ -827,7 +793,7 @@ class TcCalendar{
 			if($this->mydate->dateAfter($this->time_allow2, $date_str, false)) return false;
 		}}
 
-    private function isDateInInterval()
+		private function isDateInInterval($start_interval, $end_interval, $date_str)
     {
         //check if set date is before start_interval
 		if($this->mydate->dateBefore($start_interval, $date_str)){
@@ -885,7 +851,8 @@ class TcCalendar{
 							$this_arr = explode(",", $this_v);
 
 							for($j=0; $j<sizeof($this_arr); $j++){
-								if(substr($this_arr[$j], 0, 1)=="\"" && substr($this_arr[$j], strlen($this_arr[$j])-1, 1)=="\""){
+								if(substr($this_arr[$j], 0, 1)=="\"" && substr($this_arr[$j], 
+								    strlen($this_arr[$j])-1, 1)=="\""){
 									$this_arr[$j] = substr($this_arr[$j], 1, strlen($this_arr[$j])-2);
 								}
 							}
@@ -934,7 +901,8 @@ class TcCalendar{
 
 		if($this->time_allow2 > 0){
 			//check valid if today is before date_allow2
-			if($this->mydate->validDate($this->time_allow2) && !$this->mydate->dateBefore($this->time_allow2, $today))
+			if($this->mydate->validDate($this->time_allow2) && !$this->mydate->dateBefore($this->time_allow2, 
+			    $today))
 				return false;
 		}
 		return true;
