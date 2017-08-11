@@ -53,7 +53,6 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getRequestTypeFromValidString_UpdateMarket(){
-        assert(RequestHandler::getRequestTypeFromstring("today_events") == Request::TODAY_EVENTS);
         assert(RequestHandler::getRequestTypeFromstring("current_trades") == Request::CURRENT_TRADES);
         assert(RequestHandler::getRequestTypeFromstring("next_events") == Request::NEXT_EVENTS);
         assert(RequestHandler::getRequestTypeFromstring("predictable_trade") == Request::PREDICTABLE_TRADE);
@@ -88,106 +87,11 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
         $this->requestHandler = new RequestHandler(10);
     }
     
-    public function test__setWrongTypeEventDBHandlerShouldThrow(){
-        $eventDBHandlerObserver = $this->getMockBuilder('TradeDBHandler')
-            ->disableOriginalConstructor()->getMock();
-        $this->expectExceptionMessage("Wrong type for eventDBHandler. Expected EventDBHandler got: ".
-            gettype($eventDBHandlerObserver));
-        $this->requestHandler = new RequestHandler(Request::TODAY_EVENTS);
-        $this->requestHandler->setEventDBHandler($eventDBHandlerObserver);
-    }
-    
-    public function test__setWrongTypeEventParserShouldThrow(){
-        $eventParserObserver = $this->getMockBuilder('TradeDBHandler')
-        ->disableOriginalConstructor()->getMock();
-        $this->expectExceptionMessage("Wrong type for eventParser. Expected EventParser got: ".
-            gettype($eventParserObserver));
-        $this->requestHandler = new RequestHandler(Request::TODAY_EVENTS);
-        $this->requestHandler->setEventParser($eventParserObserver);
-    }
-    
-    public function test__setWrongTypeTradeParserShouldThrow(){
-        $tradeDBHandlerObserver = $this->getMockBuilder('EventDBHandler')
-        ->disableOriginalConstructor()->getMock();
-        $this->expectExceptionMessage("Wrong type for tradeDBHandler. Expected TradeDBHandler got: ".
-            gettype($tradeDBHandlerObserver));
-        $this->requestHandler = new RequestHandler(Request::TODAY_EVENTS);
-        $this->requestHandler->setTradeDBHandler($tradeDBHandlerObserver);
-    }
-    
-    public function test__checkBadInitWhenTodayEvents(){
-        $eventDBHandlerObserver = $this->getMockBuilder('EventDBHandler')
-            ->disableOriginalConstructor()->getMock();
-        $this->requestHandler = new RequestHandler(Request::TODAY_EVENTS);
-        $this->requestHandler->setEventDBHandler($eventDBHandlerObserver);
-        assert($this->requestHandler->isCorrectlyInitialized() == false);
-
-    }
-    
     public function test__checkBadInitWhenUpdateMarket(){
         $this->requestHandler = new RequestHandler(Request::UPDATE_MARKET);
         assert($this->requestHandler->isCorrectlyInitialized() == false);
     }
     
-    public function test__executeWithTodayEventsRequest_NoUpdate(){
-        try{
-            $eventDBHandlerObserver = $this->getMockBuilder('EventDBHandler')
-                ->disableOriginalConstructor()->getMock();
-            $eventDBHandlerObserver->expects($this->once())
-                ->method('createTable')
-                ->will($this->returnArgument(0));
-            $eventDBHandlerObserver->expects($this->any())
-                ->method('tryAddingEvent')
-                ->willReturn(rand(1,10000));
-            
-            $eventParserObserver = $this->getMockBuilder('EventParser')
-                ->disableOriginalConstructor()->getMock();
-            $eventParserObserver->expects($this->once())
-                ->method('retrieveTableOfEvents')
-                ->will($this->returnArgument(0));
-            $eventParserObserver->expects($this->once())
-                ->method('createEventsFromTable')
-                ->will($this->returnArgument(0));
-            $eventParserObserver->expects($this->once())
-                ->method('getEvents')
-                ->willReturn($this->generateDummyEvents());
-            
-            $this->requestHandler = new RequestHandler(Request::TODAY_EVENTS);
-            $this->requestHandler->initTodayEventsHandler(
-                $eventDBHandlerObserver, 
-                $eventParserObserver);
-            $this->requestHandler->execute();
-        }
-        catch(Exception $e){
-            throw new ErrorException('Message: ' .$e->getMessage());
-            assert(false);
-        }
-        assert(true);
-    }
-    
-    public function test__executeWithUpdateMarketRequest(){
-        try{
-            $tradeDBHandlerObserver = $this->getMockBuilder('TradeDBHandler')
-            ->disableOriginalConstructor()->getMock();
-            $tradeDBHandlerObserver->expects($this->once())
-            ->method('createTable')
-            ->will($this->returnArgument(0));
-            $tradeDBHandlerObserver->expects($this->any())
-            ->method('fillTradeWithMarketInfo')
-            ->will($this->returnArgument(0));
-            
-           
-            $this->requestHandler = new RequestHandler(Request::UPDATE_MARKET);
-            $this->requestHandler->initUpdateMarketHandler(
-                $tradeDBHandlerObserver);
-            $this->requestHandler->execute();
-        }
-        catch(Exception $e){
-            throw new ErrorException('Message: ' .$e->getMessage());
-            assert(false);
-        }
-        assert(true);
-    }
     
     private function generateDummyEvents()
     {

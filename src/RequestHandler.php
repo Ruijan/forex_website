@@ -1,6 +1,5 @@
 <?php
 abstract class Request{
-    const TODAY_EVENTS      = 0;
     const CURRENT_TRADES    = 1;
     const NEXT_EVENTS       = 2;
     const PREDICTABLE_TRADE = 3;
@@ -21,8 +20,6 @@ class RequestHandler{
     
     static public function getRequestTypeFromString($strRequest){
         switch($strRequest){
-            case "today_events":
-                return Request::TODAY_EVENTS;
             case "current_trades":
                 return Request::CURRENT_TRADES;
             case "next_events":
@@ -46,7 +43,7 @@ class RequestHandler{
     }
     
     static public function doesRequestExist($request){
-        if($request >= Request::TODAY_EVENTS &&  $request <= Request::CANCEL_TRADE){
+        if($request >= Request::CURRENT_TRADES &&  $request <= Request::CANCEL_TRADE){
             return true;
         }
         return false;
@@ -56,25 +53,16 @@ class RequestHandler{
         $this->setRequest($request);
     }
     
-    public function initTodayEventsHandler($eventDBHandler, $eventParser){
+    public function init($tradeDBHandler, $eventDBHandler, $eventParser){
         $this->setEventDBHandler($eventDBHandler);
         $this->setEventParser($eventParser);
-    }
-    
-    public function initUpdateMarketHandler($tradeDBHandler){
         $this->setTradeDBHandler($tradeDBHandler);
     }
     
     public function getRequest(){return $this->request;}
     
     public function isCorrectlyInitialized(){
-        switch($this->request){
-            case Request::TODAY_EVENTS:
-                return $this->eventDBHandler != null and $this->eventParser != null;
-            case Request::UPDATE_MARKET:
-                return $this->tradeDBHandler != null;
-        }
-        throw new ErrorException("Request not handled by initialization checker");
+        return $this->eventDBHandler != null and $this->eventParser != null and $this->tradeDBHandler != null;
     }
     
     public function setEventDBHandler($eventDBHandler){
@@ -115,26 +103,30 @@ class RequestHandler{
         if(!$this->isCorrectlyInitialized()){
             throw new ErrorException("Error in the Initialization");
         }
+        $this->generateNewTradesFromFetchedEvents();
+        
         switch($this->request){
-            case Request::TODAY_EVENTS:
-                $this->eventDBHandler->createTable();
-                $this->eventParser->retrieveTableOfEvents();
-                $this->eventParser->createEventsFromTable();
-                $events = $this->eventParser->getEvents();
-                $today_UTC = DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
-                $db_events = $this->eventDBHandler->getEventsFromTo($today_UTC, $today_UTC);
-                
-                foreach($events as $event){
-                    $event->setId($this->eventDBHandler->tryAddingEvent($event));
-                    $this->updateEvent($db_events);
-                }
-                break;
             case Request::UPDATE_MARKET:
-                $this->tradeDBHandler->createTable();
         }
     }
+    private function generateNewTradesFromFetchedEvents()
+    {
+        $this->eventDBHandler->createTable();
+        $this->tradeDBHandler->createTable();
+        $this->eventParser->retrieveTableOfEvents();
+        $this->eventParser->createEventsFromTable();
+        $events = $this->eventParser->getEvents();
+        $today_UTC = DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
+        $db_events = $this->eventDBHandler->getEventsFromTo($today_UTC, $today_UTC);
+        
+        foreach($events as $event){
+            $event->setId($this->eventDBHandler->tryAddingEvent($event));
+            $this->updateEvents($db_events);
+        }
+    }
+
     
-    private function updateEvent($db_events)
+    private function updateEvents($db_events)
     {
         $events_to_remove = [];
         if(sizeof($db_events) > 0){
@@ -143,6 +135,9 @@ class RequestHandler{
                     $events_to_remove[] = $db_event;
                     if($db_event->getState() != $event->getState()){
                         $this->eventDBHandler->updateEvent($event);
+                        $now_utc = DateTime::createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
+                        $this->tradeDBHandler->tryAddingTrade(
+                            new Trade($event->getEventId(), $now_utc));
                     }
                 }
             }
