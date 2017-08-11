@@ -1,5 +1,5 @@
 <?php
-require_once(str_replace("src", "calendar", __DIR__."/").'classes/tc_calendar.php');
+require_once(str_replace("src", "calendar", __DIR__."/").'classes/TcCalendar.php');
 require_once('Trade.php');
 require_once('Event.php');
 

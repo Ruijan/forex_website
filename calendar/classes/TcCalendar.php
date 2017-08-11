@@ -986,9 +986,9 @@ class TcCalendar{
 		}
 	}
 
-	function setTimezone($tz){
-		$this->timezone = $tz;
-		@date_default_timezone_set($tz);
+	function setTimezone($timeZone){
+		$this->timezone = $timeZone;
+		@date_default_timezone_set($timeZone);
 		$this->timezone_offset = date('Z');
 		//echo("new timezone: ".$this->timezone);
 	}
