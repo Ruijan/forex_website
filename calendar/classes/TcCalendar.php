@@ -223,10 +223,12 @@ class TcCalendar{
 				//echo("<br />TZ! ".$this->system_timezone);
 				//echo("<br />OFFSET: ".$this->system_timezone_offset.",".$this->timezone_offset);
 				//timezone has been set and different from system timezone
-				$a_date = $this->year."-".$this->month."-".$this->day." ".$this->system_timezone_h.":".$this->system_timezone_i.":".$this->system_timezone_s;
+				$a_date = $this->year."-".$this->month."-".$this->day." "
+				    .$this->system_timezone_h.":".$this->system_timezone_i.":".$this->system_timezone_s;
 				//echo(", date: $a_date");
 
-				if ((version_compare(PHP_VERSION, '5.3.0') <= 0 && checkdate($this->month, $this->day, $this->year)) || true) {
+				if ((version_compare(PHP_VERSION, '5.3.0') <= 0 && checkdate($this->month, 
+				    $this->day, $this->year)) || true) {
 					//get the timezone difference
 					$tz_sys_ms = $this->system_timezone_offset;
 					$tz_new_ms = $this->timezone_offset;
@@ -249,7 +251,8 @@ class TcCalendar{
 					$a_date_i = date("i", $a_time);
 					$a_date_s = date("s", $a_time);
 
-					$n_time = mktime(($a_date_h+$timezone_diff_hr), $a_date_i, $a_date_s, $a_date_m, $a_date_d, $a_date_y);
+					$n_time = mktime(($a_date_h+$timezone_diff_hr), $a_date_i, $a_date_s, 
+					    $a_date_m, $a_date_d, $a_date_y);
 					//echo("<br />n_time: $n_time");
 					$this->year = date("Y", $n_time);
 					$this->month = date("m", $n_time);
@@ -269,21 +272,29 @@ class TcCalendar{
 
 		//check whether it is a date picker
 		if($this->date_picker){
-			$str .= "<div style=\"position: relative; z-index: ".$this->zindex."; display: inline-block; vertical-align: top;\" id=\"container_".$this->objname."\" onmouseover=\"javascript:focusCalendar('".$this->objname."');\" onmouseout=\"javascript:unFocusCalendar('".$this->objname."', ".$this->zindex.");\">";
+			$str .= "<div style=\"position: relative; z-index: "
+			    .$this->zindex."; display: inline-block; vertical-align: top;\" id=\"container_"
+			        .$this->objname."\" onmouseover=\"javascript:focusCalendar('"
+			            .$this->objname."');\" onmouseout=\"javascript:unFocusCalendar('"
+			                .$this->objname."', ".$this->zindex.");\">";
 
 			if($this->show_input){
 				$str .= $this->writeDay();
 				$str .= $this->writeMonth();
 				$str .= $this->writeYear();
 			}else{
-				$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", ".$this->auto_hide_time.");\" class=\"tclabel\">";
+				$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", "
+				    .$this->auto_hide_time.");\" class=\"tclabel\">";
 				$str .= $this->writeDateContainer();
 				$str .= "</a>";
 			}
 
-			$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", ".$this->auto_hide_time.");\">";
+			$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", "
+			    .$this->auto_hide_time.");\">";
 			if(is_file($this->icon)){
-				$str .= "<img src=\"".$this->icon."\" id=\"tcbtn_".$this->objname."\" name=\"tcbtn_".$this->objname."\" border=\"0\" align=\"absmiddle\" style=\"vertical-align:middle;\" alt=\"".$this->txt."\" title=\"".$this->txt."\" />";
+				$str .= "<img src=\"".$this->icon."\" id=\"tcbtn_".$this->objname."\" name=\"tcbtn_"
+				    .$this->objname."\" border=\"0\" align=\"absmiddle\" style=\"vertical-align:middle;\" alt=\""
+				        .$this->txt."\" title=\"".$this->txt."\" />";
 			}else $str .= $this->txt;
 			$str .= "</a>";
 
@@ -334,12 +345,17 @@ class TcCalendar{
 
 		return $str;
 	}
-    private function generateCalendarContainerString($paramStr, $div_display, $div_position, $div_align, $mout_str, $mover_str)
+    private function generateCalendarContainerString($paramStr, $div_display, $div_position, 
+        $div_align, $mout_str, $mover_str)
     {
         $str = "";
 		//write the calendar container
-		$str .= "<div id=\"div_".$this->objname."\" style=\"position:".$div_position."; visibility:".$div_display."; z-index:100;".$div_align."\" class=\"div_calendar calendar-border\" ".$mout_str.$mover_str.">";
-		$str .= "<IFRAME id=\"".$this->objname."_frame\" src=\"".$this->path."calendar_form.php".$paramStr."\" frameBorder=\"0\" scrolling=\"no\" allowtransparency=\"true\" width=\"100%\" height=\"100%\" style=\"z-index: 100;\"></IFRAME>";
+		$str .= "<div id=\"div_".$this->objname."\" style=\"position:"
+		    .$div_position."; visibility:".$div_display."; z-index:100;"
+		        .$div_align."\" class=\"div_calendar calendar-border\" ".$mout_str.$mover_str.">";
+		$str .= "<IFRAME id=\"".$this->objname."_frame\" src=\"".$this->path."calendar_form.php".$paramStr.
+		"\" frameBorder=\"0\" scrolling=\"no\" allowtransparency=\"true\" ".
+		"width=\"100%\" height=\"100%\" style=\"z-index: 100;\"></IFRAME>";
 		$str .= "</div>";
         return $str;
     }
@@ -970,7 +986,8 @@ class TcCalendar{
 		$themesDirectory = dir('./css/');
 		while($thname = $themesDirectory->read())
 		{
-			if(is_dir('./css/'.$thname) && file_exists('./css/'.$thname.'/calendar.css') && !preg_match("/^[\.]/", $thname))
+			if(is_dir('./css/'.$thname) && file_exists('./css/'.$thname.'/calendar.css') && 
+			    !preg_match("/^[\.]/", $thname))
 			{
 				$themes[$thname] = "./css/".$thname."/calendar.css";
 			};
