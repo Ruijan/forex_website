@@ -52,7 +52,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     public function test__constructFailureWithBadTypeExpectThrow(){
         $displayMode = "35";
         $this->expectExceptionMessage("Wrong type for displayMode. Expected int got: ".gettype($displayMode));
-        $displayer = new SimpleHTMLDisplayer($displayMode);
+        new SimpleHTMLDisplayer($displayMode);
     }
     
     public function test__simpleDisplayTrade(){

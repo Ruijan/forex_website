@@ -81,8 +81,8 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__tryAddingSameEvent_ExpectSameDBSize(){
-        $trade1 = $this->createDummyEvent();
-        $trade2 = $this->createDummyEvent();
+        $this->createDummyEvent();
+        $this->createDummyEvent();
         assert($this->eventDBHandler->getTableSize() == 1);
     }
     
@@ -100,13 +100,13 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__emptyTable(){
-        $id = $this->eventDBHandler->addEvent($this->event);
+        $this->eventDBHandler->addEvent($this->event);
         $this->eventDBHandler->emptyTable();
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
     public function test_getEventByEventID(){
-        $event1 = $this->createRandomDummyEvent();
+        $this->createRandomDummyEvent();
         $event2 = $this->createRandomDummyEvent();
         assert($this->eventDBHandler->getEventByEventId($event2->getEventId()) == $event2);
     }

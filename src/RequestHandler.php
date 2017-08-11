@@ -155,7 +155,6 @@ class RequestHandler{
                         $this->eventDBHandler->updateEvent($event);
                     }
                 }
-                $event_index++;
             }
             $db_event = array_diff($db_event, $events_to_remove);
         }

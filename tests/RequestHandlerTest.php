@@ -68,7 +68,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     
     public function test__getRequestTypeFromInvalidStringShouldThrow(){
         $this->expectExceptionMessage("Invalid Request");
-        $request = RequestHandler::getRequestTypeFromstring("update_markets");
+        RequestHandler::getRequestTypeFromstring("update_markets");
     }
     
     public function test__construct(){
@@ -125,8 +125,6 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__checkBadInitWhenUpdateMarket(){
-        $tradeDBHandlerObserver = $this->getMockBuilder('TradeDBHandler')
-            ->disableOriginalConstructor()->getMock();
         $this->requestHandler = new RequestHandler(Request::UPDATE_MARKET);
         assert($this->requestHandler->isCorrectlyInitialized() == false);
     }
