@@ -96,34 +96,34 @@ class TcCate extends TcDateMain{
 		}else return "";
 	}
 
-	public function addDay($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addDay($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if(!$this->compatible){
-			return parent::addDay($format, $timespan, $cdate);
+			return parent::addDay($format, $timespan = 0, $cdate);
 		}else{
 			$timespan = "P".$timespan."D";
-			return $this->addDate($format, $timespan, $cdate);
+			return $this->addDate($format, $timespan = 0, $cdate);
 		}
 	}
 
-	public function addMonth($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addMonth($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if(!$this->compatible){
-			return parent::addMonth($format, $timespan, $cdate);
+			return parent::addMonth($format, $timespan = 0, $cdate);
 		}else{
 			$timespan = "P".$timespan."M";
-			return $this->addDate($format, $timespan, $cdate);
+			return $this->addDate($format, $timespan = 0, $cdate);
 		}
 	}
 
-	public function addYear($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addYear($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if(!$this->compatible){
-			return parent::addYear($format, $timespan, $cdate);
+			return parent::addYear($format, $timespan = 0, $cdate);
 		}else{
 			$timespan = "P".$timespan."Y";
-			return $this->addDate($format, $timespan, $cdate);
+			return $this->addDate($format, $timespan = 0, $cdate);
 		}
 	}
 
-	public function addDate($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addDate($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if($this->compatible){
 			$tmp_date = ($cdate != "") ? new DateTime($cdate) : $this->mydate;
 			$tmp_date->add(new DateInterval($timespan));

@@ -244,15 +244,9 @@ class TcCalendar{
 
 					$a_time = strtotime($a_date);
 					//echo("a_time: $a_time");
-					$a_date_y = date("Y", $a_time);
-					$a_date_m = date("m", $a_time);
-					$a_date_d = date("d", $a_time);
-					$a_date_h = date("H", $a_time);
-					$a_date_i = date("i", $a_time);
-					$a_date_s = date("s", $a_time);
 
-					$n_time = mktime(($a_date_h+$timezone_diff_hr), $a_date_i, $a_date_s, 
-					    $a_date_m, $a_date_d, $a_date_y);
+					$n_time = mktime((date("H", $a_time)+$timezone_diff_hr), date("i", $a_time), date("s", $a_time), 
+					    date("m", $a_time), date("d", $a_time), date("Y", $a_time));
 					//echo("<br />n_time: $n_time");
 					$this->year = date("Y", $n_time);
 					$this->month = date("m", $n_time);
@@ -272,35 +266,7 @@ class TcCalendar{
 
 		//check whether it is a date picker
 		if($this->date_picker){
-			$str .= "<div style=\"position: relative; z-index: "
-			    .$this->zindex."; display: inline-block; vertical-align: top;\" id=\"container_"
-			        .$this->objname."\" onmouseover=\"javascript:focusCalendar('"
-			            .$this->objname."');\" onmouseout=\"javascript:unFocusCalendar('"
-			                .$this->objname."', ".$this->zindex.");\">";
-
-			if($this->show_input){
-				$str .= $this->writeDay();
-				$str .= $this->writeMonth();
-				$str .= $this->writeYear();
-			}else{
-				$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", "
-				    .$this->auto_hide_time.");\" class=\"tclabel\">";
-				$str .= $this->writeDateContainer();
-				$str .= "</a>";
-			}
-
-			$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", "
-			    .$this->auto_hide_time.");\">";
-			if(is_file($this->icon)){
-				$str .= "<img src=\"".$this->icon."\" id=\"tcbtn_".$this->objname."\" name=\"tcbtn_"
-				    .$this->objname."\" border=\"0\" align=\"absmiddle\" style=\"vertical-align:middle;\" alt=\""
-				        .$this->txt."\" title=\"".$this->txt."\" />";
-			}else $str .= $this->txt;
-			$str .= "</a>";
-
-			$str .= $this->writeCalendarContainer();
-
-			$str .= "</div>";
+			$str .= $this->buildDatePickerHTML($str);
 		}else{
 			$str .= $this->writeCalendarContainer();
 		}
@@ -311,6 +277,41 @@ class TcCalendar{
 			echo($str);
 		}
 	}
+	
+    private function buildDatePickerHTML($str)
+    {
+        $str .= "<div style=\"position: relative; z-index: "
+            .$this->zindex."; display: inline-block; vertical-align: top;\" id=\"container_"
+                .$this->objname."\" onmouseover=\"javascript:focusCalendar('"
+                    .$this->objname."');\" onmouseout=\"javascript:unFocusCalendar('"
+                        .$this->objname."', ".$this->zindex.");\">";
+
+        if($this->show_input){
+        	$str .= $this->writeDay();
+        	$str .= $this->writeMonth();
+        	$str .= $this->writeYear();
+        }else{
+        	$str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", "
+        	    .$this->auto_hide_time.");\" class=\"tclabel\">";
+        	$str .= $this->writeDateContainer();
+        	$str .= "</a>";
+        }
+
+        $str .= " <a href=\"javascript:toggleCalendar('".$this->objname."', ".$this->auto_hide.", "
+            .$this->auto_hide_time.");\">";
+        if(is_file($this->icon)){
+        	$str .= "<img src=\"".$this->icon."\" id=\"tcbtn_".$this->objname."\" name=\"tcbtn_"
+        	    .$this->objname."\" border=\"0\" align=\"absmiddle\" style=\"vertical-align:middle;\" alt=\""
+        	        .$this->txt."\" title=\"".$this->txt."\" />";
+        }else $str .= $this->txt;
+        $str .= "</a>";
+
+        $str .= $this->writeCalendarContainer();
+
+        $str .= "</div>";
+        return $str;
+    }
+
 
 	public function writeCalendarContainer(){
 		$params = $this->createParamsArray();
@@ -865,16 +866,7 @@ class TcCalendar{
 						$return_arr[] = array();
 						if($this_v != "")
 						{
-							$this_arr = explode(",", $this_v);
-
-							for($j=0; $j<sizeof($this_arr); $j++){
-								if(substr($this_arr[$j], 0, 1)=="\"" && substr($this_arr[$j], 
-								    strlen($this_arr[$j])-1, 1)=="\""){
-									$this_arr[$j] = substr($this_arr[$j], 1, strlen($this_arr[$j])-2);
-								}
-							}
-
-							$return_arr[] = $this_arr;
+							$j = $this->generateDictFromJsonString($return_arr, $this_v);
 						}
 					}
 					return $return_arr;
@@ -882,6 +874,21 @@ class TcCalendar{
 			}else return array();
 		}
 	}
+    private function generateDictFromJsonString($return_arr, $this_v)
+    {
+        $this_arr = explode(",", $this_v);
+
+        for($j=0; $j<sizeof($this_arr); $j++){
+        	if(substr($this_arr[$j], 0, 1)=="\"" && substr($this_arr[$j], 
+        	    strlen($this_arr[$j])-1, 1)=="\""){
+        		$this_arr[$j] = substr($this_arr[$j], 1, strlen($this_arr[$j])-2);
+        	}
+        }
+
+        $return_arr[] = $this_arr;
+        return $j;
+    }
+
 
 	public function setOnChange($value){
 		$this->tc_onchanged = $value;

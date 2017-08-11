@@ -55,7 +55,7 @@ class TcDateMain{
 		}else return "0000-00-00";
 	}
 
-	public function addDay($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addDay($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 			$tmp_date = ($cdate != "") ? strtotime($cdate) : $this->mydate;
 			return date($format, mktime(0,0,0,date('m', $tmp_date),(date('d', $tmp_date)+$timespan),
@@ -63,7 +63,7 @@ class TcDateMain{
 		}else return "0000-00-00";
 	}
 
-	public function addMonth($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addMonth($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 			$tmp_date = ($cdate != "") ? strtotime($cdate) : $this->mydate;
 			return date($format, mktime(0,0,0,(date('m', $tmp_date)+$timespan),
@@ -71,7 +71,7 @@ class TcDateMain{
 		}else return "0000-00-00";
 	}
 
-	public function addYear($format = "Y-m-d", $timespan, $cdate = ""){
+	public function addYear($format = "Y-m-d", $timespan = 0, $cdate = ""){
 		if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 			$tmp_date = ($cdate != "") ? strtotime($cdate) : $this->mydate;
 			return date($format, mktime(0,0,0,date('m', $tmp_date),
