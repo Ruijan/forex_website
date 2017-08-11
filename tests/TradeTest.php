@@ -46,9 +46,9 @@ class TradeTest extends PHPUnit_Framework_TestCase
     
     public function test__initializationWithWrongArgument_expectError()
     {
-        $id = -1;
-        $this->expectExceptionMessage("Id should be positive. Id = ".$id);
-        $this->trade->setId($id);
+        $identifier = -1;
+        $this->expectExceptionMessage("Id should be positive. Id = ".$identifier);
+        $this->trade->setId($identifier);
     }
     
     public function test_setDVPTM5WithWrongArgument_expectError(){
@@ -111,7 +111,7 @@ class TradeTest extends PHPUnit_Framework_TestCase
         assert($this->trade->getGain() == $gain, "Expect equal gain");
         assert($this->trade->getCommission() == $commission, "Expect equal commission");
         assert($this->trade->getCloseTime() == $close_time, "Expect equal close time");
-        assert($this->trade->getState() == TradeState::Close, "Expect sate to be 4");
+        assert($this->trade->getState() == TradeState::CLOSE, "Expect sate to be 4");
     }
     
     public function test_closeTradeWhenNotOpenShouldThrow(){
@@ -134,7 +134,7 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->predict($prediction, $p_proba);
         $this->trade->open($open_time);
         assert($this->trade->getOpenTime() == $open_time, "Expect equal open time");
-        assert($this->trade->getState() == TradeState::Open, "Expect sate to be 3");
+        assert($this->trade->getState() == TradeState::OPEN, "Expect sate to be 3");
     }
     
     public function test_openTradeWhenNotPredictedShouldThrow(){
@@ -154,7 +154,7 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->predict($prediction, $p_proba);
         assert($this->trade->getPrediction() == $prediction, "Expect equal close time");
         assert($this->trade->getP_proba() == $p_proba, "Expect equal p_proba");
-        assert($this->trade->getState() == TradeState::Predicted, "Expect state to be 2");
+        assert($this->trade->getState() == TradeState::PREDICTED, "Expect state to be 2");
     }
     
     public function test_predictTradeWhenNotFilledShouldThrow(){
@@ -174,7 +174,7 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
         assert($this->trade->getDv_p_t0() == $dv_p_t0, "Expect equal dv_p_t0 time");
         assert($this->trade->getDv_p_tm5() == $dv_p_tm5, "Expect equal dv_p_tm5");
-        assert($this->trade->getState() == TradeState::Filled, "Expect state to be 1");
+        assert($this->trade->getState() == TradeState::FILLED, "Expect state to be 1");
     }
     
     public function test_fillTradeWhenInPredictedStateShouldThrow(){
@@ -192,23 +192,23 @@ class TradeTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getStringFromTradeInitializedState(){
-        assert(Trade::getStringFromState(TradeState::Initialized) == "Initialized");
+        assert(Trade::getStringFromState(TradeState::INITIALIZED) == "Initialized");
     }
     
     public function test__getStringFromTradeFilledState(){
-        assert(Trade::getStringFromState(TradeState::Filled) == "Market filled");
+        assert(Trade::getStringFromState(TradeState::FILLED) == "Market filled");
     }
     
     public function test__getStringFromTradePredictedState(){
-        assert(Trade::getStringFromState(TradeState::Predicted) == "Predicted");
+        assert(Trade::getStringFromState(TradeState::PREDICTED) == "Predicted");
     }
     
     public function test__getStringFromTradeOpenState(){
-        assert(Trade::getStringFromState(TradeState::Open) == "Open");
+        assert(Trade::getStringFromState(TradeState::OPEN) == "Open");
     }
     
     public function test__getStringFromTradeCloseState(){
-        assert(Trade::getStringFromState(TradeState::Close) == "Close");
+        assert(Trade::getStringFromState(TradeState::CLOSE) == "Close");
     }
 }
 

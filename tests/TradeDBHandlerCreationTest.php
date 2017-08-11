@@ -212,7 +212,7 @@ class TradeDBHandlerCreationTest extends TradeDBHandlerTest
     public function test__getTradesFromToState(){
         $from = new DateTime("2017-08-03");
         $to = new DateTime("2017-08-06");
-        $state = TradeState::Open;
+        $state = TradeState::OPEN;
         
         $all_trades = $this->generateDummyTrades();
         $trades_to_get = [$all_trades[2]];
