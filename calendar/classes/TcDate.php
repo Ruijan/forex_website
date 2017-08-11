@@ -1,16 +1,16 @@
 <?php
 //*************************************
-// Date handling class for tc_calendar
+// Date handling class for TcCalendar
 // for php version higher than 5.3.0
 // written by TJ @triconsole
 //*************************************
 
-require_once('tc_date_main.php');
+require_once('TcDateMain.php');
 
-class tc_date extends tc_date_main{
+class TcCate extends TcDateMain{
 	var $compatible;
 
-	function tc_date(){
+	function TcCate(){
 		//check if we should use DateTime that comes with 5.3.0 and later
 		if (version_compare(PHP_VERSION, '5.3.0') <= 0) {
 			$this->compatible = false;
@@ -25,7 +25,7 @@ class tc_date extends tc_date_main{
 
 	function getDayOfWeek($cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::getDayOfWeek($cdate);
+			return TcDateMain::getDayOfWeek($cdate);
 		}else{
 			if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 				$tmp_date = ($cdate != "") ? new DateTime($cdate) : $this->mydate;
@@ -36,7 +36,7 @@ class tc_date extends tc_date_main{
 
 	function getWeekNumber($cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::getWeekNumber($cdate);
+			return TcDateMain::getWeekNumber($cdate);
 		}else{
 			if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 				$tmp_date = ($cdate != "") ? new DateTime($cdate) : $this->mydate;
@@ -47,16 +47,16 @@ class tc_date extends tc_date_main{
 
 	function setDate($sdate){
 		if(!$this->compatible){
-			tc_date_main::setDate($sdate);
+			TcDateMain::setDate($sdate);
 		}else{
-			if(tc_date_main::validDate($sdate))
+			if(TcDateMain::validDate($sdate))
 				$this->mydate = new DateTime($sdate);
 		}
 	}
 
 	function getDate($format = "Y-m-d", $cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::getDate($format, $cdate);
+			return TcDateMain::getDate($format, $cdate);
 		}else{
 			if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 				$tmp_date = ($cdate != "") ? new DateTime($cdate) : $this->mydate;
@@ -67,7 +67,7 @@ class tc_date extends tc_date_main{
 
 	function setTimestamp($stime){
 		if(!$this->compatible){
-			tc_date_main::setTimestamp($stime);
+			TcDateMain::setTimestamp($stime);
 		}else{
 			$this->mydate->setTimestamp($stime);
 		}
@@ -75,7 +75,7 @@ class tc_date extends tc_date_main{
 
 	function getTimestamp($cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::getTimestamp($cdate);
+			return TcDateMain::getTimestamp($cdate);
 		}else{
 			if(($cdate != "" && $this->validDate($cdate)) || $cdate == ""){
 				$tmp_date = ($cdate != "") ? new DateTime($cdate) : $this->mydate;
@@ -87,7 +87,7 @@ class tc_date extends tc_date_main{
 	function getDateFromTimestamp($stime, $format = 'Y-m-d'){
 		if($stime){
 			if(!$this->compatible){
-				return tc_date_main::getDateFromTimestamp($stime, $format);
+				return TcDateMain::getDateFromTimestamp($stime, $format);
 			}else{
 				$tmp_date = new DateTime();
 				$tmp_date->setTimestamp($stime);
@@ -98,7 +98,7 @@ class tc_date extends tc_date_main{
 
 	function addDay($format = "Y-m-d", $timespan, $cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::addDay($format, $timespan, $cdate);
+			return TcDateMain::addDay($format, $timespan, $cdate);
 		}else{
 			$timespan = "P".$timespan."D";
 			return $this->addDate($format, $timespan, $cdate);
@@ -107,7 +107,7 @@ class tc_date extends tc_date_main{
 
 	function addMonth($format = "Y-m-d", $timespan, $cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::addMonth($format, $timespan, $cdate);
+			return TcDateMain::addMonth($format, $timespan, $cdate);
 		}else{
 			$timespan = "P".$timespan."M";
 			return $this->addDate($format, $timespan, $cdate);
@@ -116,7 +116,7 @@ class tc_date extends tc_date_main{
 
 	function addYear($format = "Y-m-d", $timespan, $cdate = ""){
 		if(!$this->compatible){
-			return tc_date_main::addYear($format, $timespan, $cdate);
+			return TcDateMain::addYear($format, $timespan, $cdate);
 		}else{
 			$timespan = "P".$timespan."Y";
 			return $this->addDate($format, $timespan, $cdate);
@@ -135,7 +135,7 @@ class tc_date extends tc_date_main{
 	//if date1 omitted use set date
 	function differentDate($date2, $date1 = ""){
 		if(!$this->compatible){
-			return tc_date_main::differentDate($date2, $date1);
+			return TcDateMain::differentDate($date2, $date1);
 		}else{
 			$date1 = ($date1 != "") ? $date1 : $this->getDate('Y-m-d');
 
@@ -150,7 +150,7 @@ class tc_date extends tc_date_main{
 	//if date1 omitted use set date
 	function dateBefore($date2, $date1 = "", $equal = true){
 		if(!$this->compatible){
-			return tc_date_main::dateBefore($date2, $date1, $equal);
+			return TcDateMain::dateBefore($date2, $date1, $equal);
 		}else{
 			$date1 = ($date1 != "") ? $date1 : $this->getDate('Y-m-d');
 
@@ -164,7 +164,7 @@ class tc_date extends tc_date_main{
 	//if date1 omitted use set date
 	function dateAfter($date2, $date1 = "", $equal = true){
 		if(!$this->compatible){
-			return tc_date_main::dateAfter($date2, $date1, $equal);
+			return TcDateMain::dateAfter($date2, $date1, $equal);
 		}else{
 			$date1 = ($date1 != "") ? $date1 : $this->getDate('Y-m-d');
 

@@ -5,10 +5,10 @@
 // written by TJ @triconsole
 //*************************************
 
-class tc_date_main{
+class TcDateMain{
 	var $mydate;
 
-	function tc_date_main(){
+	function TcDateMain(){
 		$this->mydate = strtotime(date('Y-m-d'));
 	}
 

@@ -1,16 +1,16 @@
 <?php
-require_once("classes/tc_calendar.php");
-require_once("classes/tc_date.php");
+require_once("classes/TcCalendar.php");
+require_once("classes/TcDate.php");
 
 if(!isset($show_calendar_info)) $show_calendar_info = true;
 if(!isset($show_fb_info)) $show_fb_info = true;
 if(!isset($show_servertime_info)) $show_servertime_info = true;
 
-$tobj = new tc_calendar("");
+$tobj = new TcCalendar("");
 $version = $tobj->version;
 $check_version = $tobj->check_new_version;
 
-$tdate = new tc_date();
+$tdate = new TcDate();
 
 if(!isset($timezone)) $timezone = date_default_timezone_get();
 

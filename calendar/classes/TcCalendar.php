@@ -10,9 +10,9 @@ $AUTHOR = "Triconsole";
 $WEB_SUPPORT = "http://www.triconsole.com/php/calendar_datepicker.php";
 //*********************************************************************
 
-require_once('tc_date.php');
+require_once('TcDate.php');
 
-class tc_calendar{
+class TcCalendar{
 	public $version = "3.75";
 	public $check_new_version = true;
 
@@ -112,7 +112,7 @@ class tc_calendar{
 
 		$this->show_input = $show_input;
 
-		$this->mydate = new tc_date();
+		$this->mydate = new TcDate();
 	}
 
 	//check for leapyear
@@ -231,12 +231,11 @@ class tc_calendar{
 					$tz_sys_ms = $this->system_timezone_offset;
 					$tz_new_ms = $this->timezone_offset;
 
+					$timezone_diff = $tz_sys_ms-$tz_new_ms;
 					if($tz_sys_ms>=0 && $tz_new_ms<=0){
 						$timezone_diff = 0-($tz_sys_ms+abs($tz_new_ms));
 					}elseif($tz_sys_ms<=0 && $tz_new_ms>=0){
 						$timezone_diff = abs($tz_sys_ms)+$tz_new_ms;
-					}else{
-						$timezone_diff = $tz_sys_ms-$tz_new_ms;
 					}
 					$timezone_diff_hr = $timezone_diff/3600;
 					//echo("<br />Diff: ".$timezone_diff_hr);
@@ -303,7 +302,76 @@ class tc_calendar{
 	}
 
 	function writeCalendarContainer(){
-		$params = array();
+		$params = $this->createParamsArray();
+
+		$paramStr = (sizeof($params)>0) ? "?".implode("&", $params) : "";
+
+		$div_display = "visible";
+		$div_position = "relative";
+		$div_align = "";
+		
+		if($this->date_picker){
+			$div_display = "hidden";
+			$div_position = "absolute";
+
+			$line_height = $this->line_height;
+
+			if(is_file($this->icon)){
+				$img_attribs = getimagesize($this->icon);
+				$line_height = $img_attribs[1]+2;
+			}
+
+			$div_align = $this->createCSSAlignement();
+		}
+
+		$mout_str = ($this->auto_hide && $this->date_picker) ? " onmouseout=\"javascript:prepareHide('"
+		    .$this->objname."', ".$this->auto_hide_time.");\"" : "";
+
+		$mover_str = " onmouseover=\"javascript:cancelHide('".$this->objname."');\"";
+
+		$str = $this->generateCalendarContainerString($paramStr, $div_display, $div_position, 
+		    $div_align, $mout_str, $mover_str);
+
+		return $str;
+	}
+    private function generateCalendarContainerString($paramStr, $div_display, $div_position, $div_align, $mout_str, $mover_str)
+    {
+        $str = "";
+		//write the calendar container
+		$str .= "<div id=\"div_".$this->objname."\" style=\"position:".$div_position."; visibility:".$div_display."; z-index:100;".$div_align."\" class=\"div_calendar calendar-border\" ".$mout_str.$mover_str.">";
+		$str .= "<IFRAME id=\"".$this->objname."_frame\" src=\"".$this->path."calendar_form.php".$paramStr."\" frameBorder=\"0\" scrolling=\"no\" allowtransparency=\"true\" width=\"100%\" height=\"100%\" style=\"z-index: 100;\"></IFRAME>";
+		$str .= "</div>";
+        return $str;
+    }
+
+    private function createCSSAlignement()
+    {
+        $div_align = "";
+
+        //adjust alignment
+        switch($this->v_align){
+        	case "top":
+        		$div_align .= "bottom:".$line_height."px;";
+        		break;
+        	case "bottom":
+        	default:
+        		$div_align .= "top:".$line_height."px;";
+        }
+
+        switch($this->h_align){
+        	case "left":
+        		$div_align .= "left:0px;";
+        		break;
+        	case "right":
+        	default:
+        		$div_align .= "right:0px;";
+        }
+        return $div_align;
+    }
+
+    private function createParamsArray()
+    {
+        $params = array();
 		$params[] = "objname=".$this->objname;
 
 		$param = $this->day;
@@ -398,58 +466,9 @@ class tc_calendar{
 
 		$param = $this->theme;
 		if($param != "") $params[] = "thm=".$param;
+        return $params;
+    }
 
-		$paramStr = (sizeof($params)>0) ? "?".implode("&", $params) : "";
-
-		if($this->date_picker){
-			$div_display = "hidden";
-			$div_position = "absolute";
-
-			$line_height = $this->line_height;
-
-			if(is_file($this->icon)){
-				$img_attribs = getimagesize($this->icon);
-				$line_height = $img_attribs[1]+2;
-			}
-
-			$div_align = "";
-
-			//adjust alignment
-			switch($this->v_align){
-				case "top":
-					$div_align .= "bottom:".$line_height."px;";
-					break;
-				case "bottom":
-				default:
-					$div_align .= "top:".$line_height."px;";
-			}
-
-			switch($this->h_align){
-				case "left":
-					$div_align .= "left:0px;";
-					break;
-				case "right":
-				default:
-					$div_align .= "right:0px;";
-			}
-		}else{
-			$div_display = "visible";
-			$div_position = "relative";
-			$div_align = "";
-		}
-
-		$mout_str = ($this->auto_hide && $this->date_picker) ? " onmouseout=\"javascript:prepareHide('".$this->objname."', ".$this->auto_hide_time.");\"" : "";
-
-		$mover_str = " onmouseover=\"javascript:cancelHide('".$this->objname."');\"";
-
-		$str = "";
-		//write the calendar container
-		$str .= "<div id=\"div_".$this->objname."\" style=\"position:".$div_position."; visibility:".$div_display."; z-index:100;".$div_align."\" class=\"div_calendar calendar-border\" ".$mout_str.$mover_str.">";
-		$str .= "<IFRAME id=\"".$this->objname."_frame\" src=\"".$this->path."calendar_form.php".$paramStr."\" frameBorder=\"0\" scrolling=\"no\" allowtransparency=\"true\" width=\"100%\" height=\"100%\" style=\"z-index: 100;\"></IFRAME>";
-		$str .= "</div>";
-
-		return $str;
-	}
 
 	//write the select box of days
 	function writeDay(){
@@ -623,9 +642,9 @@ class tc_calendar{
 			$this->startDate = $num;
 	}
 
-	function dateAllow($from = "", $to = "", $show_not_allow = true){
-		$time_from = $this->mydate->validDate($from) ? $from : null;
-		$time_to = $this->mydate->validDate($to) ? $to : null;
+	function dateAllow($fromDate = "", $toDate = "", $show_not_allow = true){
+		$time_from = $this->mydate->validDate($fromDate) ? $fromDate : null;
+		$time_to = $this->mydate->validDate($toDate) ? $toDate : null;
 
 		// sanity check, ensure time_from earlier than time_to
 		if($time_from != null && $time_to != null && $this->mydate->dateAfter($time_to, $time_from, true)){
@@ -636,20 +655,17 @@ class tc_calendar{
 
 		if ($time_from != null) {
 			$this->time_allow1 = $time_from;
-			$y = $this->mydate->getDate('Y', $time_from);
-			if($this->year_start && $y > $this->year_start) $this->year_start = $y;
-
-			//setup year end from year start
+			$year = $this->mydate->getDate('Y', $time_from);
+			if($this->year_start && $year > $this->year_start) $this->year_start = $year; 
 			if($time_to == null && !$this->year_end) $this->year_end = $this->year_start + $this->year_display_from_current;
 		}
 
 		if ($time_to>0) {
-			$this->time_allow2 = $time_to;
-			$y = $this->mydate->getDate('Y', $time_to);
-			if($this->year_end && $y < $this->year_end) $this->year_end = $y;
-
-			//setup year start from year end
-			if($time_from == null && !$this->year_start) $this->year_start = $this->year_end - $this->year_display_from_current;
+		    $this->time_allow2 = $time_to;		    
+		    $year = $this->mydate->getDate('Y', $time_to);
+		    if($this->year_end && $year < $this->year_end) $this->year_end = $year;
+		    //setup year start from year end    
+		    if($time_from == null && !$this->year_start) $this->year_start = $this->year_end - $this->year_display_from_current; 
 		}
 
 		$this->show_not_allow = $show_not_allow;
@@ -671,10 +687,10 @@ class tc_calendar{
 
 	function writeDateContainer(){
 		if($this->day && $this->month && $this->year){
-			$dd = $this->mydate->getDate($this->date_format, $this->year."-".$this->month."-".$this->day);
-		}else $dd = "Select Date";
+			$date = $this->mydate->getDate($this->date_format, $this->year."-".$this->month."-".$this->day);
+		}else $date = "Select Date";
 
-		return "<div id=\"divCalendar_".$this->objname."_lbl\" class=\"date-tccontainer\">$dd</div>";
+		return "<div id=\"divCalendar_".$this->objname."_lbl\" class=\"date-tccontainer\">$date</div>";
 	}
 
 	//------------------------------------------------------
@@ -730,70 +746,20 @@ class tc_calendar{
 			$this->sp_type = ($type == 1) ? 1 : 0; //control data type for $type
 		}
 	}
-	/*
-	//old method use timestamp
-	function setSpecificDate($dates, $type=0, $recursive=""){
-		if(is_array($dates)){
-			$recursive = strtolower($recursive);
+	
 
-			//change specific date to time
-			foreach($dates as $sp_date){
-				$sp_time = $this->mydate->getTimestamp($sp_date);
-
-				if($sp_time > 0){
-					switch($recursive){
-						case "month": //add to monthly
-							if(!in_array($sp_time, $this->sp_dates[1]))
-								$this->sp_dates[1][] = $sp_time;
-							break;
-						case "year": //add to yearly
-							if(!in_array($sp_time, $this->sp_dates[2]))
-								$this->sp_dates[2][] = $sp_time;
-							break;
-						default: //add to no recursive
-							if(!in_array($sp_time, $this->sp_dates[0]))
-								$this->sp_dates[0][] = $sp_time;
-					}
-				}
-			}
-
-			$this->sp_type = ($type == 1) ? 1 : 0; //control data type for $type
-		}
-	}
-	*/
-
-	function checkDefaultDateValid($reset = true){
+	function checkDefaultDateValid(){
 		$date_str = $this->year."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-".str_pad($this->day, 2, "0", STR_PAD_LEFT);
-		//$default_datetime = $this->mydate->getTimestamp($date_str);
-/*
-		//reset year if set to 2038 and later
-		if(!$this->mydate->compatible && $this->year >= 2038){
-			return false;
-		}
-*/
 		//check if set date is in year interval
 		$start_interval = $this->year_start."-01-01";
 		$end_interval = $this->year_end."-12-31";
 
-		//check if set date is before start_interval
-		if($this->mydate->dateBefore($start_interval, $date_str)){
-			return false;
+		if(!$this->isDateInInterval()){
+		    return false;
 		}
 
-		//check if set date is after end_interval
-		if($this->mydate->dateAfter($end_interval, $date_str)){
-			return false;
-		}
-
-		//check with allow date
-		if($this->time_allow1 && $this->time_allow2){
-			if($this->mydate->dateBefore($this->time_allow1, $date_str, false) || $this->mydate->dateAfter($this->time_allow2, $date_str, false)){
-				return false;
-			}
-		}elseif($this->time_allow1){
-			if($this->mydate->dateBefore($this->time_allow1, $date_str, false)) return false;
-		}elseif($this->time_allow2){
-			if($this->mydate->dateAfter($this->time_allow2, $date_str, false)) return false;
+		if(!$this->isDateAllowed()){
+		    return false;
 		}
 
 		//check with specific date
@@ -848,6 +814,31 @@ class tc_calendar{
 
 		return true;
 	}
+    private function isDateAllowed()
+    {
+        //check with allow date
+		if($this->time_allow1 && $this->time_allow2){
+			if($this->mydate->dateBefore($this->time_allow1, $date_str, false) || $this->mydate->dateAfter($this->time_allow2, $date_str, false)){
+				return false;
+			}
+		}elseif($this->time_allow1){
+			if($this->mydate->dateBefore($this->time_allow1, $date_str, false)) return false;
+		}elseif($this->time_allow2){
+			if($this->mydate->dateAfter($this->time_allow2, $date_str, false)) return false;
+		}}
+
+    private function isDateInInterval()
+    {
+        //check if set date is before start_interval
+		if($this->mydate->dateBefore($start_interval, $date_str)){
+			return false;
+		}
+
+		//check if set date is after end_interval
+		if($this->mydate->dateAfter($end_interval, $date_str)){
+			return false;
+		}}
+
 
 	function check_json_encode($obj){
 		//try customize to get it work, should replace with better solution in the future
@@ -885,14 +876,12 @@ class tc_calendar{
 
 					$return_arr = array();
 
-					$offset = 0;
-
 					$arr = explode("],[", $str);
 					for($i=0; $i<sizeof($arr); $i++){
 						$this_v = $arr[$i];
-						if($this_v == "")
-							$return_arr[] = array();
-						else{
+						$return_arr[] = array();
+						if($this_v != "")
+						{
 							$this_arr = explode(",", $this_v);
 
 							for($j=0; $j<sizeof($this_arr); $j++){
