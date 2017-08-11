@@ -25,9 +25,7 @@ class TradeDBHandler
                 return true;
             }
         }
-        else {
-            return false;
-        }
+        return false;
     }
     
     public function createTable(){
@@ -91,12 +89,12 @@ class TradeDBHandler
         }
     }
     
-    public function removeTradeById($id){
+    public function removeTradeById($identifier){
         $this->throwIfTableDoesNotExist();
         $query = "DELETE FROM ".$this->table_name."
-                    WHERE ID=".$id;
+                    WHERE ID=".$identifier;
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
@@ -105,20 +103,16 @@ class TradeDBHandler
         $query = "UPDATE ".$this->table_name." SET OPEN_TIME = '".$trade->getOpenTime()->format('Y-m-d H:i:s')."', 
                     STATE=".$trade->getState()." WHERE ID=".$trade->getId();
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
     public function fillTradeWithMarketInfo($trade){
-        if($this->doesTableExists()){
-            $query = "UPDATE ".$this->table_name." SET DV_P_TM5 = ".$trade->getDv_p_tm5().",
+        $this->throwIfTableDoesNotExist();
+        $query = "UPDATE ".$this->table_name." SET DV_P_TM5 = ".$trade->getDv_p_tm5().",
                         DV_P_T0 = ".$trade->getDv_p_t0().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
-            if($this->mysqli->query($query) === FALSE){
-                echo "Error: " . $query . "<br>" . $this->mysqli->error;
-            }
-        }
-        else{
-            throw new ErrorException("Table does not exists.");
+        if($this->mysqli->query($query) === FALSE){
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
@@ -127,7 +121,7 @@ class TradeDBHandler
         $query = "UPDATE ".$this->table_name." SET PREDICTION = ".$trade->getPrediction().",
                     PREDICTION_PROBA = ".$trade->getP_proba().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
@@ -136,13 +130,13 @@ class TradeDBHandler
         $query = "UPDATE ".$this->table_name." SET CLOSE_TIME = '".$trade->getCloseTime()->format('Y-m-d H:i:s')."',
                     GAIN=".$trade->getGain().", COMMISSION=".$trade->getCommission().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
         if($this->mysqli->query($query) === FALSE){
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
-    public function getTradeByID($id){
+    public function getTradeByID($identifier){
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM ".$this->table_name." WHERE ID=".$id;
+        $query = "SELECT * FROM ".$this->table_name." WHERE ID=".$identifier;
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
             {
@@ -150,13 +144,13 @@ class TradeDBHandler
             }
         }
         else{
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
-    public function getTradeByEventId($id){
+    public function getTradeByEventId($identifier){
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM ".$this->table_name." WHERE ID_DB_EVENT=".$id;
+        $query = "SELECT * FROM ".$this->table_name." WHERE ID_DB_EVENT=".$identifier;
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
             {
@@ -164,14 +158,14 @@ class TradeDBHandler
             }
         }
         else{
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     
-    public function getTradesFromTo($from, $to, $state=-1){
-        $this->throwIfWrongArgumentType($from, $to, $state);
+    public function getTradesFromTo($fromDate, $toDate, $state=-1){
+        $this->throwIfWrongArgumentType($fromDate, $toDate, $state);
         $this->throwIfTableDoesNotExist();
-        $query = $this->buildSelectQueryFromToState($from, $to, $state);
+        $query = $this->buildSelectQueryFromToState($fromDate, $toDate, $state);
         $trades = [];
         if($result = $this->mysqli->query($query)){
             while($row = $result->fetch_array())
@@ -180,28 +174,28 @@ class TradeDBHandler
             }
         }
         else{
-            echo "Error: " . $query . "<br>" . $this->mysqli->error;
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
         return $trades;
     }
     
-    private function buildSelectQueryFromToState($from, $to, $state)
+    private function buildSelectQueryFromToState($fromDate, $toDate, $state)
     {
         $state_suffix = "";
         if($state != -1){
             $state_suffix = " AND STATE=".$state;
         }
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM ".$this->table_name." WHERE DATEDIFF(CREATION_TIME,'".$from->format('Y-m-d H:i:s').
-        "') >= 0 AND DATEDIFF(CREATION_TIME,'".$to->format('Y-m-d H:i:s').
+        $query = "SELECT * FROM ".$this->table_name." WHERE DATEDIFF(CREATION_TIME,'".$fromDate->format('Y-m-d H:i:s').
+        "') >= 0 AND DATEDIFF(CREATION_TIME,'".$toDate->format('Y-m-d H:i:s').
         "') <= 0".$state_suffix;
         return $query;
     }
     
-    private function throwIfWrongArgumentType($from, $to, $state)
+    private function throwIfWrongArgumentType($fromDate, $toDate, $state)
     {
-        if(!is_a($from, 'DateTime') || !is_a($to, 'DateTime')){
-            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($from)." and ".gettype($to));
+        if(!is_a($fromDate, 'DateTime') || !is_a($toDate, 'DateTime')){
+            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate)." and ".gettype($toDate));
         }
         if(!is_int($state)){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));

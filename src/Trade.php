@@ -1,16 +1,16 @@
 <?php
 
 abstract class TradeState{
-    const Initialized = 0;
-    const Filled = 1;
-    const Predicted = 2;
-    const Open = 3;
-    const Close = 4;
+    const INITIALIZED = 0;
+    const FILLED = 1;
+    const PREDICTED = 2;
+    const OPEN = 3;
+    const CLOSE = 4;
 }
 
 class Trade
 {
-    private $id = null;
+    private $identifier = null;
     private $id_db_event = null;
     private $creation_time = null;
     private $open_time = null;
@@ -21,9 +21,9 @@ class Trade
     private $p_proba = 0;
     private $gain = 0;
     private $commission = 0;
-    private $state = TradeState::Initialized;
+    private $state = TradeState::INITIALIZED;
     
-    public function getId(){return $this->id;}
+    public function getId(){return $this->identifier;}
     public function getIDDBEvent(){return $this->id_db_event;}
     public function getCreationTime(){return $this->creation_time;}
     public function getOpenTime(){return $this->open_time;}
@@ -36,130 +36,102 @@ class Trade
     public function getCommission(){return $this->commission;}
     public function getState(){return $this->state;}
 
-    public function setId($id)
+    public function setId($identifier)
     {
-        if((is_int($id) or is_float($id))){
-            if($id > 0){
-                $this->id = (int)$id;
-            }
-            else{
-                throw new ErrorException("Id should be positive. Id = ".$id);
-            }
+        if((!is_int($identifier) and !is_float($identifier))){
+            throw new ErrorException("Wrong type for id. Expected int or float got: ".gettype($identifier));
         }
-        else{
-            throw new ErrorException("Wrong type for id. Expected int or float got: ".gettype($id));
+        if($identifier <= 0){
+            throw new ErrorException("Id should be positive. Id = ".$identifier);
         }
+        $this->identifier = (int)$identifier;
     }
 
     private function setCreationTime($creation_time)
     {
-        if(is_a($creation_time, 'DateTime')){
-            $this->creation_time = $creation_time;
-        }
-        else{
+        if(!is_a($creation_time, 'DateTime')){
             throw new ErrorException("Wrong type for creation_time. Expected DateTime got: ".gettype($creation_time));
         }
+        $this->creation_time = $creation_time;
     }
     
     private function setOpenTime($open_time)
     {
-        if(is_a($open_time, 'DateTime')){
-            $this->open_time = $open_time;
-        }
-        else{
+        if(!is_a($open_time, 'DateTime')){
             throw new ErrorException("Wrong type for open_time. Expected DateTime got: ".gettype($open_time));
         }
+        $this->open_time = $open_time;
     }
 
     private function setCloseTime($close_time)
     {
-        if(is_a($close_time, 'DateTime')){
-            $this->close_time = $close_time;
-        }
-        else{
+        if(!is_a($close_time, 'DateTime')){
             throw new ErrorException("Wrong type for close_time. Expected DateTime got: ".gettype($close_time));
         }
+        $this->close_time = $close_time;
     }
 
     public function setDv_p_tm5($dv_p_tm5)
     {
-        if(is_float($dv_p_tm5) or is_double($dv_p_tm5)){
-            $this->dv_p_tm5 = $dv_p_tm5;
-        }
-        else{
+        if(!is_float($dv_p_tm5) and !is_double($dv_p_tm5)){
             throw new ErrorException("Wrong type for dv_p_tm5. Expected float or double got: ".gettype($dv_p_tm5));
         }
+        $this->dv_p_tm5 = $dv_p_tm5;
     }
 
     public function setDv_p_t0($dv_p_t0)
     {
-        if(is_float($dv_p_t0) or is_double($dv_p_t0)){
-            $this->dv_p_t0 = $dv_p_t0;
-        }
-        else{
+        if(!is_float($dv_p_t0) and !is_double($dv_p_t0)){
             throw new ErrorException("Wrong type for dv_p_t0. Expected float or double got: ".gettype($dv_p_t0));
         }
+        $this->dv_p_t0 = $dv_p_t0;
     }
 
     public function setPrediction($prediction)
     {
-        if(is_int($prediction)){
-            if ($prediction >= 0 and $prediction <=1){
-                $this->prediction = $prediction;
-            }
-            else{
-                throw new ErrorException("Prediction value out of range:".$prediction.". Shoudl be 0 or 1");
-            }
-            
+        if(!is_int($prediction)){
+            throw new ErrorException("Wrong type for prediction. Expected int got: ".gettype($prediction));          
         }
-        else{
-            throw new ErrorException("Wrong type for prediction. Expected int got: ".gettype($prediction));
+        if ($prediction < 0 or $prediction > 1){
+            throw new ErrorException("Prediction value out of range:".$prediction.". Shoudl be 0 or 1");
         }
+        $this->prediction = $prediction;
     }
 
     public function setP_proba($p_proba)
     {
-        if(is_float($p_proba) or is_double($p_proba)){
-            if ($p_proba >= 0 and $p_proba <=1){
-                $this->p_proba = $p_proba;
-            }
-            else{
-                throw new ErrorException("Prediction probability out of range:".$p_proba.". Should be between 0 and 1");
-            }
-        }
-        else{
+        if(!is_float($p_proba) and !is_double($p_proba)){
             throw new ErrorException("Wrong type for p_proba. Expected float or double got: ".gettype($p_proba));
         }
+        if ($p_proba < 0 or $p_proba > 1){
+            throw new ErrorException("Prediction probability out of range:".$p_proba.". Should be between 0 and 1");
+        }
+        $this->p_proba = $p_proba;
     }
 
     public function setGain($gain)
     {
-        if(is_float($gain) or is_int($gain) or is_double($gain)){
-            $this->gain = $gain;
-        }
-        else{
+        if(!is_float($gain) and !is_int($gain) and !is_double($gain)){
             throw new ErrorException("Wrong type for gain. Expected float or double or int got: ".gettype($gain));
+            
         }
+        $this->gain = $gain;
     }
 
     public function setCommission($commission)
     {
-        if(is_float($commission) or is_int($commission) or is_double($commission)){
-            $this->commission = $commission;
-        }
-        else{
+        if(!is_float($commission) and !is_int($commission) and !is_double($commission)){
             throw new ErrorException("Wrong type for commission. Expected float or double or int got: ".gettype($commission));
         }
+        $this->commission = $commission;
     }
 
     public function setState($state)
     {
-        if(is_int($state) and $state >= 0){
-            $this->state = $state;
-        }
-        else{
+        if(!is_int($state) or $state < 0){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));
         }
+        $this->state = $state;
     }
 
     public function __construct($id_db_event, $creation_time)
@@ -171,60 +143,52 @@ class Trade
     
     public function isInitialized()
     {
-        return $this->id != null and $this->id_db_event != null;
+        return $this->identifier != null and $this->id_db_event != null;
     }
     
     public function close($gain, $commission, $close_time){
-        if($this->state == TradeState::Open){
-            $this->setGain($gain);
-            $this->setCommission($commission);
-            $this->setCloseTime($close_time);
-            $this->setState(TradeState::Close);
-        }
-        else{
+        if($this->state != TradeState::OPEN){
             throw new ErrorException("Cannot switch to close state. Actual state is : ".
                 Trade::getStringFromState($this->getState()).". Next expected state is ".
                 Trade::getStringFromState($this->getState()+1));
         }
+        $this->setGain($gain);
+        $this->setCommission($commission);
+        $this->setCloseTime($close_time);
+        $this->setState(TradeState::CLOSE);
     }
     
     public function open($open_time){
-        if($this->state == TradeState::Predicted){
-            $this->setOpenTime($open_time);
-            $this->setState(TradeState::Open);
-        }
-        else{
+        if($this->state != TradeState::PREDICTED){
             throw new ErrorException("Cannot switch to open state. Actual state is : ".
                 Trade::getStringFromState($this->getState()).". Next expected state is ".
                 Trade::getStringFromState($this->getState()+1));
         }
+        $this->setOpenTime($open_time);
+        $this->setState(TradeState::OPEN);
     }
     
     public function predict($prediction, $p_predict){
-        if($this->state == TradeState::Filled){
-            $this->setPrediction($prediction);
-            $this->setP_proba($p_predict);
-            $this->setState(TradeState::Predicted);
-        }
-        else{
+        if($this->state != TradeState::FILLED){
             throw new ErrorException("Cannot switch to predicted state. Actual state is : ".
                 Trade::getStringFromState($this->getState()).". Next expected state is ".
                 Trade::getStringFromState($this->getState()+1));
         }
+        $this->setPrediction($prediction);
+        $this->setP_proba($p_predict);
+        $this->setState(TradeState::PREDICTED);
         
     }
     
     public function fillMarketInfo($dv_p_tm5, $dv_p_t0){
-        if($this->state == TradeState::Initialized){
-            $this->setDv_p_t0($dv_p_t0);
-            $this->setDv_p_tm5($dv_p_tm5);
-            $this->setState(TradeState::Filled);
-        }
-        else{
+        if($this->state != TradeState::INITIALIZED){
             throw new ErrorException("Cannot switch to initialized state. Actual state is : ".
                 Trade::getStringFromState($this->getState()).". Next expected state is ".
                 Trade::getStringFromState($this->getState()+1));
         }
+        $this->setDv_p_t0($dv_p_t0);
+        $this->setDv_p_tm5($dv_p_tm5);
+        $this->setState(TradeState::FILLED);
     }
     
     
@@ -232,10 +196,10 @@ class Trade
     {
         $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]));
         $trade->setId((int)$result["ID"]);
-        if((int)$result["STATE"] >= TradeState::Open){
+        if((int)$result["STATE"] >= TradeState::OPEN){
             $trade->setOpenTime(new DateTime($result["OPEN_TIME"]));
         }
-        if((int)$result["STATE"] >= TradeState::Close){
+        if((int)$result["STATE"] >= TradeState::CLOSE){
             $trade->setCloseTime(new DateTime($result["CLOSE_TIME"]));
         }
         $trade->setDv_p_tm5((float)$result["DV_P_TM5"]);
@@ -250,19 +214,17 @@ class Trade
     
     static public function getStringFromState($state){
         switch($state){
-            case TradeState::Initialized:
+            case TradeState::INITIALIZED:
                 return "Initialized";
-            case TradeState::Filled:
+            case TradeState::FILLED:
                 return "Market filled";
-            case TradeState::Predicted:
+            case TradeState::PREDICTED:
                 return "Predicted";
-            case TradeState::Open:
+            case TradeState::OPEN:
                 return "Open";
-            case TradeState::Close:
+            case TradeState::CLOSE:
                 return "Close";
         }
     }
-    
-    
 }
 

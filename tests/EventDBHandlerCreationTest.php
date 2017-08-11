@@ -63,6 +63,12 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
+    public function test__getInvalidEventIdShouldThrow(){
+        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $this->expectExceptionMessage("Event does not exists, id:".($identifier+1));
+        $this->eventDBHandler->getEventById($identifier+1);
+    }
+    
     public function test__addingEvent_expectSameValueInDBandEvent(){
         $id = $this->eventDBHandler->addEvent($this->event);
         $this->event->setId($id);
@@ -103,6 +109,11 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $event1 = $this->createRandomDummyEvent();
         $event2 = $this->createRandomDummyEvent();
         assert($this->eventDBHandler->getEventByEventId($event2->getEventId()) == $event2);
+    }
+    
+    public function test__getInvalidEventEventIdShouldThrow(){
+        $this->expectExceptionMessage("Event does not exists, event id:".(50));
+        $this->eventDBHandler->getEventByEventId(50);
     }
     
     public function test__getEventsFromTo(){
