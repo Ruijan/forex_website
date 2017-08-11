@@ -345,7 +345,8 @@ class TcCalendar{
 
 		return $str;
 	}
-    private public function generateCalendarContainerString($paramStr, $div_display, $div_position, 
+	
+    private function generateCalendarContainerString($paramStr, $div_display, $div_position, 
         $div_align, $mout_str, $mover_str)
     {
         $str = "";
@@ -360,7 +361,7 @@ class TcCalendar{
         return $str;
     }
 
-    private public function createCSSAlignement()
+    private function createCSSAlignement()
     {
         $div_align = "";
 
@@ -385,7 +386,7 @@ class TcCalendar{
         return $div_align;
     }
 
-    private public function createParamsArray()
+    private function createParamsArray()
     {
         $params = array();
 		$params[] = "objname=".$this->objname;
@@ -795,7 +796,7 @@ class TcCalendar{
 
 		return true;
 	}
-    private public function isDateAllowed()
+    private function isDateAllowed()
     {
         //check with allow date
 		if($this->time_allow1 && $this->time_allow2){
@@ -809,7 +810,7 @@ class TcCalendar{
 			if($this->mydate->dateAfter($this->time_allow2, $date_str, false)) return false;
 		}}
 
-		private public function isDateInInterval($start_interval, $end_interval, $date_str)
+	private function isDateInInterval($start_interval, $end_interval, $date_str)
     {
         //check if set date is before start_interval
 		if($this->mydate->dateBefore($start_interval, $date_str)){
@@ -825,7 +826,7 @@ class TcCalendar{
 	public function check_json_encode($obj){
 		//try customize to get it work, should replace with better solution in the future
 		if(is_array($obj)){
-			if(public function_exists("json_encode") && false){
+			if(function_exists("json_encode") && false){
 				return json_encode($obj);
 			}else{
 				//only array is assumed for now
@@ -843,7 +844,7 @@ class TcCalendar{
 	public function &check_json_decode($str){
 		//should replace with better solution in the future
 
-		if(public function_exists("json_decode") && false){
+		if(function_exists("json_decode") && false){
 			return json_decode($str);
 		}else{
 			//only array is assume for now
