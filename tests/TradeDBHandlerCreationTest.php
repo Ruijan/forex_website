@@ -40,14 +40,14 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test_addingTrade_expectIncrementInSize(){
-        $trade1 = $this->createRandomDummyTrade();
+        $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
         assert($this->tradeDBHandler->getTableSize() == 2);
         assert($trade2->getId() == 2);
     }
     
     public function test_getTradeByEventID(){
-        $trade1 = $this->createRandomDummyTrade();
+        $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
         assert($this->tradeDBHandler->getTradeByEventId($trade2->getIDDBEvent()) == $trade2);
     }
@@ -72,14 +72,6 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     public function test_tryAddingTradeSecondTime_SizeShouldBeOne(){
         $this->tryCreatingTwoSameDummyTrades();
         assert($this->tradeDBHandler->getTableSize() == 1);
-    }
-    
-    private function createDummyTrade()
-    {
-        $trade = new Trade(60, new DateTime('NOW'));
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $trade->setId($id);
-        return $trade;
     }
     
     private function tryCreatingTwoSameDummyTrades()
@@ -192,7 +184,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $to = 32;
         $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
             " and ".gettype($to));
-        $events = $this->tradeDBHandler->getTradesFromTo($from, $to);
+        $this->tradeDBHandler->getTradesFromTo($from, $to);
     }
     
     public function test__getTradesFromToStateWithBadArguments_ShouldThrow(){
@@ -200,7 +192,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $to = new DateTime("2017-08-05");
         $state = "5";
         $this->expectExceptionMessage("Wrong type for state. Expected int got: ".gettype($state));
-        $events = $this->tradeDBHandler->getTradesFromTo($from, $to, $state);
+        $this->tradeDBHandler->getTradesFromTo($from, $to, $state);
     }
     
     public function test__getTradesFromTo(){

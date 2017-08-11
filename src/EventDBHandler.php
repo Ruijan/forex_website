@@ -13,9 +13,7 @@ class EventDBHandler
                 return true;
             }
         }
-        else {
-            return false;
-        }
+        return false;
     }
     
     public function createTable(){
@@ -64,9 +62,7 @@ class EventDBHandler
         if($this->mysqli->query($query) === FALSE){
             throw new Exception("Event already in table: ". $this->mysqli->error);
         }
-        else{
-            return $this->mysqli->insert_id;
-        }
+        return $this->mysqli->insert_id;
     }
     
     public function tryAddingEvent($event){

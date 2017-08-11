@@ -75,9 +75,7 @@ class TradeDBHandler
         if($this->mysqli->query($query) === FALSE){
             throw new ErrorException("Event already in table: ".$this->mysqli->error);
         }
-        else{
-            return $this->mysqli->insert_id;
-        }
+        return $this->mysqli->insert_id;
     }
     
     public function tryAddingTrade($trade){
@@ -119,7 +117,8 @@ class TradeDBHandler
     public function predictTrade($trade){
         $this->throwIfTableDoesNotExist();
         $query = "UPDATE ".$this->table_name." SET PREDICTION = ".$trade->getPrediction().",
-                    PREDICTION_PROBA = ".$trade->getP_proba().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+                    PREDICTION_PROBA = ".$trade->getP_proba().", STATE=".$trade->getState()." WHERE ID="
+                        .$trade->getId();
         if($this->mysqli->query($query) === FALSE){
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
@@ -128,7 +127,8 @@ class TradeDBHandler
     public function closeTrade($trade){
         $this->throwIfTableDoesNotExist();
         $query = "UPDATE ".$this->table_name." SET CLOSE_TIME = '".$trade->getCloseTime()->format('Y-m-d H:i:s')."',
-                    GAIN=".$trade->getGain().", COMMISSION=".$trade->getCommission().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+                    GAIN=".$trade->getGain().", COMMISSION=".$trade->getCommission().", STATE="
+                        .$trade->getState()." WHERE ID=".$trade->getId();
         if($this->mysqli->query($query) === FALSE){
             throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
@@ -186,7 +186,8 @@ class TradeDBHandler
             $state_suffix = " AND STATE=".$state;
         }
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM ".$this->table_name." WHERE DATEDIFF(CREATION_TIME,'".$fromDate->format('Y-m-d H:i:s').
+        $query = "SELECT * FROM ".$this->table_name." WHERE DATEDIFF(CREATION_TIME,'"
+            .$fromDate->format('Y-m-d H:i:s').
         "') >= 0 AND DATEDIFF(CREATION_TIME,'".$toDate->format('Y-m-d H:i:s').
         "') <= 0".$state_suffix;
         return $query;
@@ -195,7 +196,8 @@ class TradeDBHandler
     private function throwIfWrongArgumentType($fromDate, $toDate, $state)
     {
         if(!is_a($fromDate, 'DateTime') || !is_a($toDate, 'DateTime')){
-            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate)." and ".gettype($toDate));
+            throw new ErrorException("Wrong type for from or to. Expected DateTime got: "
+                .gettype($fromDate)." and ".gettype($toDate));
         }
         if(!is_int($state)){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));

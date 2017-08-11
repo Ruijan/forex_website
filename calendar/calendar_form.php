@@ -1,6 +1,6 @@
 <?php
-require_once('classes/tc_date.php');
-require_once('classes/tc_calendar.php');
+require_once('classes/TcDate.php');
+require_once('classes/TcCalendar.php');
 require_once('calendar_functions.php');
 
 //change the following line to show or hide calendar information
@@ -16,7 +16,7 @@ $timezone = getParameter("tmz");
 if(!$timezone) $timezone = date_default_timezone_get();
 @date_default_timezone_set($timezone);
 
-$cdate = new tc_date();
+$cdate = new TcDate();
 $today = $cdate->getDate();
 
 $sld = getParameter("selected_day");
@@ -55,7 +55,7 @@ $date_pair2 = getParameter("pr2");
 $date_pair_value = getParameter("prv");
 $path = getParameter("pth");
 
-$sp_dates = (isset($_REQUEST["spd"])) ? @tc_calendar::check_json_decode(htmlspecialchars_decode($_REQUEST["spd"], ENT_QUOTES)) : array(array(), array(), array());
+$sp_dates = (isset($_REQUEST["spd"])) ? @TcCalendar::check_json_decode(htmlspecialchars_decode($_REQUEST["spd"], ENT_QUOTES)) : array(array(), array(), array());
 //echo("<br />".htmlspecialchars_decode($_REQUEST["spd"], ENT_QUOTES));
 //print_r($sp_dates);
 
@@ -136,7 +136,7 @@ if (!$show_not_allow) {
 $objname = getParameter("objname");
 $dp = getParameter("dp", "boolean");
 
-$cobj = new tc_calendar("");
+$cobj = new TcCalendar("");
 $cobj->setDate($sld, $slm, $sly);
 $cobj->startDate($startDate);
 $cobj->dsb_days = explode(",", $dsb_txt);

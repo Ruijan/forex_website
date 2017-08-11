@@ -1,6 +1,6 @@
 <?php
   include dirname(__FILE__)."/db_functions.php";
-  require_once('calendar/classes/tc_calendar.php');
+  require_once('calendar/classes/TcCalendar.php');
 
   function createTopHeader(){
     return '<!DOCTYPE html><html lang="en">';
@@ -109,7 +109,7 @@
     return $toptag.$from_calendar.'<br/>'.$to_calendar.$form.$validate.$bottomtag;
   }
   function createCalendar($date1, $date2, $default){
-    $myCalendar = new tc_calendar($date1, true,false);
+    $myCalendar = new TcCalendar($date1, true,false);
     $myCalendar->setIcon("calendar/images/iconCalendar.gif");
     $myCalendar->setDate(date('d', strtotime($default))
             , date('m', strtotime($default))
