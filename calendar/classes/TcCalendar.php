@@ -98,7 +98,7 @@ class TcCalendar{
 	private $theme = "default";
 
 	//calendar constructor
-	function __construct($objname, $date_picker = false, $show_input = true, $timezone = ""){
+	public function __construct($objname, $date_picker = false, $show_input = true, $timezone = ""){
 		$this->objname = $objname;
 		//$this->year_display_from_current = 50;
 		$this->date_picker = $date_picker;
@@ -116,13 +116,13 @@ class TcCalendar{
 	}
 
 	//check for leapyear
-	function is_leapyear($year){
+	public function is_leapyear($year){
     	return ($year % 4 == 0) ?
     		!($year % 100 == 0 && $year % 400 <> 0)	: false;
     }
 
 	//get the total day of each month in year
-    function total_days($month,$year){
+    public function total_days($month,$year){
     	$days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 		if($month > 0 && $year > 0){
 	    	return ($month == 2 && $this->is_leapYear($year)) ? 29 : $days[$month-1];
@@ -130,13 +130,13 @@ class TcCalendar{
     }
 
 	//Deprecate since v1.6
-	function getDayNum($day){
+	public function getDayNum($day){
 		$headers = $this->getDayHeaders();
 		return isset($headers[$day]) ? $headers[$day] : 0;
 	}
 
 	//get the day headers start from sunday till saturday
-	function getDayHeaders(){
+	public function getDayHeaders(){
 		$rtn_hdrs = array();
 		$hdrs = array("0"=>"Su", "1"=>"Mo", "2"=>"Tu", "3"=>"We", "4"=>"Th", "5"=>"Fr", "6"=>"Sa");
 
@@ -153,11 +153,11 @@ class TcCalendar{
 		return $rtn_hdrs;
 	}
 
-	function setIcon($icon){
+	public function setIcon($icon){
 		$this->icon = $icon;
 	}
 
-	function setText($txt){
+	public function setText($txt){
 		$this->txt = $txt;
 	}
 
@@ -165,12 +165,12 @@ class TcCalendar{
 	//input the date format according to php date format
 	// for example: 'd F y' or 'Y-m-d'
 	//-----------------------------------------------------------
-	function setDateFormat($format){
+	public function setDateFormat($format){
 		$this->date_format = $format;
 	}
 
 	//set default selected date
-	function setDate($day, $month, $year){
+	public function setDate($day, $month, $year){
 		//get system timezone before set the date
 		$this->system_timezone = date_default_timezone_get();
 		$this->system_timezone_offset = date('Z');
@@ -185,7 +185,7 @@ class TcCalendar{
 		$this->year = $year;
 	}
 
-	function setDateYMD($date){
+	public function setDateYMD($date){
 		list($year, $month, $day) = explode("-", $date, 3);
 		$this->day = $day;
 		$this->month = $month;
@@ -193,21 +193,21 @@ class TcCalendar{
 	}
 
 	//specified location of the calendar_form.php
-	function setPath($path){
+	public function setPath($path){
 		$last_char = substr($path, strlen($path)-1, strlen($path));
 		if($last_char != "/") $path .= "/";
 		$this->path = $path;
 	}
 
-	function writeScript(){
+	public function writeScript(){
 		$this->processScript();
 	}
 
-	function getScript(){
+	public function getScript(){
 		return $this->processScript(true);
 	}
 
-	function processScript($buffer = false){
+	public function processScript($buffer = false){
 		$str = "";
 
 		//check valid default date
@@ -312,7 +312,7 @@ class TcCalendar{
 		}
 	}
 
-	function writeCalendarContainer(){
+	public function writeCalendarContainer(){
 		$params = $this->createParamsArray();
 
 		$paramStr = (sizeof($params)>0) ? "?".implode("&", $params) : "";
@@ -345,7 +345,7 @@ class TcCalendar{
 
 		return $str;
 	}
-    private function generateCalendarContainerString($paramStr, $div_display, $div_position, 
+    private public function generateCalendarContainerString($paramStr, $div_display, $div_position, 
         $div_align, $mout_str, $mover_str)
     {
         $str = "";
@@ -360,7 +360,7 @@ class TcCalendar{
         return $str;
     }
 
-    private function createCSSAlignement()
+    private public function createCSSAlignement()
     {
         $div_align = "";
 
@@ -385,7 +385,7 @@ class TcCalendar{
         return $div_align;
     }
 
-    private function createParamsArray()
+    private public function createParamsArray()
     {
         $params = array();
 		$params[] = "objname=".$this->objname;
@@ -435,7 +435,7 @@ class TcCalendar{
 
 
 	//write the select box of days
-	function writeDay(){
+	public function writeDay(){
 		$total_days = $this->total_days($this->month, $this->year);
 
 		$str = "";
@@ -455,7 +455,7 @@ class TcCalendar{
 	}
 
 	//write the select box of months
-	function writeMonth(){
+	public function writeMonth(){
 		$str = "";
 		$str .= "<select name=\"".$this->objname."_month\" id=\""
 		    .$this->objname."_month\" onChange=\"javascript:tc_setMonth('"
@@ -475,7 +475,7 @@ class TcCalendar{
 	}
 
 	//write the year textbox
-	function writeYear(){
+	public function writeYear(){
 		$str = "";
 		//echo("<input type=\"textbox\" name=\"".$this->objname."_year\" id=\"".$this->objname."_year\" value=\"$this->year\" maxlength=4 size=5 onBlur=\"javascript:tc_setYear('".$this->objname."', this.value, '$this->path');\" onKeyPress=\"javascript:if(yearEnter(event)){ tc_setYear('".$this->objname."', this.value, '$this->path'); return false; }\"> ");
 		$str .= "<select name=\"".$this->objname."_year\" id=\""
@@ -510,7 +510,7 @@ class TcCalendar{
 		return $str;
 	}
 
-	function eHidden($suffix, $value) {
+	public function eHidden($suffix, $value) {
 		if(trim($value) != ""){
 			if($suffix) $suffix = "_".$suffix;
 			return "<input type=\"hidden\" name=\"".$this->objname.$suffix."\" id=\""
@@ -519,7 +519,7 @@ class TcCalendar{
 	}
 
 	//write hidden components
-	function writeHidden(){
+	public function writeHidden(){
 		$str = "";
 
 		$str .= $this->eHidden('', $this->getDate());
@@ -569,7 +569,7 @@ class TcCalendar{
 	// Deprecated since version 2.9
 	// Auto sizing is applied
 	//---------------------------
-	function setWidth($width){
+	public function setWidth($width){
 		if($width) $this->width = $width;
 	}
 
@@ -578,11 +578,11 @@ class TcCalendar{
 	// Deprecated since version 2.9
 	// Auto sizing is applied
 	//---------------------------
-	function setHeight($height){
+	public function setHeight($height){
 		if($height) $this->height = $height;
 	}
 
-	function setYearInterval($start, $end){
+	public function setYearInterval($start, $end){
 		$this->year_start_input = $start;
 		$this->year_end_input = $end;
 
@@ -598,7 +598,7 @@ class TcCalendar{
 		}
 	}
 
-	function getMonthNames(){
+	public function getMonthNames(){
 		return array("January", "February", "March", "April", "May", "June", "July", "August", 
 		    "September", "October", "November", "December");
 	}
@@ -607,19 +607,19 @@ class TcCalendar{
 	// Deprecated since version 3.61
 	// override by startDate()
 	//-------------------------------
-	function startMonday($flag){
+	public function startMonday($flag){
 		//$this->startMonday = $flag;
 
 		//change it so that it will not cause an error after version 3.61
 		if($flag) $this->startDate = 1;
 	}
 
-	function startDate($num){
+	public function startDate($num){
 		if(is_numeric($num) && $num >= 0 && $num <= 6)
 			$this->startDate = $num;
 	}
 
-	function dateAllow($fromDate = "", $toDate = "", $show_not_allow = true){
+	public function dateAllow($fromDate = "", $toDate = "", $show_not_allow = true){
 		$time_from = $this->mydate->validDate($fromDate) ? $fromDate : null;
 		$time_to = $this->mydate->validDate($toDate) ? $toDate : null;
 
@@ -650,22 +650,22 @@ class TcCalendar{
 		$this->show_not_allow = $show_not_allow;
 	}
 
-	function autoSubmit($auto, $form_name, $target = ""){
+	public function autoSubmit($auto, $form_name, $target = ""){
 		$this->auto_submit = $auto;
 		$this->form_container = $form_name;
 		$this->target_url = $target;
 	}
 
-	function getDate(){
+	public function getDate(){
 		return str_pad($this->year, 4, "0", STR_PAD_LEFT)."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-"
 		    .str_pad($this->day, 2, "0", STR_PAD_LEFT);
 	}
 
-	function showInput($flag){
+	public function showInput($flag){
 		$this->show_input = $flag;
 	}
 
-	function writeDateContainer(){
+	public function writeDateContainer(){
 		if($this->day && $this->month && $this->year){
 			$date = $this->mydate->getDate($this->date_format, $this->year."-".$this->month."-".$this->day);
 		}else $date = "Select Date";
@@ -674,21 +674,21 @@ class TcCalendar{
 	}
 
 	//------------------------------------------------------
-	// This function disable day column as specified value
+	// This public function disable day column as specified value
 	// day values : Sun, Mon, Tue, Wed, Thu, Fri, Sat
 	//------------------------------------------------------
-	function disabledDay($day){
+	public function disabledDay($day){
 		$day = strtolower($day); //make it not case-sensitive
 		if(in_array($day, $this->dsb_days) === false)
 			$this->dsb_days[] = $day;
 	}
 
-	function setAlignment($h_align, $v_align){
+	public function setAlignment($h_align, $v_align){
 		$this->h_align = $h_align;
 		$this->v_align = $v_align;
 	}
 
-	function setDatePair($calendar_name1, $calendar_name2, $pair_value = "0000-00-00 00:00:00"){
+	public function setDatePair($calendar_name1, $calendar_name2, $pair_value = "0000-00-00 00:00:00"){
 		if($calendar_name1 != $this->objname){
 			$this->date_pair1 = $calendar_name1;
 			if($pair_value != "0000-00-00 00:00:00")
@@ -700,7 +700,7 @@ class TcCalendar{
 		}
 	}
 
-	function setSpecificDate($dates, $type=0, $recursive=""){
+	public function setSpecificDate($dates, $type=0, $recursive=""){
 		if(is_array($dates)){
 			$recursive = strtolower($recursive);
 
@@ -728,7 +728,7 @@ class TcCalendar{
 	}
 	
 
-	function checkDefaultDateValid(){
+	public function checkDefaultDateValid(){
 		$date_str = $this->year."-".str_pad($this->month, 2, "0", STR_PAD_LEFT)."-"
 		    .str_pad($this->day, 2, "0", STR_PAD_LEFT);
 		//check if set date is in year interval
@@ -795,7 +795,7 @@ class TcCalendar{
 
 		return true;
 	}
-    private function isDateAllowed()
+    private public function isDateAllowed()
     {
         //check with allow date
 		if($this->time_allow1 && $this->time_allow2){
@@ -809,7 +809,7 @@ class TcCalendar{
 			if($this->mydate->dateAfter($this->time_allow2, $date_str, false)) return false;
 		}}
 
-		private function isDateInInterval($start_interval, $end_interval, $date_str)
+		private public function isDateInInterval($start_interval, $end_interval, $date_str)
     {
         //check if set date is before start_interval
 		if($this->mydate->dateBefore($start_interval, $date_str)){
@@ -822,10 +822,10 @@ class TcCalendar{
 		}}
 
 
-	function check_json_encode($obj){
+	public function check_json_encode($obj){
 		//try customize to get it work, should replace with better solution in the future
 		if(is_array($obj)){
-			if(function_exists("json_encode") && false){
+			if(public function_exists("json_encode") && false){
 				return json_encode($obj);
 			}else{
 				//only array is assumed for now
@@ -840,10 +840,10 @@ class TcCalendar{
 		}else return "";
 	}
 
-	function &check_json_decode($str){
+	public function &check_json_decode($str){
 		//should replace with better solution in the future
 
-		if(function_exists("json_decode") && false){
+		if(public function_exists("json_decode") && false){
 			return json_decode($str);
 		}else{
 			//only array is assume for now
@@ -882,15 +882,15 @@ class TcCalendar{
 		}
 	}
 
-	function setOnChange($value){
+	public function setOnChange($value){
 		$this->tc_onchanged = $value;
 	}
 
-	function showWeeks($flag){
+	public function showWeeks($flag){
 		$this->show_week = $flag;
 	}
 
-	function setAutoHide($auto, $time = ""){
+	public function setAutoHide($auto, $time = ""){
 		$this->auto_hide = ($auto) ? 1 : 0;
 		if($time != "" && $time >= 0){
 			$this->auto_hide_time = $time;
@@ -900,7 +900,7 @@ class TcCalendar{
 	//*****************
 	// Validate the today date of calendar
 	//*****************
-	function validTodayDate(){
+	public function validTodayDate(){
 		$today = $this->mydate->getDate();
 
 		//check if today is year 2038 and later
@@ -925,7 +925,7 @@ class TcCalendar{
 	}
 
 	//Tooltips
-	function setToolTips($dates, $tooltip="", $recursive=""){
+	public function setToolTips($dates, $tooltip="", $recursive=""){
 
 		if(is_array($dates)){
 			$recursive = strtolower($recursive);
@@ -970,18 +970,18 @@ class TcCalendar{
 		}
 	}
 
-	function setTimezone($timeZone){
+	public function setTimezone($timeZone){
 		$this->timezone = $timeZone;
 		@date_default_timezone_set($timeZone);
 		$this->timezone_offset = date('Z');
 		//echo("new timezone: ".$this->timezone);
 	}
 
-	function setTheme($theme){
+	public function setTheme($theme){
 		$this->theme = $theme;
 	}
 
-	function getThemes(){
+	public function getThemes(){
 		$themes = array();
 		$themesDirectory = dir('./css/');
 		while($thname = $themesDirectory->read())
@@ -997,7 +997,7 @@ class TcCalendar{
 		return $themes;
 	}
 
-	function getThemePath($theme){
+	public function getThemePath($theme){
 		$all_themes = $this->getThemes();
 		return isset($all_themes[$theme]) ? $all_themes[$theme] : "";
 	}
