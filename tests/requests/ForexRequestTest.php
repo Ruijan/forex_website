@@ -106,7 +106,8 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         $eventParserMock = $this->getMockBuilder('EventParser')
         ->disableOriginalConstructor()->getMock();
         
-        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, ["currency" => "EUR_USD"]);
+        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, 
+            $eventParserMock, ["currency" => "EUR_USD"]);
         
         assert($this->forexRequest->getParameters()["currency"] == "EUR_USD");
     }

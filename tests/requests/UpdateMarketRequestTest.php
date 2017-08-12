@@ -73,7 +73,7 @@ class UpdateMarketRequestTest extends PHPUnit_Framework_TestCase
             assert(true);
         }
         catch(Exception $e){
-            echo $e->getMessage();
+            throw new ErrorException($e->getMessage());
             assert(false);
         }
     }
@@ -114,7 +114,7 @@ class UpdateMarketRequestTest extends PHPUnit_Framework_TestCase
             assert(true);
         }
         catch(Exception $e){
-            echo $e->getMessage();
+            throw new ErrorException($e->getMessage());
             assert(false);
         }
         
