@@ -1,11 +1,12 @@
 <?php
 use src\requests\UpdateMarketRequest;
-
+$path = str_replace("tests\\requests", "src", __DIR__."/");
+$path = str_replace("tests\requests", "src", $path."/");
 require_once(str_replace("tests", "src", __DIR__."/").'UpdateMarketRequest.php');
-require_once(str_replace("tests\\requests", "src", __DIR__."/").'Trade.php');
-require_once(str_replace("tests\\requests", "src", __DIR__."/").'EventDBHandler.php');
-require_once(str_replace("tests\\requests", "src", __DIR__."/").'EventParser.php');
-require_once(str_replace("tests\\requests", "src", __DIR__."/").'TradeDBHandler.php');
+require_once($path.'Trade.php');
+require_once($path.'EventDBHandler.php');
+require_once($path.'EventParser.php');
+require_once($path.'TradeDBHandler.php');
 
 
 /**
