@@ -56,9 +56,15 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         assert($this->tradeDBHandler->table_name == "trades_".$this->currency);
     }
     
-    public function test_setCurrencyWithWronTypeShouldThrow(){
+    public function test_setCurrencyWithWrongTypeShouldThrow(){
         $this->expectExceptionMessage("Wrong type for currency. Expected string got: ".gettype(0));
         $this->tradeDBHandler->setCurrency(0);
+    }
+    
+    public function test_setCurrencySuccess(){
+        $this->tradeDBHandler->setCurrency("EUR_USD");
+        assert($this->tradeDBHandler->getCurrency() == "EUR_USD");
+        assert($this->tradeDBHandler->getTableName() == "trades_EUR_USD");
     }
     
     public function test__createTable(){

@@ -29,6 +29,9 @@ class TradeDBHandler
         $this->table_name = "trades_".$currency;
     }
     
+    public function getCurrency(){return $this->currency;}
+    public function getTableName(){return $this->table_name;}
+    
     public function doesTableExists(){
         if ($result = $this->mysqli->query("SHOW TABLES LIKE '".$this->table_name."'")) {
             if($result->num_rows >= 1) {
