@@ -19,6 +19,16 @@ class TradeDBHandler
         return $this->mysqli != null and $this->currency != "";
     }
     
+    public function setCurrency($currency)
+    {
+        if(!is_string($currency)){
+            throw new ErrorException("Wrong type for currency. Expected string got: "
+                .gettype($currency));
+        }
+        $this->currency = $currency;
+        $this->table_name = "trades_".$currency;
+    }
+    
     public function doesTableExists(){
         if ($result = $this->mysqli->query("SHOW TABLES LIKE '".$this->table_name."'")) {
             if($result->num_rows >= 1) {

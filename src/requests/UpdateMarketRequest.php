@@ -1,7 +1,6 @@
 <?php
 namespace src\requests;
 
-require_once(str_replace("requests", "", __DIR__).'Trade.php');
 require_once('ForexRequest.php');
 
 use DateTime;
@@ -10,23 +9,23 @@ use ErrorException;
 class UpdateMarketRequest extends ForexRequest
 {
     
-    
     public function __construct()
     {}
     
     public function validateRequest(){
-        if(!isset($_POST["dv_p_tm5"]) or !isset($_POST["dv_p_t0"]) or !isset($_POST["currency"])){
+        if(!isset($this->parameters["dv_p_tm5"]) or !isset($this->parameters["dv_p_t0"]) or
+            !isset($this->parameters["currency"])){
             throw new ErrorException("Ill-formed request: missing parameters");           
         }
-        if(!$this->isDecimal($_POST["dv_p_tm5"]) || !$this->isDecimal($_POST["dv_p_t0"]) ||
-            !$this->isValidCurrency()){
+        if(!$this->isDecimal($this->parameters["dv_p_tm5"]) || !$this->isDecimal($this->parameters["dv_p_t0"]) ||
+            !$this->isValidCurrency($this->parameters["currency"])){
             throw new ErrorException("Invalid Request: bad parameters type");
         }
     }
     
-    private function isValidCurrency()
+    private function isValidCurrency($currency)
     {
-        return $_POST["currency"] == "EUR_USD";
+        return $currency == "EUR_USD";
     }
 
     
@@ -38,9 +37,10 @@ class UpdateMarketRequest extends ForexRequest
     public function execute(){
         $this->validateRequest();
         $now_utc = DateTime::createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
+        $this->tradeDBHandler->setCurrency($this->parameters["currency"]);
         $trades = $this->tradeDBHandler->getTradesFromTo($now_utc, $now_utc, \TradeState::INITIALIZED);
         foreach ($trades as $trade){
-            $trade->fillMarketInfo($_POST["dv_p_tm5"], $_POST["dv_p_t0"]);
+            $trade->fillMarketInfo($this->parameters["dv_p_tm5"], $this->parameters["dv_p_t0"]);
             $this->tradeDBHandler->fillTradeWithMarketInfo($trade);
         }
     }

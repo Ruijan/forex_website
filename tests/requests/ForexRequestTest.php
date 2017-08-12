@@ -47,7 +47,7 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
     }
 
     public function test__setWrongTypeEventDBHandlerShouldThrow(){
-        $tradeDBHandlerObserver = $this->getMockBuilder('TradeDBHandler')
+        $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventParser')
         ->disableOriginalConstructor()->getMock();
@@ -56,12 +56,11 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         
         $this->expectExceptionMessage("Wrong type for eventDBHandler. Expected EventDBHandler got: ".
             gettype($eventDBHandlerMock));
-        $this->forexRequest = new ForexRequest();
-        $this->forexRequest->init($tradeDBHandlerObserver, $eventDBHandlerMock, $eventParserMock);
+        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, []);
     }
     
     public function test__setWrongTypeEventParserShouldThrow(){
-        $tradeDBHandlerObserver = $this->getMockBuilder('TradeDBHandler')
+        $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
         ->disableOriginalConstructor()->getMock();
@@ -70,12 +69,11 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         
         $this->expectExceptionMessage("Wrong type for eventParser. Expected EventParser got: ".
             gettype($eventParserMock));
-        $this->forexRequest = new ForexRequest();
-        $this->forexRequest->init($tradeDBHandlerObserver, $eventDBHandlerMock, $eventParserMock);
+        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, []);
     }
     
-    public function test__setWrongTypeTradeParserShouldThrow(){
-        $tradeDBHandlerObserver = $this->getMockBuilder('EventDBHandler')
+    public function test__setWrongTypeTradeDBHandlerShouldThrow(){
+        $tradeDBHandlerMock = $this->getMockBuilder('EventDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
         ->disableOriginalConstructor()->getMock();
@@ -83,9 +81,34 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         ->disableOriginalConstructor()->getMock();
         
         $this->expectExceptionMessage("Wrong type for tradeDBHandler. Expected TradeDBHandler got: ".
-            gettype($tradeDBHandlerObserver));
-        $this->forexRequest = new ForexRequest();
-        $this->forexRequest->init($tradeDBHandlerObserver, $eventDBHandlerMock, $eventParserMock);
+            gettype($tradeDBHandlerMock));
+        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, []);
+    }
+    
+    public function test__setWrongTypeParametersShouldThrow(){
+        $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
+        ->disableOriginalConstructor()->getMock();
+        $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
+        ->disableOriginalConstructor()->getMock();
+        $eventParserMock = $this->getMockBuilder('EventParser')
+        ->disableOriginalConstructor()->getMock();
+        
+        $this->expectExceptionMessage("Wrong type for parameters. Expected Array got: ".
+            gettype(""));
+        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, "");
+    }
+    
+    public function test__initSuccessfully(){
+        $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
+        ->disableOriginalConstructor()->getMock();
+        $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
+        ->disableOriginalConstructor()->getMock();
+        $eventParserMock = $this->getMockBuilder('EventParser')
+        ->disableOriginalConstructor()->getMock();
+        
+        $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, ["currency" => "EUR_USD"]);
+        
+        assert($this->forexRequest->getParameters()["currency"] == "EUR_USD");
     }
 }
 

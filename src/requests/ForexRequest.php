@@ -8,6 +8,7 @@ class ForexRequest
     protected $eventDBHandler;
     protected $eventParser;
     protected $tradeDBHandler;
+    protected $parameters;
     
     public function setEventDBHandler($eventDBHandler){
         if(!is_a($eventDBHandler, 'EventDBHandler')){
@@ -33,6 +34,16 @@ class ForexRequest
         $this->tradeDBHandler = $tradeDBHandler;
     }
     
+    public function setParameters($parameters){
+        if(!is_array($parameters)){
+            throw new ErrorException("Wrong type for parameters. Expected Array got: ".
+                gettype($parameters));
+        }
+        $this->parameters = $parameters;
+    }
+    
+    public function getParameters(){return $this->parameters;}
+    
     public function validateRequest(){
         
     }
@@ -41,10 +52,11 @@ class ForexRequest
         
     }
     
-    public function init($tradeDBHandler, $eventDBHandler, $eventParser){
+    public function init($tradeDBHandler, $eventDBHandler, $eventParser, $parameters){
         $this->setEventDBHandler($eventDBHandler);
         $this->setEventParser($eventParser);
         $this->setTradeDBHandler($tradeDBHandler);
+        $this->setParameters($parameters);
     }
 }
 
