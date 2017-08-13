@@ -10,8 +10,8 @@ function connect_database(){
     //$mysqli = mysqli_connect("pixelnos.com", "pixelnos_forex", "18061990", "pixelnos_forex");
     //$mysqli = mysqli_connect("37.187.143.44", "pixelnos_admin", "Potter321!", "pixelnos_mvd");
     if (!$mysqli) {
-        echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-        throw new Exception("Error: Unable to connect to MySQL." . PHP_EOL);
+        throw new Exception("Debugging errno: " . mysqli_connect_errno() . PHP_EOL."\n".
+            "Error: Unable to connect to MySQL." . PHP_EOL);
     }
     return $mysqli;
 }

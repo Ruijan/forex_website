@@ -165,5 +165,11 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             assert(false);
         }
     }
+    
+    public function testExecuteBadInitialization(){
+        $this->expectExceptionMessage("Error in the Initialization");
+        $this->requestHandler->execute();
+        
+    }
 }
 
