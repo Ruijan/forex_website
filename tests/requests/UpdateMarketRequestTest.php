@@ -2,11 +2,16 @@
 use src\requests\UpdateMarketRequest;
 $path = str_replace("tests\\requests", "src", __DIR__."/");
 $path = str_replace("tests/requests", "src", $path."/");
+
 require_once(str_replace("tests", "src", __DIR__."/").'UpdateMarketRequest.php');
 require_once($path.'Trade.php');
 require_once($path.'EventDBHandler.php');
 require_once($path.'EventParser.php');
 require_once($path.'TradeDBHandler.php');
+
+$pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
+$pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");
+require_once($pathToVendor.'/autoload.php');
 
 
 /**
