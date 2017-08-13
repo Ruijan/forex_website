@@ -10,6 +10,7 @@ require_once($path.'EventParser.php');
 require_once($path.'TradeDBHandler.php');
 
 $pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
+$pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");
 require_once($pathToVendor.'/autoload.php');
 
 

@@ -10,6 +10,7 @@ require_once($path.'TradeDBHandler.php');
 require_once($path.'Event.php');
 
 $pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
+$pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");
 require_once($pathToVendor.'/autoload.php');
 
 use src\requests\CollectEventsRequest;
