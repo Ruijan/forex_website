@@ -25,11 +25,7 @@ class EventParser
     
     public function retrieveTableOfEvents(){
         $dom = new DOMDocument('1.0');
-        $url = "https://sslecal2.forexprostools.com?columns=exc_flags,exc_currency,".
-        "exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,".
-        "timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5".
-        "&calType=day&timeZone=55&lang=1";
-        @$dom->loadHTMLFile($url);
+        @$dom->loadHTMLFile($this->link);
         $this->table = $dom;
     }
     

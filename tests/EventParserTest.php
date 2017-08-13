@@ -57,14 +57,30 @@ class EventParserTest extends PHPUnit_Framework_TestCase
         
         assert($this->eventParser->getLink() == $this->link, "Links should be equal");
     }
+    
+    public function testSetLinkWithWrongTypeShouldThrow(){
+        $link = 65;
+        $this->expectExceptionMessage("Wrong type for link. Expected string got: ".gettype($link));
+        $this->eventParser->setLink($link);
+    }
 
     public function test__retrieveTableOfEvents()
     {
+        $link = "https://sslecal2.forexprostools.com?columns=exc_flags,exc_currency,".
+            "exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,".
+            "timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5".
+            "&calType=day&timeZone=55&lang=1";
+        $this->eventParser->setLink($link);
         $this->eventParser->retrieveTableOfEvents();
         assert(!is_null($this->eventParser->getTable()->getElementByID('ecEventsTable')));
     }
     
     public function test__createEventsFromTable(){
+        $link = "https://sslecal2.forexprostools.com?columns=exc_flags,exc_currency,".
+            "exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,".
+            "timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5".
+            "&calType=day&timeZone=55&lang=1";
+        $this->eventParser->setLink($link);
         $this->eventParser->retrieveTableOfEvents();
         $this->eventParser->createEventsFromTable();
         $events = $this->eventParser->getEvents();
