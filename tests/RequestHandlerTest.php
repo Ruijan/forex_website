@@ -110,8 +110,6 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     public function testSettingRequestsArrayWithWrongSizeShouldThrow(){
         $marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
         ->disableOriginalConstructor()->getMock();
-        $eventsRequestMock = $this->getMockBuilder('CollectEventsRequest')
-        ->disableOriginalConstructor()->getMock();
         $this->expectExceptionMessage("Wrong number of request handlers. Got 1 expected 2");
         $this->requestHandler->setRequestHandlers([$marketRequestMock]);
     }

@@ -30,7 +30,6 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
         
-        // TODO Auto-generated CollectEventsRequestTest::setUp()
         $this->eventParserMock = $this->getMockBuilder('EventParser')
         ->disableOriginalConstructor()->getMock();
         $this->eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
@@ -44,7 +43,6 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        // TODO Auto-generated CollectEventsRequestTest::tearDown()
         $this->collectEvents = null;
         
         parent::tearDown();
@@ -52,7 +50,6 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        // TODO Auto-generated constructor
     }
 
     public function test__Execute()
