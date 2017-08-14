@@ -68,7 +68,7 @@ class UpdateMarketRequestTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated constructor
     }
     
-    public function test__validateValidRequest(){
+    public function testValidateValidRequest(){
         try{
             $parameters = ["dv_p_tm5" => 0.0050, "dv_p_t0" => 0.0100, "currency" => "EUR_USD"];
             
@@ -83,14 +83,14 @@ class UpdateMarketRequestTest extends PHPUnit_Framework_TestCase
         }
     }
     
-    public function test__validateEmptyRequestShouldThrow(){
+    public function testValidateEmptyRequestShouldThrow(){
         $this->expectExceptionMessage("Ill-formed request: missing parameters");
         $this->updateMarketRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, []);
         $this->updateMarketRequest->validateRequest();
     }
     
-    public function test__executeWithBadRequestShouldThrow(){
+    public function testExecuteWithBadRequestShouldThrow(){
         $parameters = ["dv_p_tm5" => "0.0050", "dv_p_t0" => "0.0100", "currency" => "EUR_USD"];
         $this->expectExceptionMessage("Invalid Request: bad parameters type");
         $this->updateMarketRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
@@ -98,7 +98,7 @@ class UpdateMarketRequestTest extends PHPUnit_Framework_TestCase
         $this->updateMarketRequest->execute();
     }
     
-    public function test__executeWithGoodRequestSuccess(){
+    public function testExecuteWithGoodRequestSuccess(){
         try{
             $this->tradeDBHandlerMock->expects($this->once())
             ->method('getTradesFromTo')

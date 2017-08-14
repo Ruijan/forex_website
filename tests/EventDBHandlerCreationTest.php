@@ -51,15 +51,15 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__addingEvent_expectIncrementInSize(){
-        $id = $this->eventDBHandler->addEvent($this->event);
+        $identifier = $this->eventDBHandler->addEvent($this->event);
         assert($this->eventDBHandler->getTableSize() == 1);
-        assert($id != 2);
-        assert($id == 1);
+        assert($identifier != 2);
+        assert($identifier == 1);
     }
     
     public function test__removingEvent_expectDecrementationInSize(){
-        $id = $this->eventDBHandler->addEvent($this->event);
-        $this->eventDBHandler->removeEventById($id);
+        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $this->eventDBHandler->removeEventById($identifier);
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
@@ -70,9 +70,9 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__addingEvent_expectSameValueInDBandEvent(){
-        $id = $this->eventDBHandler->addEvent($this->event);
-        $this->event->setId($id);
-        $db_event = $this->eventDBHandler->getEventById($id);
+        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $this->event->setId($identifier);
+        $db_event = $this->eventDBHandler->getEventById($identifier);
         assert($db_event->getEventId() == $this->event->getEventId());
         assert($db_event->getNewsId() == $this->event->getNewsId());
         assert($db_event->getAnnouncedTime() == $this->event->getAnnouncedTime());
@@ -87,11 +87,11 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__updateEvent_expectSameValueInDBandEvent(){
-        $id = $this->eventDBHandler->addEvent($this->event);
-        $this->event->setId($id);
+        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $this->event->setId($identifier);
         $this->event->update(2.5, (new DateTime("NOW"))->add(new DateInterval("PT5M")));
         $this->eventDBHandler->updateEvent($this->event);
-        $db_event = $this->eventDBHandler->getEventById($id);
+        $db_event = $this->eventDBHandler->getEventById($identifier);
         assert($db_event->getRealTime() == $this->event->getRealTime(), "Real times should be equal: ".
             $this->event->getRealTime()->format("Y-m-d H:i:s"). " and ".
             $db_event->getRealTime()->format("Y-m-d H:i:s"));
@@ -117,13 +117,13 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getEventsFromTo(){
-        $from = new DateTime("2017-08-03");
-        $to = new DateTime("2017-08-05");
+        $fromDate = new DateTime("2017-08-03");
+        $toDate = new DateTime("2017-08-05");
         
         $all_events = $this->generateDummyEvents();
         $events_to_get = [$all_events[0], $all_events[1], $all_events[4]];
         $this->addListOfEvents($all_events);
-        $events = $this->eventDBHandler->getEventsFromTo($from, $to);
+        $events = $this->eventDBHandler->getEventsFromTo($fromDate, $toDate);
         
         $all_here = $this->areListOfEventsEquals($events_to_get, $events);
         assert(sizeof($events) == sizeof($events_to_get),
@@ -132,14 +132,14 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getEventsFromToState(){
-        $from = new DateTime("2017-08-03");
-        $to = new DateTime("2017-08-05");
+        $fromDate = new DateTime("2017-08-03");
+        $toDate = new DateTime("2017-08-05");
         $state = EventState::UPDATED;
         
         $all_events = $this->generateEventsWithDifferentStates();
         $events_to_get = [$all_events[0], $all_events[3]];
         $this->addListOfEvents($all_events);
-        $events = $this->eventDBHandler->getEventsFromTo($from, $to, $state);
+        $events = $this->eventDBHandler->getEventsFromTo($fromDate, $toDate, $state);
         
         $all_here = $this->areListOfEventsEquals($events_to_get, $events);
         assert(sizeof($events) == sizeof($events_to_get),
@@ -148,19 +148,19 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getEventsFromToWithBadArguments_ShouldThrow(){
-        $from = "coucou";
-        $to = 32;
-        $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
-            " and ".gettype($to));
-        $this->eventDBHandler->getEventsFromTo($from, $to);
+        $fromDate = "coucou";
+        $toDate = 32;
+        $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate).
+            " and ".gettype($toDate));
+        $this->eventDBHandler->getEventsFromTo($fromDate, $toDate);
     }
     
     public function test__getEventsFromToStateWithBadArguments_ShouldThrow(){
-        $from = new DateTime("2017-08-03");
-        $to = new DateTime("2017-08-05");
+        $fromDate = new DateTime("2017-08-03");
+        $toDate = new DateTime("2017-08-05");
         $state = "5";
         $this->expectExceptionMessage("Wrong type for state. Expected int got: ".gettype($state));
-        $this->eventDBHandler->getEventsFromTo($from, $to, $state);
+        $this->eventDBHandler->getEventsFromTo($fromDate, $toDate, $state);
     }
     
     private function areListOfEventsEquals($events_to_get, $events)

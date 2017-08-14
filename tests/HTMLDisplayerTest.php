@@ -56,7 +56,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__simpleDisplayTrade(){
-        $string_display = "1;555;2017-08-04 20:00:00;2017-08-04 20:05:00;2017-08-04 21:00:00;0.00050;-0.00010;1;0.75;0.56;0.12;4";
+        $string_display = $this->createSimpleTradeString();
         $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"));
         $trade->setId(1);
         $trade->fillMarketInfo(0.00050, -0.00010);
@@ -66,6 +66,18 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
         $displayed = $this->htmlDisplayer->displayTrade($trade);
         assert($displayed == $string_display, "Wrong string");
     }
+    private function createSimpleTradeString()
+    {
+        $idsStr = "1;555;";
+        $dates = "2017-08-04 20:00:00;2017-08-04 20:05:00;2017-08-04 21:00:00;";
+        $marketInfos = "0.00050;-0.00010;";
+        $prediction = "1;0.75;";
+        $gain = "0.56;0.12;";
+        $state = "4";
+        $string_display = $idsStr.$dates.$marketInfos.$prediction.$gain.$state;
+        return $string_display;
+    }
+
     
     public function test__tableDisplayTrade(){
         $this->htmlDisplayer->setDisplayMode(DisplayMode::TABLE);

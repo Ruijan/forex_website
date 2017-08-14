@@ -10,6 +10,10 @@ require_once($path.'EventParser.php');
 require_once($path.'TradeDBHandler.php');
 require_once($path.'Trade.php');
 
+$pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
+$pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");
+require_once($pathToVendor.'/autoload.php');
+
 class PredictTradeRequestTest extends PHPUnit_Framework_TestCase
 {
 
