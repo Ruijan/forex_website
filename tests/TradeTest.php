@@ -52,12 +52,14 @@ class TradeTest extends PHPUnit_Framework_TestCase
     }
     
     public function test_setDVPTM5WithWrongArgument_expectError(){
-        $this->expectExceptionMessage("Wrong type for dv_p_tm5. Expected float or double got: ".gettype("string"));
+        $this->expectExceptionMessage("Wrong type for dv_p_tm5. Expected float or double got: "
+            .gettype("string"));
         $this->trade->setDv_p_tm5("string");
     }
     
     public function test_setDVPT0WithWrongArgument_expectError(){
-        $this->expectExceptionMessage("Wrong type for dv_p_t0. Expected float or double got: ".gettype("string"));
+        $this->expectExceptionMessage("Wrong type for dv_p_t0. Expected float or double got: "
+            .gettype("string"));
         $this->trade->setDv_p_t0("string");
     }
     
@@ -72,7 +74,8 @@ class TradeTest extends PHPUnit_Framework_TestCase
     }
     
     public function test_setPredictionProbaWithWrongArgument_expectError(){
-        $this->expectExceptionMessage("Wrong type for p_proba. Expected float or double got: ".gettype("0.5"));
+        $this->expectExceptionMessage("Wrong type for p_proba. Expected float or double got: "
+            .gettype("0.5"));
         $this->trade->setP_proba("0.5");
     }
     
@@ -82,13 +85,15 @@ class TradeTest extends PHPUnit_Framework_TestCase
     }
     
     public function test_setGainWithWrongArgument_expectError(){
-        $this->expectExceptionMessage("Wrong type for gain. Expected float or double or int got: ".gettype("0.5"));
+        $this->expectExceptionMessage("Wrong type for gain. Expected float or double or int got: "
+            .gettype("0.5"));
         $this->trade->setGain("0.5");
     }
     
     public function test_setCommissionWithWrongArgument_expectError(){
         
-        $this->expectExceptionMessage("Wrong type for commission. Expected float or double or int got: ".gettype("0.5"));
+        $this->expectExceptionMessage("Wrong type for commission. Expected float or double or int got: "
+            .gettype("0.5"));
         $this->trade->setCommission("0.5");
     }
     
@@ -120,8 +125,8 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $close_time = new DateTime('NOW');
         
         $this->expectExceptionMessage("Cannot switch to close state. Actual state is : ".
-            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
-            Trade::getStringFromState($this->trade->getState()+1));
+            $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
+            $this->trade->getStringFromState($this->trade->getState()+1));
         
         $this->trade->close($gain, $commission, $close_time);
     }
@@ -141,8 +146,8 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $open_time = new DateTime('NOW');
         
         $this->expectExceptionMessage("Cannot switch to open state. Actual state is : ".
-            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
-            Trade::getStringFromState($this->trade->getState()+1));
+            $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
+            $this->trade->getStringFromState($this->trade->getState()+1));
         
         $this->trade->open($open_time);
     }
@@ -162,8 +167,8 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $p_proba = 0.76;
         
         $this->expectExceptionMessage("Cannot switch to predicted state. Actual state is : ".
-            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
-            Trade::getStringFromState($this->trade->getState()+1));
+            $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
+            $this->trade->getStringFromState($this->trade->getState()+1));
         
         $this->trade->predict($prediction, $p_proba);
     }
@@ -185,30 +190,30 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
         $this->trade->predict($prediction, $p_proba);
         $this->expectExceptionMessage("Cannot switch to initialized state. Actual state is : ".
-            Trade::getStringFromState($this->trade->getState()).". Next expected state is ".
-            Trade::getStringFromState($this->trade->getState()+1));
+            $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
+            $this->trade->getStringFromState($this->trade->getState()+1));
         
         $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
     }
     
     public function test__getStringFromTradeInitializedState(){
-        assert(Trade::getStringFromState(TradeState::INITIALIZED) == "Initialized");
+        assert($this->trade->getStringFromState(TradeState::INITIALIZED) == "Initialized");
     }
     
     public function test__getStringFromTradeFilledState(){
-        assert(Trade::getStringFromState(TradeState::FILLED) == "Market filled");
+        assert($this->trade->getStringFromState(TradeState::FILLED) == "Market filled");
     }
     
     public function test__getStringFromTradePredictedState(){
-        assert(Trade::getStringFromState(TradeState::PREDICTED) == "Predicted");
+        assert($this->trade->getStringFromState(TradeState::PREDICTED) == "Predicted");
     }
     
     public function test__getStringFromTradeOpenState(){
-        assert(Trade::getStringFromState(TradeState::OPEN) == "Open");
+        assert($this->trade->getStringFromState(TradeState::OPEN) == "Open");
     }
     
     public function test__getStringFromTradeCloseState(){
-        assert(Trade::getStringFromState(TradeState::CLOSE) == "Close");
+        assert($this->trade->getStringFromState(TradeState::CLOSE) == "Close");
     }
 }
 

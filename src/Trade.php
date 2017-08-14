@@ -150,8 +150,8 @@ class Trade
     public function close($gain, $commission, $close_time){
         if($this->state != TradeState::OPEN){
             throw new ErrorException("Cannot switch to close state. Actual state is : ".
-                Trade::getStringFromState($this->getState()).". Next expected state is ".
-                Trade::getStringFromState($this->getState()+1));
+                $this->getStringFromState($this->getState()).". Next expected state is ".
+                $this->getStringFromState($this->getState()+1));
         }
         $this->setGain($gain);
         $this->setCommission($commission);
@@ -162,8 +162,8 @@ class Trade
     public function open($open_time){
         if($this->state != TradeState::PREDICTED){
             throw new ErrorException("Cannot switch to open state. Actual state is : ".
-                Trade::getStringFromState($this->getState()).". Next expected state is ".
-                Trade::getStringFromState($this->getState()+1));
+                $this->getStringFromState($this->getState()).". Next expected state is ".
+                $this->getStringFromState($this->getState()+1));
         }
         $this->setOpenTime($open_time);
         $this->setState(TradeState::OPEN);
@@ -172,8 +172,8 @@ class Trade
     public function predict($prediction, $p_predict){
         if($this->state != TradeState::FILLED){
             throw new ErrorException("Cannot switch to predicted state. Actual state is : ".
-                Trade::getStringFromState($this->getState()).". Next expected state is ".
-                Trade::getStringFromState($this->getState()+1));
+                $this->getStringFromState($this->getState()).". Next expected state is ".
+                $this->getStringFromState($this->getState()+1));
         }
         $this->setPrediction($prediction);
         $this->setP_proba($p_predict);
@@ -184,8 +184,8 @@ class Trade
     public function fillMarketInfo($dv_p_tm5, $dv_p_t0){
         if($this->state != TradeState::INITIALIZED){
             throw new ErrorException("Cannot switch to initialized state. Actual state is : ".
-                Trade::getStringFromState($this->getState()).". Next expected state is ".
-                Trade::getStringFromState($this->getState()+1));
+                $this->getStringFromState($this->getState()).". Next expected state is ".
+                $this->getStringFromState($this->getState()+1));
         }
         $this->setDv_p_t0($dv_p_t0);
         $this->setDv_p_tm5($dv_p_tm5);
@@ -213,7 +213,7 @@ class Trade
         return $trade;
     }
     
-    static public function getStringFromState($state){
+    public function getStringFromState($state){
         switch($state){
             case TradeState::INITIALIZED:
                 return "Initialized";

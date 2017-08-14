@@ -32,7 +32,8 @@ class SimpleHTMLDisplayer
             $this->displayMode = $displayMode;
         }
         else{
-            throw new ErrorException("Wrong type for displayMode. Expected int got: ".gettype($displayMode));
+            throw new ErrorException("Wrong type for displayMode. Expected int got: "
+                .gettype($displayMode));
         }
     }
     
@@ -47,10 +48,17 @@ class SimpleHTMLDisplayer
     
     private function simpleDisplayTrade($trade)
     {
-        $trade_string = $trade->getId().";".$trade->getIDDBEvent().";".$trade->getCreationTime()->format('Y-m-d H:i:s').
-        ";".$trade->getOpenTime()->format('Y-m-d H:i:s').";".$trade->getCloseTime()->format('Y-m-d H:i:s').
-        ";".sprintf("%01.5f", $trade->getDv_p_tm5()).";".sprintf("%01.5f", $trade->getDv_p_t0()).";".$trade->getPrediction().
-        ";".$trade->getP_proba().";".$trade->getGain().";".$trade->getCommission().";".$trade->getState();
+        $trade_string = $trade->getId().
+        ";".$trade->getIDDBEvent().
+        ";".$trade->getCreationTime()->format('Y-m-d H:i:s').
+        ";".$trade->getOpenTime()->format('Y-m-d H:i:s').
+        ";".$trade->getCloseTime()->format('Y-m-d H:i:s').
+        ";".sprintf("%01.5f", $trade->getDv_p_tm5()).
+        ";".sprintf("%01.5f", $trade->getDv_p_t0()).
+        ";".$trade->getPrediction().
+        ";".$trade->getP_proba().
+        ";".$trade->getGain().
+        ";".$trade->getCommission().";".$trade->getState();
         return $trade_string;
     }
     
@@ -67,7 +75,7 @@ class SimpleHTMLDisplayer
         "</td><td class='p_prediction'>".$trade->getP_proba().
         "</td><td class='gain'>".$trade->getGain().
         "</td><td class='commission'>".$trade->getCommission().
-        "</td><td class='state'>".Trade::getStringFromState($trade->getState())."</td>";
+        "</td><td class='state'>".$trade->getStringFromState($trade->getState())."</td>";
         return $trade_string;
     }
 
@@ -96,9 +104,15 @@ class SimpleHTMLDisplayer
     
     private function simpleDisplayEvent($event)
     {
-        $event_string = $event->getId().";".$event->getEventId().";".$event->getNewsId().
-        ";".$event->getAnnouncedTime()->format('Y-m-d H:i:s').";".$event->getRealTime()->format('Y-m-d H:i:s').
-        ";".$event->getActual().";".$event->getPrevious().";".$event->getNextEvent().";".$event->getState();
+        $event_string = $event->getId().
+        ";".$event->getEventId().
+        ";".$event->getNewsId().
+        ";".$event->getAnnouncedTime()->format('Y-m-d H:i:s').
+        ";".$event->getRealTime()->format('Y-m-d H:i:s').
+        ";".$event->getActual().
+        ";".$event->getPrevious().
+        ";".$event->getNextEvent().
+        ";".$event->getState();
         return $event_string;
     }
 

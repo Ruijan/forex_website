@@ -180,29 +180,29 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getTradesFromToWithBadArguments_ShouldThrow(){
-        $from = "coucou";
-        $to = 32;
-        $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($from).
-            " and ".gettype($to));
-        $this->tradeDBHandler->getTradesFromTo($from, $to);
+        $fromDate = "coucou";
+        $toDate = 32;
+        $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate).
+            " and ".gettype($toDate));
+        $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate);
     }
     
     public function test__getTradesFromToStateWithBadArguments_ShouldThrow(){
-        $from = new DateTime("2017-08-03");
-        $to = new DateTime("2017-08-05");
+        $fromDate = new DateTime("2017-08-03");
+        $toDate = new DateTime("2017-08-05");
         $state = "5";
         $this->expectExceptionMessage("Wrong type for state. Expected int got: ".gettype($state));
-        $this->tradeDBHandler->getTradesFromTo($from, $to, $state);
+        $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate, $state);
     }
     
     public function test__getTradesFromTo(){
-        $from = new DateTime("2017-08-03");
-        $to = new DateTime("2017-08-05");
+        $fromDate = new DateTime("2017-08-03");
+        $toDate = new DateTime("2017-08-05");
         
         $all_trades = $this->generateDummyTrades();
         $trades_to_get = [$all_trades[0], $all_trades[1], $all_trades[2]];
         $this->addListOfTrades($all_trades);
-        $trades = $this->tradeDBHandler->getTradesFromTo($from, $to);
+        $trades = $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate);
         
         $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
         assert(sizeof($trades) == sizeof($trades_to_get),
@@ -211,8 +211,8 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     }
     
     public function test__getTradesFromToState(){
-        $from = new DateTime("2017-08-03");
-        $to = new DateTime("2017-08-06");
+        $fromDate = new DateTime("2017-08-03");
+        $toDate = new DateTime("2017-08-06");
         $state = TradeState::OPEN;
         
         $all_trades = $this->generateDummyTrades();
@@ -224,7 +224,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $this->tradeDBHandler->fillTradeWithMarketInfo($all_trades[2]);
         $this->tradeDBHandler->predictTrade($all_trades[2]);
         $this->tradeDBHandler->openTrade($all_trades[2]);
-        $trades = $this->tradeDBHandler->getTradesFromTo($from, $to, $state);
+        $trades = $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate, $state);
         $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
         assert(sizeof($trades) == sizeof($trades_to_get),
             "Different number of trades expected. Expected ".sizeof($trades_to_get)." got ".sizeof($trades));
