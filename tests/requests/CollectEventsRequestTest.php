@@ -52,7 +52,7 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
     {
     }
 
-    public function test__Execute()
+    public function testExecuteNoEventInDB()
     {
         try{
             $this->collectEvents->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
@@ -80,7 +80,57 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
             throw new ErrorException($e->getMessage());
             assert(false);
         }
-        
+    }
+    
+    public function testExecuteSuccess(){
+        try{
+            $eventMock = $this->getMockBuilder('Event')
+            ->disableOriginalConstructor()->getMock();
+            $anId = 25;
+            
+            $this->collectEvents->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+                $this->eventParserMock, []);
+            $this->eventParserMock->expects($this->once())
+            ->method('retrieveTableOfEvents')
+            ->willReturn($this->returnArgument(0));
+            $this->eventParserMock->expects($this->once())
+            ->method('createEventsFromTable')
+            ->willReturn($this->returnArgument(0));
+            $this->eventParserMock->expects($this->once())
+            ->method('getEvents')
+            ->willReturn([$this->eventMock]);
+            $this->eventDBHandlerMock->expects($this->once())
+            ->method('getEventsFromTo')
+            ->willReturn([$eventMock]);
+            $this->eventDBHandlerMock->expects($this->once())
+            ->method('tryAddingEvent')
+            ->willReturn($this->returnArgument(0));
+            $eventMock->expects($this->once())
+            ->method('getId')
+            ->willReturn($anId);
+            $this->eventMock->expects($this->once())
+            ->method('getId')
+            ->willReturn($anId);
+            $eventMock->expects($this->once())
+            ->method('getState')
+            ->willReturn(0);
+            $this->eventMock->expects($this->once())
+            ->method('getState')
+            ->willReturn(1);
+            $this->eventDBHandlerMock->expects($this->once())
+            ->method('updateEvent')
+            ->willReturn($this->returnArgument(0));
+            $this->tradeDBHandlerMock->expects($this->once())
+            ->method('tryAddingTrade')
+            ->willReturn($this->returnArgument(0));
+            
+            $this->collectEvents->execute();
+            assert(true);
+        }
+        catch(Exception $e){
+            throw new ErrorException($e->getMessage());
+            assert(false);
+        }
     }
 }
 

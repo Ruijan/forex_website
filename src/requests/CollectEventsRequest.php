@@ -31,11 +31,9 @@ class CollectEventsRequest extends ForexRequest
     
     private function updateEvents($db_events, $event)
     {
-        $events_to_remove = [];
         if(sizeof($db_events) > 0){
             foreach ($db_events as $db_event){
                 if($event->getId() == $db_event->getId()){
-                    $events_to_remove[] = $db_event;
                     if($db_event->getState() != $event->getState()){
                         $this->eventDBHandler->updateEvent($event);
                         $now_utc = DateTime::createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
@@ -44,7 +42,6 @@ class CollectEventsRequest extends ForexRequest
                     }
                 }
             }
-            $db_event = array_diff($db_events, $events_to_remove);
         }
     }
 }
