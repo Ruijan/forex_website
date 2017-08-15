@@ -1,15 +1,13 @@
 <?php
 abstract class Request{
     const FETCH_EVENTS      = 0;
-    const CURRENT_TRADES    = 1;
-    const NEXT_EVENTS       = 2;
-    const PREDICTABLE_TRADE = 3;
-    const NEXT_ACTION       = 4;
-    const UPDATE_MARKET     = 5;
-    const PREDICT_TRADE     = 6;
-    const OPEN_TRADE        = 7;
-    const CLOSE_TRADE       = 8;
-    const CANCEL_TRADE      = 9;
+    const PREDICTABLE_TRADE = 1;
+    const NEXT_ACTION       = 2;
+    const UPDATE_MARKET     = 3;
+    const PREDICT_TRADE     = 4;
+    const OPEN_TRADE        = 5;
+    const CLOSE_TRADE       = 6;
+    const CANCEL_TRADE      = 7;
 }
 
 
@@ -24,10 +22,6 @@ class RequestHandler{
         switch($strRequest){
             case "FETCH_EVENTS":
                 return Request::FETCH_EVENTS;
-            case "current_trades":
-                return Request::CURRENT_TRADES;
-            case "next_events":
-                return Request::NEXT_EVENTS;
             case "predictable_trade":
                 return Request::PREDICTABLE_TRADE;
             case "next_action":
