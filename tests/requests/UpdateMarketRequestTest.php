@@ -24,15 +24,9 @@ class UpdateMarketRequestTest extends PHPUnit_Framework_TestCase
     private $eventDBHandlerMock;
     private $tradeDBHandlerMock;
     private $tradeMock;
-    /**
-     *
-     * @var UpdateMarketRequest
-     */
+
     private $updateMarketRequest;
 
-    /**
-     * Prepares the environment before running a test.
-     */
     protected function setUp()
     {
         parent::setUp();
