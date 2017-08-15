@@ -1,22 +1,13 @@
 <?php
 
-use src\requests\OpenTradeRequest;
+require_once(str_replace("tests", "src", __DIR__."/").'CloseTradeRequest.php');
 
-require_once(str_replace("tests", "src", __DIR__."/").'OpenTradeRequest.php');
+use src\requests\CloseTradeRequest;
 
-$pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
-$pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");
-require_once($pathToVendor.'/autoload.php');
-
-class OpenTradeRequestTest extends PHPUnit_Framework_TestCase
+class CloseTradeRequestTest extends PHPUnit_Framework_TestCase
 {
-    private $eventParserMock;
-    private $eventDBHandlerMock;
-    private $tradeDBHandlerMock;
-    private $tradeMock;
-    
-    private $openTradeRequest;
 
+    private $closerTradeRequest;
 
     protected function setUp()
     {
@@ -30,12 +21,12 @@ class OpenTradeRequestTest extends PHPUnit_Framework_TestCase
         $this->tradeMock = $this->getMockBuilder('Trade')
         ->disableOriginalConstructor()->getMock();
         
-        $this->openTradeRequest = new OpenTradeRequest();
+        $this->closerTradeRequest = new CloseTradeRequest();
     }
 
     protected function tearDown()
     {
-        $this->openTradeRequest = null;
+        $this->closerTradeRequest = null;
         
         parent::tearDown();
     }
@@ -44,23 +35,23 @@ class OpenTradeRequestTest extends PHPUnit_Framework_TestCase
     {
         // TODO Auto-generated constructor
     }
-    
+
     public function testExecuteSuccess(){
         try{
             $this->tradeDBHandlerMock->expects($this->once())
             ->method("getTradeByID")
             ->willReturn($this->tradeMock);
             $this->tradeMock->expects($this->once())
-            ->method("open")
+            ->method("close")
             ->willReturn($this->returnArgument(0));
             $this->tradeDBHandlerMock->expects($this->once())
-            ->method("openTrade")
+            ->method("closeTrade")
             ->willReturn($this->returnArgument(0));
-            $parameters = ["trade_id" => 5];
-            $this->openTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+            $parameters = ["trade_id" => 5, "gain" => 0.75, "commission" => 0.12];
+            $this->closerTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
                 $this->eventParserMock, $parameters);
             
-            $this->openTradeRequest->execute();
+            $this->closerTradeRequest->execute();
             assert(true);
         }
         catch(Exception $e){
@@ -70,19 +61,19 @@ class OpenTradeRequestTest extends PHPUnit_Framework_TestCase
     }
     
     public function testExecuteWithWrongRequestShouldThrow(){
-        $parameters = [];
-        $this->openTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+        $parameters = ["trade_id" => "5"];
+        $this->closerTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, $parameters);
         $this->expectExceptionMessage("Ill-formed request: missing parameters");
-        $this->openTradeRequest->execute();
+        $this->closerTradeRequest->execute();
     }
     
     public function testExecuteWithInvalidParametersTypeShouldThrow(){
-        $parameters = ["trade_id" => "5"];
-        $this->openTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+        $parameters = ["trade_id" => "5", "gain" => 0.75, "commission" => 0.12];
+        $this->closerTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, $parameters);
         $this->expectExceptionMessage("Invalid Request: bad parameters type");
-        $this->openTradeRequest->execute();
+        $this->closerTradeRequest->execute();
     }
 }
 

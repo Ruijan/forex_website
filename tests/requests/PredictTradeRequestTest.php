@@ -1,14 +1,7 @@
 <?php
 use src\requests\PredictTradeRequest;
 
-$path = str_replace("tests\\requests", "src", __DIR__."/");
-$path = str_replace("tests/requests", "src", $path."/");
-
 require_once(str_replace("tests", "src", __DIR__."/").'PredictTradeRequest.php');
-require_once($path.'EventDBHandler.php');
-require_once($path.'EventParser.php');
-require_once($path.'TradeDBHandler.php');
-require_once($path.'Trade.php');
 
 $pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
 $pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");

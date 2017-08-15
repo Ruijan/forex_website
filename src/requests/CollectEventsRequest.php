@@ -8,6 +8,7 @@ $path = str_replace("requests\\", "",  __DIR__."/");
 $path = str_replace("requests", "", $path."/");
 require_once('ForexRequest.php');
 require_once($path.'Trade.php');
+require_once($path.'Event.php');
 
 class CollectEventsRequest extends ForexRequest
 {
