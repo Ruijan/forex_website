@@ -3,6 +3,12 @@ namespace src\requests;
 
 use ErrorException;
 
+$path = str_replace("requests\\", "", __DIR__."/");
+$path = str_replace("requests/", "", $path."/");
+require_once($path.'EventDBHandler.php');
+require_once($path.'EventParser.php');
+require_once($path.'TradeDBHandler.php');
+
 class ForexRequest
 {
     protected $eventDBHandler;

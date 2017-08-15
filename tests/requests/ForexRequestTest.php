@@ -46,7 +46,7 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated constructor
     }
 
-    public function test__setWrongTypeEventDBHandlerShouldThrow(){
+    public function testSetWrongTypeEventDBHandlerShouldThrow(){
         $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventParser')
@@ -59,7 +59,7 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, []);
     }
     
-    public function test__setWrongTypeEventParserShouldThrow(){
+    public function testSetWrongTypeEventParserShouldThrow(){
         $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
@@ -72,7 +72,7 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, []);
     }
     
-    public function test__setWrongTypeTradeDBHandlerShouldThrow(){
+    public function testSetWrongTypeTradeDBHandlerShouldThrow(){
         $tradeDBHandlerMock = $this->getMockBuilder('EventDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
@@ -98,7 +98,7 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, "");
     }
     
-    public function test__initSuccessfully(){
+    public function testInitSuccessfully(){
         $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')

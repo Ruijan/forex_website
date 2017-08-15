@@ -1,6 +1,10 @@
 <?php
 namespace src\requests;
 
+$path = str_replace("requests\\", "", __DIR__."/");
+$path = str_replace("requests/", "", $path."/");
+require_once($path.'Trade.php');
+
 require_once('ForexRequest.php');
 
 use DateTime;
