@@ -68,10 +68,11 @@ class EventParser
         $news_id = explode('_',$line->getAttribute('id'))[1];
         $previous_node = $this->table->getElementByID('eventPrevious_'.$news_id)->nodeValue;
         $previous = $this->getFloatFromString($previous_node);
-        
+        $eventDateTime = new \DateTime();
+        $eventDateTime->createFromFormat('Y-m-d H:i:s', $line->getAttribute('event_timestamp'));
         $event = new Event((int)$line->getAttribute('event_attr_id'), 
             (int)$news_id , 
-            DateTime::createFromFormat('Y-m-d H:i:s', $line->getAttribute('event_timestamp')), 
+            $eventDateTime, 
             $previous, 0);
         return $event;
     }
@@ -83,17 +84,19 @@ class EventParser
         $actual = $this->getFloatFromString($actual_node);
         if (!is_null($actual))
         {
-            $real_time = DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
-            $event->update($actual, $real_time);
+            $realTime = new DateTime();
+            $realTime->createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
+            $event->update($actual, $realTime);
         }
     }
 
     
     private function setNextEventTimeToDiffToMidnight($event)
     {
-        $end_of_the_day = DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
-        $end_of_the_day->setTime(23,59,59);
-        $time_diff = $end_of_the_day->diff($event->getAnnouncedTime());
+        $endOfTheDay = new DateTime();
+        $endOfTheDay->createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
+        $endOfTheDay->setTime(23,59,59);
+        $time_diff = $endOfTheDay->diff($event->getAnnouncedTime());
         $time_diff = $time_diff->s +
             $time_diff->i*60 +
             $time_diff->h*60*60 +

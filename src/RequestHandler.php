@@ -20,7 +20,7 @@ class RequestHandler{
     
     public function getRequestTypeFromString($strRequest){
         switch($strRequest){
-            case "FETCH_EVENTS":
+            case "fetch_events":
                 return Request::FETCH_EVENTS;
             case "predictable_trade":
                 return Request::PREDICTABLE_TRADE;

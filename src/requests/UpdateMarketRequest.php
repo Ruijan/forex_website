@@ -7,7 +7,6 @@ require_once($path.'Trade.php');
 
 require_once('ForexRequest.php');
 
-use DateTime;
 use ErrorException;
 
 class UpdateMarketRequest extends ForexRequest
@@ -40,9 +39,10 @@ class UpdateMarketRequest extends ForexRequest
     
     public function execute(){
         $this->validateRequest();
-        $now_utc = DateTime::createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
+        $todayUTC = new \DateTime();
+        $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
         $this->tradeDBHandler->setCurrency($this->parameters["currency"]);
-        $trades = $this->tradeDBHandler->getTradesFromTo($now_utc, $now_utc, \TradeState::INITIALIZED);
+        $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::INITIALIZED);
         foreach ($trades as $trade){
             $trade->fillMarketInfo($this->parameters["dv_p_tm5"], $this->parameters["dv_p_t0"]);
             $this->tradeDBHandler->fillTradeWithMarketInfo($trade);
