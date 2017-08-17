@@ -25,7 +25,9 @@ class OpenTradeRequest extends ForexRequest
     public function execute(){
         $this->validateRequest();
         $trade = $this->tradeDBHandler->getTradeByID($this->parameters["trade_id"]);
-        $trade->open(\DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time()))));
+        $todayUTC = new \DateTime();
+        $todayUTC->createFromFormat('Y-m-d H:i:s',gmdate('Y-m-d H:i:s', time()));
+        $trade->open($todayUTC);
         $this->tradeDBHandler->openTrade($trade);
     }
 }

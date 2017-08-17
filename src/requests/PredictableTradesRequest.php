@@ -8,7 +8,7 @@ require_once($path.'HTMLDisplayer.php');
 
 require_once('ForexRequest.php');
 
-class NextActionRequest extends ForexRequest
+class PredictableTradesRequest extends ForexRequest
 {
     private $displayer;
     public function __construct()
@@ -25,7 +25,7 @@ class NextActionRequest extends ForexRequest
     public function execute(){
         $todayUTC = new \DateTime();
         $todayUTC->createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
-        $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::PREDICTED);
+        $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::FILLED);
         foreach ($trades as $trade){
             echo $this->displayer->displayTrade($trade)."<br/>";
         }

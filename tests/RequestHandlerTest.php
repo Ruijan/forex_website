@@ -57,8 +57,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     
     public function testgetRequestTypeFromValidString(){
         $this->requestHandler = new RequestHandler();
-        assert($this->requestHandler->getRequestTypeFromstring("current_trades") == Request::CURRENT_TRADES);
-        assert($this->requestHandler->getRequestTypeFromstring("next_events") == Request::NEXT_EVENTS);
+        assert($this->requestHandler->getRequestTypeFromstring("fetch_events") == Request::FETCH_EVENTS);
         assert($this->requestHandler->getRequestTypeFromstring("predictable_trade") == Request::PREDICTABLE_TRADE);
         assert($this->requestHandler->getRequestTypeFromstring("next_action") == Request::NEXT_ACTION);
         assert($this->requestHandler->getRequestTypeFromstring("update_market") == Request::UPDATE_MARKET);

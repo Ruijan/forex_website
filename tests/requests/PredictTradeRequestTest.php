@@ -41,10 +41,13 @@ class PredictTradeRequestTest extends PHPUnit_Framework_TestCase
     
     public function testExecuteSuccess(){
         try{
-            $parameters = ["trade_id" => 25, "prediction" => 0, "probability_prediction" => 0.75];
+            $parameters = ["trade_id" => 25, "prediction" => 0, "probability_prediction" => 0.75, 
+                "currency" => "EUR_USD"];
             $this->predictTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
                 $this->eventParserMock, $parameters);
-            
+            $this->tradeDBHandlerMock->expects($this->once())
+            ->method('setCurrency')
+            ->willReturn($this->returnArgument(0));
             $this->tradeDBHandlerMock->expects($this->once())
             ->method('getTradeByID')
             ->willReturn($this->tradeMock);
@@ -67,14 +70,18 @@ class PredictTradeRequestTest extends PHPUnit_Framework_TestCase
     
     public function testExecuteWithWrongParametersNumberAsRequestShouldThrow(){
         $this->expectExceptionMessage("Ill-formed request: missing parameters");
-        $parameters = ["trade_id" => 25, "dv_p_tm5" => 0, "probability_prediction" => 0.75];
+        $parameters = ["trade_id" => 25, "prediction" => 0, "probability_prediction" => 0.75];
         $this->predictTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, $parameters);
         $this->predictTradeRequest->execute();
     }
     
     public function testExecuteWithWrongParametersTypeAsRequestShouldThrow(){
-        $parameters = ["trade_id" => 0.25, "prediction" => 0, "probability_prediction" => 0.75];
+        $parameters = ["trade_id" => 0.25, 
+            "prediction" => 0, 
+            "probability_prediction" => 0.75,
+            "currency" => "EUR_USD"
+        ];
         $this->expectExceptionMessage("Invalid Request: bad parameters type");
         $this->predictTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, $parameters);
