@@ -127,12 +127,32 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
         ->disableOriginalConstructor()->getMock();
         $eventsRequestMock = $this->getMockBuilder('CollectEventsRequest')
         ->disableOriginalConstructor()->getMock();
+        $predictTradeMock = $this->getMockBuilder('PredictTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $predictableTradeMock = $this->getMockBuilder('PredictableTradesRequest')
+        ->disableOriginalConstructor()->getMock();
+        $openTradeMock = $this->getMockBuilder('OpenTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $closeTradeMock = $this->getMockBuilder('CloseTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $cancelTradeMock = $this->getMockBuilder('CancelTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $nextActionMock = $this->getMockBuilder('NextActionRequest')
+        ->disableOriginalConstructor()->getMock();
         
-        $handlers = [$eventsRequestMock, $marketRequestMock];
+        $handlers = [$eventsRequestMock, $marketRequestMock, $predictTradeMock, $predictableTradeMock,
+            $openTradeMock, $closeTradeMock, $cancelTradeMock, $nextActionMock
+        ];
         $this->requestHandler->setRequestHandlers($handlers);
         $requestHandlers = $this->requestHandler->getRequestHandlers();
-        assert($requestHandlers[Request::UPDATE_MARKET] == $handlers[1]);
         assert($requestHandlers[Request::FETCH_EVENTS] == $handlers[0]);
+        assert($requestHandlers[Request::UPDATE_MARKET] == $handlers[1]);
+        assert($requestHandlers[Request::PREDICT_TRADE] == $handlers[2]);
+        assert($requestHandlers[Request::PREDICTABLE_TRADE] == $handlers[3]);
+        assert($requestHandlers[Request::OPEN_TRADE] == $handlers[4]);
+        assert($requestHandlers[Request::CLOSE_TRADE] == $handlers[5]);
+        assert($requestHandlers[Request::CANCEL_TRADE] == $handlers[6]);
+        assert($requestHandlers[Request::NEXT_ACTION] == $handlers[7]);
     }
     
     public function testExecuteSucces(){

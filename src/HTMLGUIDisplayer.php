@@ -1,4 +1,7 @@
 <?php
+
+require_once 'calendar/classes/TcCalendar.php';
+
 class GUIHTMLDisplayer
 {
     
@@ -116,7 +119,7 @@ class GUIHTMLDisplayer
         return $toptag.$from_calendar.'<br/>'.$to_calendar.$form.$validate.$bottomtag;
     }
     function createCalendar($date1, $date2, $default){
-        $myCalendar = new tc_calendar($date1, true,false);
+        $myCalendar = new TcCalendar($date1, true,false);
         $myCalendar->setIcon("calendar/images/iconCalendar.gif");
         $myCalendar->setDate(date('d', strtotime($default))
             , date('m', strtotime($default))
@@ -149,8 +152,7 @@ class GUIHTMLDisplayer
     }
     
     function createPage(){
-        return createTopHeader().createHeader().createTopNavBar().createLeftNavBar().createTopBodyTag().createBody().createBottomBodyTag();
+        return $this->createTopHeader().$this->createHeader().$this->createTopNavBar()
+        .$this->createLeftNavBar().$this->createTopBodyTag().$this->createBody().$this->createBottomBodyTag();
     }
 }
-
-?>

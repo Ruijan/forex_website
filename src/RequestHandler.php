@@ -109,6 +109,24 @@ class RequestHandler{
             elseif (is_a($handler,"CollectEventsRequest")){
                 $this->requestHandlers[Request::FETCH_EVENTS] = $handler;
             }
+            elseif (is_a($handler,"PredictTradeRequest")){
+                $this->requestHandlers[Request::PREDICT_TRADE] = $handler;
+            }
+            elseif (is_a($handler,"PredictableTradesRequest")){
+                $this->requestHandlers[Request::PREDICTABLE_TRADE] = $handler;
+            }
+            elseif (is_a($handler,"OpenTradeRequest")){
+                $this->requestHandlers[Request::OPEN_TRADE] = $handler;
+            }
+            elseif (is_a($handler,"CloseTradeRequest")){
+                $this->requestHandlers[Request::CLOSE_TRADE] = $handler;
+            }
+            elseif (is_a($handler,"NextActionRequest")){
+                $this->requestHandlers[Request::NEXT_ACTION] = $handler;
+            }
+            elseif (is_a($handler,"CancelTradeRequest")){
+                $this->requestHandlers[Request::CANCEL_TRADE] = $handler;
+            }
             else{
                 throw new ErrorException("Wrong type of request handler.");
             }
