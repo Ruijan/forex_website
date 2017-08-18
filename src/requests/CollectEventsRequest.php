@@ -40,7 +40,7 @@ class CollectEventsRequest extends ForexRequest
                         $todayUTC = new \DateTime();
                         $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
                         $this->tradeDBHandler->tryAddingTrade(
-                            new Trade($event->getEventId(), $todayUTC));
+                            new Trade($event->getEventId(), $todayUTC, "EUR_USD"));
                     }
                 }
             }

@@ -13,9 +13,9 @@ class TradeTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         $this->id_db_event = 50;
         $this->creation_time = new DateTime('NOW');
+        $this->currency = "EUR_USD";
         // TODO Auto-generated TradeTest::setUp()
-        $this->trade = new Trade($this->id_db_event, $this->creation_time);
-        $this->trade->__construct($this->id_db_event, $this->creation_time);
+        $this->trade = new Trade($this->id_db_event, $this->creation_time, "EUR_USD");
     }
 
     protected function tearDown()
@@ -40,11 +40,19 @@ class TradeTest extends PHPUnit_Framework_TestCase
     {
         $this->trade->setId(5);
         assert($this->trade->isInitialized());
+        assert($this->trade->getCurrency() == "EUR_USD");
         assert($this->trade->getId()==5);
         assert($this->trade->getCreationTime() == $this->creation_time);
     }
     
-    public function test__initializationWithWrongArgument_expectError()
+    public function testSetCurrencyWithWrongArgumentShouldThrow(){
+        $currency = 5;
+        $this->expectExceptionMessage("Wrong type for currency. Expected string got: "
+            .gettype($currency));
+        $this->trade->setCurrency($currency);
+    }
+    
+    public function testInitializationWithWrongArgumentShouldThrow()
     {
         $identifier = -1;
         $this->expectExceptionMessage("Id should be positive. Id = ".$identifier);

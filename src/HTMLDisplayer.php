@@ -75,6 +75,7 @@ class SimpleHTMLDisplayer
         "</td><td class='p_prediction'>".$trade->getP_proba().
         "</td><td class='gain'>".$trade->getGain().
         "</td><td class='commission'>".$trade->getCommission().
+        "</td><td class='currency'>".$trade->getCurrency().
         "</td><td class='state'>".$trade->getStringFromState($trade->getState())."</td>";
         return $trade_string;
     }

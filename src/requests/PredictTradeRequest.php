@@ -15,12 +15,10 @@ class PredictTradeRequest extends ForexRequest
     {}
     
     public function validateRequest(){
-        if(!isset($this->parameters["trade_id"]) or !isset($this->parameters["prediction"]) or 
-            !isset($this->parameters["currency"])){
+        if(!isset($this->parameters["trade_id"]) or !isset($this->parameters["prediction"])){
             throw new ErrorException("Ill-formed request: missing parameters");
         }
         if(!is_int($this->parameters["prediction"]) || !is_int($this->parameters["trade_id"]) ||
-            !is_string($this->parameters["currency"]) ||
             (isset($this->parameters["probability_prediction"]) and 
                 !$this->isDecimal($this->parameters["probability_prediction"]))){
                 throw new ErrorException("Invalid Request: bad parameters type");
@@ -34,7 +32,6 @@ class PredictTradeRequest extends ForexRequest
     
     public function execute(){
         $this->validateRequest();
-        $this->tradeDBHandler->setCurrency($this->parameters["currency"]);
         $trade = $this->tradeDBHandler->getTradeByID($this->parameters["trade_id"]);
         $probability = -1;
         if(isset($this->parameters["probability_prediction"])){

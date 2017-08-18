@@ -21,6 +21,7 @@ class Trade
     private $p_proba = 0;
     private $gain = 0;
     private $commission = 0;
+    private $currency = "";
     private $state = TradeState::INITIALIZED;
     
     public function getId(){return $this->identifier;}
@@ -34,6 +35,7 @@ class Trade
     public function getP_proba(){return $this->p_proba;}
     public function getGain(){return $this->gain;}
     public function getCommission(){return $this->commission;}
+    public function getCurrency(){return $this->currency;}
     public function getState(){return $this->state;}
 
     public function setId($identifier)
@@ -45,6 +47,15 @@ class Trade
             throw new ErrorException("Id should be positive. Id = ".$identifier);
         }
         $this->identifier = (int)$identifier;
+    }
+    
+    public function setCurrency($currency)
+    {
+        if(!is_string($currency)){
+            throw new ErrorException("Wrong type for currency. Expected string got: "
+                .gettype($currency));
+        }
+        $this->currency = $currency;
     }
 
     private function setCreationTime($creation_time)
@@ -135,11 +146,11 @@ class Trade
         $this->state = $state;
     }
 
-    public function __construct($id_db_event, $creation_time)
+    public function __construct($id_db_event, $creation_time, $currency)
     {
         $this->id_db_event = $id_db_event;
         $this->setCreationTime($creation_time);
-        
+        $this->setCurrency($currency);
     }
     
     public function isInitialized()
@@ -195,7 +206,7 @@ class Trade
     
     static public function createTradeFromDbArray($result)
     {
-        $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]));
+        $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]), $result["CURRENCY"]);
         $trade->setId((int)$result["ID"]);
         if((int)$result["STATE"] >= TradeState::OPEN){
             $trade->setOpenTime(new DateTime($result["OPEN_TIME"]));

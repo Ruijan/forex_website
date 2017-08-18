@@ -5,31 +5,18 @@ require_once "Trade.php";
 class TradeDBHandler
 {
     private $mysqli = null;
-    private $currency = "";
-    public $table_name = "";
+    private $table_name = "";
     
-    public function __construct($mysqli, $currency)
+    public function __construct($mysqli)
     {
         $this->mysqli = $mysqli;
-        $this->currency = $currency;
-        $this->table_name = "trades_".$currency;
+        $this->table_name = "trades";
     }
     
     public function isInitialized(){
-        return $this->mysqli != null and $this->currency != "";
+        return $this->mysqli != null;
     }
     
-    public function setCurrency($currency)
-    {
-        if(!is_string($currency)){
-            throw new ErrorException("Wrong type for currency. Expected string got: "
-                .gettype($currency));
-        }
-        $this->currency = $currency;
-        $this->table_name = "trades_".$currency;
-    }
-    
-    public function getCurrency(){return $this->currency;}
     public function getTableName(){return $this->table_name;}
     
     public function doesTableExists(){
@@ -55,6 +42,7 @@ class TradeDBHandler
                         PREDICTION_PROBA double NULL,
                         GAIN double NULL,
                         COMMISSION double NULL,
+                        CURRENCY char(50) NULL,
                         STATE int NULL,
                         PRIMARY KEY  (ID)
                         )";
@@ -81,10 +69,10 @@ class TradeDBHandler
         $this->throwIfTableDoesNotExist();
         $query = "INSERT INTO ".$this->table_name." 
                     (ID, ID_DB_EVENT, CREATION_TIME, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
-                    PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, STATE) 
+                    PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, CURRENCY, STATE) 
                     VALUES (NULL,'".$trade->getIDDBEvent()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
                     NULL,NULL,NULL,NULL,NULL,
-                    NULL, NULL, NULL, NULL)";
+                    NULL, NULL, NULL, '".$trade->getCurrency()."', NULL)";
         if($this->mysqli->query($query) === FALSE){
             throw new ErrorException("Event already in table: ".$this->mysqli->error);
         }
@@ -173,10 +161,10 @@ class TradeDBHandler
         }
     }
     
-    public function getTradesFromTo($fromDate, $toDate, $state=-1){
-        $this->throwIfWrongArgumentType($fromDate, $toDate, $state);
+    public function getTradesFromTo($fromDate, $toDate, $state=-1, $currency=""){
+        $this->throwIfWrongArgumentType($fromDate, $toDate, $state, $currency);
         $this->throwIfTableDoesNotExist();
-        $query = $this->buildSelectQueryFromToState($fromDate, $toDate, $state);
+        $query = $this->buildSelectQueryFromToState($fromDate, $toDate, $state, $currency);
         $trades = [];
         $result = $this->mysqli->query($query);
         if(!$result){
@@ -189,21 +177,25 @@ class TradeDBHandler
         return $trades;
     }
     
-    private function buildSelectQueryFromToState($fromDate, $toDate, $state)
+    private function buildSelectQueryFromToState($fromDate, $toDate, $state, $currency)
     {
         $state_suffix = "";
+        $currency_suffix = "";
         if($state != -1){
             $state_suffix = " AND STATE=".$state;
+        }
+        if($currency != ""){
+            $currency_suffix = " AND CURRENCY='".$currency."'";
         }
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM ".$this->table_name." WHERE DATEDIFF(CREATION_TIME,'"
             .$fromDate->format('Y-m-d H:i:s').
         "') >= 0 AND DATEDIFF(CREATION_TIME,'".$toDate->format('Y-m-d H:i:s').
-        "') <= 0".$state_suffix;
+        "') <= 0".$state_suffix.$currency_suffix;
         return $query;
     }
     
-    private function throwIfWrongArgumentType($fromDate, $toDate, $state)
+    private function throwIfWrongArgumentType($fromDate, $toDate, $state, $currency)
     {
         if(!is_a($fromDate, 'DateTime') || !is_a($toDate, 'DateTime')){
             throw new ErrorException("Wrong type for from or to. Expected DateTime got: "
@@ -211,6 +203,9 @@ class TradeDBHandler
         }
         if(!is_int($state)){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));
+        }
+        if(!is_string($currency)){
+            throw new ErrorException("Wrong type for currency. Expected string got: ".gettype($currency));
         }
     }
     

@@ -57,7 +57,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     
     public function test__simpleDisplayTrade(){
         $string_display = $this->createSimpleTradeString();
-        $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"));
+        $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"), "EUR_USD");
         $trade->setId(1);
         $trade->fillMarketInfo(0.00050, -0.00010);
         $trade->predict(1, 0.75);
@@ -87,8 +87,9 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
             "<td class='close_time'>2017-08-04 21:00:00</td>".
             "<td class='market'>0.00050</td><td class='market'>-0.00010</td>".
             "<td class='prediction'>1</td><td class='p_prediction'>0.75</td>".
-            "<td class='gain'>0.56</td><td class='commission'>0.12</td><td class='state'>Close</td>";
-        $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"));
+            "<td class='gain'>0.56</td><td class='commission'>0.12</td>".
+            "<td class='currency'>EUR_USD</td><td class='state'>Close</td>";
+        $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"), "EUR_USD");
         $trade->setId(1);
         $trade->fillMarketInfo(0.00050, -0.00010);
         $trade->predict(1, 0.75);
