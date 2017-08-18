@@ -41,8 +41,8 @@ class UpdateMarketRequest extends ForexRequest
         $this->validateRequest();
         $todayUTC = new \DateTime();
         $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
-        $this->tradeDBHandler->setCurrency($this->parameters["currency"]);
-        $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::INITIALIZED);
+        $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::INITIALIZED, 
+            $this->parameters["currency"]);
         foreach ($trades as $trade){
             $trade->fillMarketInfo($this->parameters["dv_p_tm5"], $this->parameters["dv_p_t0"]);
             $this->tradeDBHandler->fillTradeWithMarketInfo($trade);

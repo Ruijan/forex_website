@@ -17,11 +17,10 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         
         // TODO Auto-generated TradeDBHandlerTest::setUp()
         $this->mysqli = connect_database();
-        $this->currency = "EUR_USD";
-        $this->tradeDBHandler = new TradeDBHandler($this->mysqli, $this->currency);
+        $this->tradeDBHandler = new TradeDBHandler($this->mysqli);
         if($this->tradeDBHandler->doesTableExists())
         {
-            $this->mysqli->query("DROP TABLE trades_".$this->currency);
+            $this->mysqli->query("DROP TABLE trades");
         }
     }
 
@@ -53,18 +52,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     public function test__construct()
     {
         assert($this->tradeDBHandler->isInitialized());
-        assert($this->tradeDBHandler->table_name == "trades_".$this->currency);
-    }
-    
-    public function test_setCurrencyWithWrongTypeShouldThrow(){
-        $this->expectExceptionMessage("Wrong type for currency. Expected string got: ".gettype(0));
-        $this->tradeDBHandler->setCurrency(0);
-    }
-    
-    public function test_setCurrencySuccess(){
-        $this->tradeDBHandler->setCurrency("EUR_USD");
-        assert($this->tradeDBHandler->getCurrency() == "EUR_USD");
-        assert($this->tradeDBHandler->getTableName() == "trades_EUR_USD");
+        assert($this->tradeDBHandler->getTableName() == "trades");
     }
     
     public function test__createTable(){
@@ -94,7 +82,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         if($this->tradeDBHandler->doesTableExists())
         {
-            $this->mysqli->query("DROP TABLE trades_".$this->currency);
+            $this->mysqli->query("DROP TABLE trades");
         }
     }  
 }
