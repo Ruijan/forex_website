@@ -98,40 +98,45 @@ class RequestHandler{
     }
     
     public function setRequestHandlers($requestHandlers){
-        if(sizeof($requestHandlers) < 2){
+        if(sizeof($requestHandlers) < 8){
             throw new ErrorException("Wrong number of request handlers. Got ".
-                sizeof($requestHandlers)." expected 2");
+                sizeof($requestHandlers)." expected 8");
         }
         foreach ($requestHandlers as $handler){
-            if(is_a($handler,"UpdateMarketRequest")){
-                $this->requestHandlers[Request::UPDATE_MARKET] = $handler;
-            }
-            elseif (is_a($handler,"CollectEventsRequest")){
-                $this->requestHandlers[Request::FETCH_EVENTS] = $handler;
-            }
-            elseif (is_a($handler,"PredictTradeRequest")){
-                $this->requestHandlers[Request::PREDICT_TRADE] = $handler;
-            }
-            elseif (is_a($handler,"PredictableTradesRequest")){
-                $this->requestHandlers[Request::PREDICTABLE_TRADE] = $handler;
-            }
-            elseif (is_a($handler,"OpenTradeRequest")){
-                $this->requestHandlers[Request::OPEN_TRADE] = $handler;
-            }
-            elseif (is_a($handler,"CloseTradeRequest")){
-                $this->requestHandlers[Request::CLOSE_TRADE] = $handler;
-            }
-            elseif (is_a($handler,"NextActionRequest")){
-                $this->requestHandlers[Request::NEXT_ACTION] = $handler;
-            }
-            elseif (is_a($handler,"CancelTradeRequest")){
-                $this->requestHandlers[Request::CANCEL_TRADE] = $handler;
-            }
-            else{
-                throw new ErrorException("Wrong type of request handler.");
-            }
+            $this->tryAddingRequestHandler($handler);
         }
     }
+    private function tryAddingRequestHandler($handler)
+    {
+        if(is_a($handler,"UpdateMarketRequest")){
+            $this->requestHandlers[Request::UPDATE_MARKET] = $handler;
+        }
+        elseif (is_a($handler,"CollectEventsRequest")){
+            $this->requestHandlers[Request::FETCH_EVENTS] = $handler;
+        }
+        elseif (is_a($handler,"PredictTradeRequest")){
+            $this->requestHandlers[Request::PREDICT_TRADE] = $handler;
+        }
+        elseif (is_a($handler,"PredictableTradesRequest")){
+            $this->requestHandlers[Request::PREDICTABLE_TRADE] = $handler;
+        }
+        elseif (is_a($handler,"OpenTradeRequest")){
+            $this->requestHandlers[Request::OPEN_TRADE] = $handler;
+        }
+        elseif (is_a($handler,"CloseTradeRequest")){
+            $this->requestHandlers[Request::CLOSE_TRADE] = $handler;
+        }
+        elseif (is_a($handler,"NextActionRequest")){
+            $this->requestHandlers[Request::NEXT_ACTION] = $handler;
+        }
+        elseif (is_a($handler,"CancelTradeRequest")){
+            $this->requestHandlers[Request::CANCEL_TRADE] = $handler;
+        }
+        else{
+            throw new ErrorException("Wrong type of request handler.");
+        }
+    }
+
     
     public function getRequestHandlers(){return $this->requestHandlers;}
     
