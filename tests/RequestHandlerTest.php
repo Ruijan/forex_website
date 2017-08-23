@@ -19,26 +19,40 @@ require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 class RequestHandlerTest extends PHPUnit_Framework_TestCase
 {
 
-    /**
-     *
-     * @var RequestHandler
-     */
     private $requestHandler;
+    private $marketRequestMock;
+    private $eventsRequestMock;
+    private $predictTradeMock;
+    private $predictableTradeMock;
+    private $openTradeMock;
+    private $closeTradeMock;
+    private $cancelTradeMock;
+    private $nextActionMock;
 
-    /**
-     * Prepares the environment before running a test.
-     */
     protected function setUp()
     {
         parent::setUp();
+        $this->marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->eventsRequestMock = $this->getMockBuilder('CollectEventsRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->predictTradeMock = $this->getMockBuilder('PredictTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->predictableTradeMock = $this->getMockBuilder('PredictableTradesRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->openTradeMock = $this->getMockBuilder('OpenTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->closeTradeMock = $this->getMockBuilder('CloseTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->cancelTradeMock = $this->getMockBuilder('CancelTradeRequest')
+        ->disableOriginalConstructor()->getMock();
+        $this->nextActionMock = $this->getMockBuilder('NextActionRequest')
+        ->disableOriginalConstructor()->getMock();
         $this->requestHandler = new RequestHandler();
         // TODO Auto-generated RequestHandlerTest::setUp()
 
     }
 
-    /**
-     * Cleans up the environment after running a test.
-     */
     protected function tearDown()
     {
         // TODO Auto-generated RequestHandlerTest::tearDown()
@@ -47,9 +61,6 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    /**
-     * Constructs the test case.
-     */
     public function __construct()
     {
         // TODO Auto-generated constructor
@@ -109,30 +120,41 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     public function testSettingRequestsArrayWithWrongSizeShouldThrow(){
         $marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
         ->disableOriginalConstructor()->getMock();
-        $this->expectExceptionMessage("Wrong number of request handlers. Got 1 expected 2");
+        $this->expectExceptionMessage("Wrong number of request handlers. Got 1 expected 8");
         $this->requestHandler->setRequestHandlers([$marketRequestMock]);
     }
     
     public function testSettingRequestsArrayWithWrongTypeShouldThrow(){
-        $marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
-        ->disableOriginalConstructor()->getMock();
         $forexRequestMock = $this->getMockBuilder('ForexRequest')
         ->disableOriginalConstructor()->getMock();
         $this->expectExceptionMessage("Wrong type of request handler.");
-        $this->requestHandler->setRequestHandlers([$marketRequestMock, $forexRequestMock]);
+        $handlers = [$this->eventsRequestMock, $this->marketRequestMock, $this->predictTradeMock, 
+            $this->predictableTradeMock,
+            $this->openTradeMock, $this->closeTradeMock, $this->cancelTradeMock, $forexRequestMock
+        ];
+        $this->requestHandler->setRequestHandlers($handlers);
     }
     
     public function testSettingRequestsArraySuccess(){
-        $marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
-        ->disableOriginalConstructor()->getMock();
-        $eventsRequestMock = $this->getMockBuilder('CollectEventsRequest')
-        ->disableOriginalConstructor()->getMock();
-        
-        $handlers = [$eventsRequestMock, $marketRequestMock];
+        $handlers = [$this->eventsRequestMock,
+            $this->marketRequestMock,
+            $this->predictTradeMock,
+            $this->predictableTradeMock,
+            $this->openTradeMock,
+            $this->closeTradeMock,
+            $this->cancelTradeMock,
+            $this->nextActionMock
+        ];
         $this->requestHandler->setRequestHandlers($handlers);
         $requestHandlers = $this->requestHandler->getRequestHandlers();
-        assert($requestHandlers[Request::UPDATE_MARKET] == $handlers[1]);
         assert($requestHandlers[Request::FETCH_EVENTS] == $handlers[0]);
+        assert($requestHandlers[Request::UPDATE_MARKET] == $handlers[1]);
+        assert($requestHandlers[Request::PREDICT_TRADE] == $handlers[2]);
+        assert($requestHandlers[Request::PREDICTABLE_TRADE] == $handlers[3]);
+        assert($requestHandlers[Request::OPEN_TRADE] == $handlers[4]);
+        assert($requestHandlers[Request::CLOSE_TRADE] == $handlers[5]);
+        assert($requestHandlers[Request::CANCEL_TRADE] == $handlers[6]);
+        assert($requestHandlers[Request::NEXT_ACTION] == $handlers[7]);
     }
     
     public function testExecuteSucces(){
@@ -150,7 +172,15 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             
             $this->requestHandler->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock);
             $this->requestHandler->setRequest(Request::FETCH_EVENTS);
-            $handlers = [$eventsRequestMock, $marketRequestMock];
+            $handlers = [$eventsRequestMock, 
+                $this->marketRequestMock, 
+                $this->predictTradeMock, 
+                $this->predictableTradeMock,
+                $this->openTradeMock, 
+                $this->closeTradeMock, 
+                $this->cancelTradeMock, 
+                $this->nextActionMock
+            ];
             $this->requestHandler->setRequestHandlers($handlers);
             
             $eventsRequestMock->expects($this->once())
