@@ -14,27 +14,26 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
+
         parent::setUp();
+        $this->mysqli = connect_database();
+        $this->eventDBHandler = new EventDBHandler($this->mysqli);
+        $this->eventDBHandler->createTable();
         $this->event = new Event(254, 65954, new DateTime("NOW"), 0.01, 500);
     }
     
     protected function tearDown()
     {
         $this->eventDBHandler->emptyTable();
+        $this->mysqli->close();
         parent::tearDown();
-    }
-    
-    public function __construct()
-    {
-        $this->mysqli = connect_database();
-        $this->eventDBHandler = new EventDBHandler($this->mysqli);
-        $this->eventDBHandler->createTable();
     }
     
     public function __destruct()
     {
+        $this->mysqli = connect_database();
         $this->deleteTableIfExists();
-        $this->eventDBHandler = null;
+        $this->mysqli->close();
     }
     
     private function deleteTableIfExists()
@@ -45,31 +44,31 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         }
     }
     
-    public function test__isTableEmpty()
+    public function testIsTableEmpty()
     {
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
-    public function test__addingEvent_expectIncrementInSize(){
+    public function testAddingEventExpectIncrementInSize(){
         $identifier = $this->eventDBHandler->addEvent($this->event);
         assert($this->eventDBHandler->getTableSize() == 1);
         assert($identifier != 2);
         assert($identifier == 1);
     }
     
-    public function test__removingEvent_expectDecrementationInSize(){
+    public function testRemovingEventExpectDecrementationInSize(){
         $identifier = $this->eventDBHandler->addEvent($this->event);
         $this->eventDBHandler->removeEventById($identifier);
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
-    public function test__getInvalidEventIdShouldThrow(){
+    public function testGetInvalidEventIdShouldThrow(){
         $identifier = $this->eventDBHandler->addEvent($this->event);
         $this->expectExceptionMessage("Event does not exists, id:".($identifier+1));
         $this->eventDBHandler->getEventById($identifier+1);
     }
     
-    public function test__addingEvent_expectSameValueInDBandEvent(){
+    public function testAddingEventExpectSameValueInDBandEvent(){
         $identifier = $this->eventDBHandler->addEvent($this->event);
         $this->event->setId($identifier);
         $db_event = $this->eventDBHandler->getEventById($identifier);
@@ -80,13 +79,13 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($db_event->getNextEvent() == $this->event->getNextEvent());
     }
     
-    public function test__tryAddingSameEvent_ExpectSameDBSize(){
+    public function testTryAddingSameEventExpectSameDBSize(){
         $this->createDummyEvent();
         $this->createDummyEvent();
         assert($this->eventDBHandler->getTableSize() == 1);
     }
     
-    public function test__updateEvent_expectSameValueInDBandEvent(){
+    public function testUpdateEventExpectSameValueInDBandEvent(){
         $identifier = $this->eventDBHandler->addEvent($this->event);
         $this->event->setId($identifier);
         $this->event->update(2.5, (new DateTime("NOW"))->add(new DateInterval("PT5M")));
@@ -99,24 +98,24 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($db_event->getState() == $this->event->getState(), "State should be equal to 1");
     }
     
-    public function test__emptyTable(){
+    public function testEmptyTable(){
         $this->eventDBHandler->addEvent($this->event);
         $this->eventDBHandler->emptyTable();
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
-    public function test_getEventByEventID(){
+    public function testGetEventByEventID(){
         $this->createRandomDummyEvent();
         $event2 = $this->createRandomDummyEvent();
         assert($this->eventDBHandler->getEventByEventId($event2->getEventId()) == $event2);
     }
     
-    public function test__getInvalidEventEventIdShouldThrow(){
+    public function testGetInvalidEventEventIdShouldThrow(){
         $this->expectExceptionMessage("Event does not exists, event id:".(50));
         $this->eventDBHandler->getEventByEventId(50);
     }
     
-    public function test__getEventsFromTo(){
+    public function testGetEventsFromTo(){
         $fromDate = new DateTime("2017-08-03");
         $toDate = new DateTime("2017-08-05");
         
@@ -131,7 +130,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($all_here, "Events were not equals");
     }
     
-    public function test__getEventsFromToState(){
+    public function testGetEventsFromToState(){
         $fromDate = new DateTime("2017-08-03");
         $toDate = new DateTime("2017-08-05");
         $state = EventState::UPDATED;
@@ -147,7 +146,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($all_here, "Events were not equals");
     }
     
-    public function test__getEventsFromToWithBadArguments_ShouldThrow(){
+    public function testGetEventsFromToWithBadArgumentsShouldThrow(){
         $fromDate = "coucou";
         $toDate = 32;
         $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate).
@@ -155,7 +154,7 @@ class EventDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $this->eventDBHandler->getEventsFromTo($fromDate, $toDate);
     }
     
-    public function test__getEventsFromToStateWithBadArguments_ShouldThrow(){
+    public function testGetEventsFromToStateWithBadArgumentsShouldThrow(){
         $fromDate = new DateTime("2017-08-03");
         $toDate = new DateTime("2017-08-05");
         $state = "5";

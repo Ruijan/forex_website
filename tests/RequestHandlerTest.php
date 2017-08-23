@@ -1,15 +1,9 @@
 <?php
-require_once(str_replace("tests", "src", __DIR__."/").'connect.php');
 
-require_once(str_replace("tests", "src", __DIR__."/").'RequestHandler.php');
-require_once(str_replace("tests", "src", __DIR__."/").'EventDBHandler.php');
-require_once(str_replace("tests", "src", __DIR__."/").'EventParser.php');
-require_once(str_replace("tests", "src", __DIR__."/").'TradeDBHandler.php');
+$pathToSrc = str_replace("tests", "src", __DIR__."/");
+require_once($pathToSrc.'connect.php');
 
-require_once(str_replace("tests", "src/requests", __DIR__."/").'CollectEventsRequest.php');
-require_once(str_replace("tests", "src/requests", __DIR__."/").'UpdateMarketRequest.php');
-require_once(str_replace("tests", "src/requests", __DIR__."/").'ForexRequest.php');
-
+require_once($pathToSrc.'RequestHandler.php');
 
 require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 
@@ -127,7 +121,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     public function testSettingRequestsArrayWithWrongTypeShouldThrow(){
         $forexRequestMock = $this->getMockBuilder('ForexRequest')
         ->disableOriginalConstructor()->getMock();
-        $this->expectExceptionMessage("Wrong type of request handler.");
+        $this->expectExceptionMessage("Wrong type of request handler: ".get_class($forexRequestMock));
         $handlers = [$this->eventsRequestMock, $this->marketRequestMock, $this->predictTradeMock, 
             $this->predictableTradeMock,
             $this->openTradeMock, $this->closeTradeMock, $this->cancelTradeMock, $forexRequestMock
@@ -162,13 +156,24 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             $eventParserMock = $this->getMockBuilder('EventParser')
             ->disableOriginalConstructor()->getMock();
             $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()->setMethods(array('createTable', 'doesTableExists'))->getMock();
             $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
-            ->disableOriginalConstructor()->getMock();
-            $marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()->setMethods(array('createTable', 'doesTableExists'))->getMock();
             $eventsRequestMock = $this->getMockBuilder('CollectEventsRequest')
             ->disableOriginalConstructor()->setMethods(array('execute'))->getMock();
+            
+            $eventDBHandlerMock->expects($this->once())
+            ->method('createTable')
+            ->willReturn($this->returnArgument(0));
+            $tradeDBHandlerMock->expects($this->once())
+            ->method('createTable')
+            ->willReturn($this->returnArgument(0));
+            $eventDBHandlerMock->expects($this->once())
+            ->method('doesTableExists')
+            ->willReturn(True);
+            $tradeDBHandlerMock->expects($this->once())
+            ->method('doesTableExists')
+            ->willReturn(True);
             
             $this->requestHandler->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock);
             $this->requestHandler->setRequest(Request::FETCH_EVENTS);

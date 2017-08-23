@@ -10,13 +10,16 @@ class GUIHTMLDisplayer
         parent::__construct($display_mode);
     }
     
+    public function createPage(){
+        return $this->createTopHeader().$this->createHeader().$this->createTopNavBar()
+        .$this->createLeftNavBar().$this->createTopBodyTag().$this->createBody().$this->createBottomBodyTag();
+    }
     
-    
-    function createTopHeader(){
+    private function createTopHeader(){
         return '<!DOCTYPE html><html lang="en">';
     }
     
-    function createHeader(){
+    private function createHeader(){
         return '
       <head>
         <meta charset="utf-8">
@@ -35,7 +38,7 @@ class GUIHTMLDisplayer
     </head>';
     }
     
-    function createTopNavBar(){
+    private function createTopNavBar(){
         return '<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -60,7 +63,7 @@ class GUIHTMLDisplayer
     </nav>';
     }
     
-    function createLeftNavBar(){
+    private function createLeftNavBar(){
         $toptag = '<div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">';
@@ -75,7 +78,7 @@ class GUIHTMLDisplayer
     </div>';
         return $toptag.$list.$calendars.$bottomtag;
     }
-    function createTopBodyTag(){
+    private function createTopBodyTag(){
         return '<body class="col-md-offset-2">
       <head>
         <link rel="stylesheet" href="styles/stats_style.css">
@@ -85,7 +88,7 @@ class GUIHTMLDisplayer
       <script type="text/javascript" src="https://www.google.com/jsapi"></script>
       <section id="conteneur"><article>';
     }
-    function createBody(){
+    private function createBody(){
         $events = "";
         $mysqli = connect_database();
         $date = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
@@ -100,7 +103,7 @@ class GUIHTMLDisplayer
         }
         return $events;
     }
-    function createFromToCalendars(){
+    private function createFromToCalendars(){
         
         $toptag = "<div sytle='margin: auto; width:100%; text-align: center;'>";
         $from_calendar = "From: ".createCalendar('from','to', date("Y-m-d"));
@@ -118,7 +121,7 @@ class GUIHTMLDisplayer
         $bottomtag = "</form></div>";
         return $toptag.$from_calendar.'<br/>'.$to_calendar.$form.$validate.$bottomtag;
     }
-    function createCalendar($date1, $date2, $default){
+    private function createCalendar($date1, $date2, $default){
         $myCalendar = new TcCalendar($date1, true,false);
         $myCalendar->setIcon("calendar/images/iconCalendar.gif");
         $myCalendar->setDate(date('d', strtotime($default))
@@ -147,12 +150,8 @@ class GUIHTMLDisplayer
         return $calendar.$myCalendar->getScript();
     }
     
-    function createBottomBodyTag(){
+    private function createBottomBodyTag(){
         return '</article></section></body>';
     }
     
-    function createPage(){
-        return $this->createTopHeader().$this->createHeader().$this->createTopNavBar()
-        .$this->createLeftNavBar().$this->createTopBodyTag().$this->createBody().$this->createBottomBodyTag();
-    }
 }
