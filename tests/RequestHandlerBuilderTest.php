@@ -5,7 +5,6 @@ require_once($pathToSrc.'connect.php');
 require_once($pathToSrc.'RequestHandlerBuilder.php');
 require_once(str_replace("tests", "vendor", __DIR__."/").'/autoload.php');
 
-
 class RequestHandlerBuilderTest extends PHPUnit_Framework_TestCase
 {
 

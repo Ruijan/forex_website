@@ -4,15 +4,17 @@ require_once('EventDBHandler.php');
 require_once('EventParser.php');
 require_once('TradeDBHandler.php');
 
-require_once('requests\CollectEventsRequest.php');
-require_once('requests\UpdateMarketRequest.php');
-require_once('requests\ForexRequest.php');
-require_once('requests\CancelTradeRequest.php');
-require_once('requests\CloseTradeRequest.php');
-require_once('requests\OpenTradeRequest.php');
-require_once('requests\PredictableTradesRequest.php');
-require_once('requests\PredictTradeRequest.php');
-require_once('requests\NextActionRequest.php');
+$pathToRequest = __DIR__."/requests/";
+
+require_once($pathToRequest.'CollectEventsRequest.php');
+require_once($pathToRequest.'UpdateMarketRequest.php');
+require_once($pathToRequest.'ForexRequest.php');
+require_once($pathToRequest.'CancelTradeRequest.php');
+require_once($pathToRequest.'CloseTradeRequest.php');
+require_once($pathToRequest.'OpenTradeRequest.php');
+require_once($pathToRequest.'PredictableTradesRequest.php');
+require_once($pathToRequest.'PredictTradeRequest.php');
+require_once($pathToRequest.'NextActionRequest.php');
 
 abstract class Request{
     const FETCH_EVENTS      = 0;
