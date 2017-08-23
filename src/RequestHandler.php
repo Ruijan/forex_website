@@ -1,4 +1,19 @@
 <?php
+
+require_once('EventDBHandler.php');
+require_once('EventParser.php');
+require_once('TradeDBHandler.php');
+
+require_once('requests\CollectEventsRequest.php');
+require_once('requests\UpdateMarketRequest.php');
+require_once('requests\ForexRequest.php');
+require_once('requests\CancelTradeRequest.php');
+require_once('requests\CloseTradeRequest.php');
+require_once('requests\OpenTradeRequest.php');
+require_once('requests\PredictableTradesRequest.php');
+require_once('requests\PredictTradeRequest.php');
+require_once('requests\NextActionRequest.php');
+
 abstract class Request{
     const FETCH_EVENTS      = 0;
     const PREDICTABLE_TRADE = 1;
@@ -108,32 +123,32 @@ class RequestHandler{
     }
     private function tryAddingRequestHandler($handler)
     {
-        if(is_a($handler,"UpdateMarketRequest")){
+        if(strstr(get_class($handler),"UpdateMarketRequest")){
             $this->requestHandlers[Request::UPDATE_MARKET] = $handler;
         }
-        elseif (is_a($handler,"CollectEventsRequest")){
+        elseif (strstr(get_class($handler),"CollectEventsRequest")){
             $this->requestHandlers[Request::FETCH_EVENTS] = $handler;
         }
-        elseif (is_a($handler,"PredictTradeRequest")){
+        elseif (strstr(get_class($handler),"PredictTradeRequest")){
             $this->requestHandlers[Request::PREDICT_TRADE] = $handler;
         }
-        elseif (is_a($handler,"PredictableTradesRequest")){
+        elseif (strstr(get_class($handler),"PredictableTradesRequest")){
             $this->requestHandlers[Request::PREDICTABLE_TRADE] = $handler;
         }
-        elseif (is_a($handler,"OpenTradeRequest")){
+        elseif (strstr(get_class($handler),"OpenTradeRequest")){
             $this->requestHandlers[Request::OPEN_TRADE] = $handler;
         }
-        elseif (is_a($handler,"CloseTradeRequest")){
+        elseif (strstr(get_class($handler),"CloseTradeRequest")){
             $this->requestHandlers[Request::CLOSE_TRADE] = $handler;
         }
-        elseif (is_a($handler,"NextActionRequest")){
+        elseif (strstr(get_class($handler),"NextActionRequest")){
             $this->requestHandlers[Request::NEXT_ACTION] = $handler;
         }
-        elseif (is_a($handler,"CancelTradeRequest")){
+        elseif (strstr(get_class($handler),"CancelTradeRequest")){
             $this->requestHandlers[Request::CANCEL_TRADE] = $handler;
         }
         else{
-            throw new ErrorException("Wrong type of request handler.");
+            throw new ErrorException("Wrong type of request handler: ".get_class($handler));
         }
     }
 
