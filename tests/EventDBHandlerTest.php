@@ -15,7 +15,6 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
         
-        // TODO Auto-generated EventDBHandlerTest::setUp()
         $this->mysqli = connect_database();
         $this->eventDBHandler = new EventDBHandler($this->mysqli);
         $this->deleteTableIfExists();
@@ -31,15 +30,11 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function deleteTableIfExists()
     {
-        if($this->eventDBHandler->doesTableExists())
-        {
-            $this->mysqli->query("DROP TABLE events");
-        }
+        $this->eventDBHandler->deleteTable();
     }
 
     public function __construct()
     {
-        // TODO Auto-generated constructor
     }
     
     public function test__constructTableShouldNotExists(){

@@ -69,13 +69,16 @@ class RequestHandler{
         $this->setEventDBHandler($eventDBHandler);
         $this->setEventParser($eventParser);
         $this->setTradeDBHandler($tradeDBHandler);
+        $this->eventDBHandler->createTable();
+        $this->tradeDBHandler->createTable();
     }
     
     public function getRequest(){return $this->request;}
     
     public function isCorrectlyInitialized(){
         return $this->eventDBHandler != null and $this->eventParser != null and 
-        $this->tradeDBHandler != null and $this->doesRequestExist($this->request);
+        $this->tradeDBHandler != null and $this->doesRequestExist($this->request) and 
+        $this->eventDBHandler->doesTableExists() and $this->tradeDBHandler->doesTableExists();
     }
     
     public function setEventDBHandler($eventDBHandler){

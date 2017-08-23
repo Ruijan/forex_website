@@ -36,7 +36,10 @@ class RequestHandlerBuilderTest extends PHPUnit_Framework_TestCase
         try{
             $mysqli = connect_database();
             $request = "fetch_events";
-            $requestHandler = $this->requestHandlerBuilder->makeRequestHandlerWithRequest($request, $mysqli);
+            $requestHandler = $this->requestHandlerBuilder->makeRequestHandlerWithRequest(
+                $request, 
+                [],
+                $mysqli);
             assert(true);
         }
         catch(Exception $e){

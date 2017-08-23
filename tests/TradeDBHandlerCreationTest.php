@@ -22,44 +22,45 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         // TODO Auto-generated TradeDBHandlerTest::tearDown()
-        $this->tradeDBHandler->deleteTable();
-        $this->deleteTableIfExists();
-        $this->tradeDBHandler = null;
+        $this->tradeDBHandler->emptyTable();
         $this->mysqli->close();
         parent::tearDown();
     }
     
-    public function __construct()
+    public function __destruct()
     {
-        // TODO Auto-generated constructor
+        $this->mysqli = connect_database();
+        $this->deleteTableIfExists();
+        $this->mysqli->close();
     }
     
-    public function test_isTableEmpty()
+    
+    public function testIsTableEmpty()
     {
         assert($this->tradeDBHandler->getTableSize() == 0);
     }
     
-    public function test_addingTrade_expectIncrementInSize(){
+    public function testAddingTrade_expectIncrementInSize(){
         $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
         assert($this->tradeDBHandler->getTableSize() == 2);
         assert($trade2->getId() == 2);
     }
     
-    public function test_getTradeByEventID(){
+    public function testGetTradeByEventID(){
         $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
         assert($this->tradeDBHandler->getTradeByEventId($trade2->getIDDBEvent()) == $trade2);
     }
     
-    public function test_removingTrade_expectDecrementationInSize(){
+    public function testRemovingTradeExpectDecrementationInSize(){
         $trade = new Trade(999, new DateTime('NOW'), "EUR_USD");
         $id = $this->tradeDBHandler->addTrade($trade);
         $this->tradeDBHandler->removeTradeById($id);
         assert($this->tradeDBHandler->getTableSize() == 0);
     }
     
-    public function test_addingTrade_expectExactParameters(){
+    public function testAddingTradeExpectExactParameters(){
         $trade = $this->createRandomDummyTrade();
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         assert($trade->getCreationTime() == $db_trade->getCreationTime(), "Expect same Creation Time: ".
@@ -69,7 +70,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($trade->getIDDBEvent() == $db_trade->getIDDBEvent(), "Expect same event Id");
     }
     
-    public function test_tryAddingTradeSecondTime_SizeShouldBeOne(){
+    public function testTryAddingTradeSecondTimeSizeShouldBeOne(){
         $this->tryCreatingTwoSameDummyTrades();
         assert($this->tradeDBHandler->getTableSize() == 1);
     }
@@ -90,7 +91,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         return $trade;
     }
 
-    public function test_openTrade_shouldUpdateOpenTime(){
+    public function testOpenTradeShouldUpdateOpenTime(){
         $trade = $this->openTrade();
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         $this->checkIfOpenDBTradeEqualTrade($trade, $db_trade);
@@ -117,7 +118,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         return $trade;
     }
 
-    public function test_closeTrade_shouldUpdateCloseTimeGainCommissionState(){
+    public function testCloseTradeShouldUpdateCloseTimeGainCommissionState(){
         $trade = $this->openCloseTrade();
         $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
         $this->checkIfClosedDBtradeEqualTrade($trade, $db_trade);
@@ -144,7 +145,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         return $trade;
     }
     
-    public function test_fillMarketTrade_shouldUpdateMarketState(){
+    public function testFillMarketTradeShouldUpdateMarketState(){
         $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
         $id = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($id);
@@ -161,7 +162,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($db_trade->getState() == $trade->getState(), "Expect equal state of 1");
     }
 
-    public function test_predictTrade_shouldUpdatePredictPProbaState(){
+    public function testPredictTradeShouldUpdatePredictPProbaState(){
         $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
         $id = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($id);
@@ -179,7 +180,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         assert($db_trade->getState() == $trade->getState(), "Expect equal state of 2");
     }
     
-    public function test__getTradesFromToWithBadArguments_ShouldThrow(){
+    public function testGetTradesFromToWithBadArgumentsShouldThrow(){
         $fromDate = "coucou";
         $toDate = 32;
         $this->expectExceptionMessage("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate).
@@ -187,7 +188,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate);
     }
     
-    public function test__getTradesFromToStateWithBadArguments_ShouldThrow(){
+    public function testGetTradesFromToStateWithBadArgumentsShouldThrow(){
         $fromDate = new DateTime("2017-08-03");
         $toDate = new DateTime("2017-08-05");
         $state = "5";

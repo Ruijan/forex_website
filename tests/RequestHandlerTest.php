@@ -156,11 +156,24 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             $eventParserMock = $this->getMockBuilder('EventParser')
             ->disableOriginalConstructor()->getMock();
             $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()->setMethods(array('createTable', 'doesTableExists'))->getMock();
             $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
-            ->disableOriginalConstructor()->getMock();
+            ->disableOriginalConstructor()->setMethods(array('createTable', 'doesTableExists'))->getMock();
             $eventsRequestMock = $this->getMockBuilder('CollectEventsRequest')
             ->disableOriginalConstructor()->setMethods(array('execute'))->getMock();
+            
+            $eventDBHandlerMock->expects($this->once())
+            ->method('createTable')
+            ->willReturn($this->returnArgument(0));
+            $tradeDBHandlerMock->expects($this->once())
+            ->method('createTable')
+            ->willReturn($this->returnArgument(0));
+            $eventDBHandlerMock->expects($this->once())
+            ->method('doesTableExists')
+            ->willReturn(True);
+            $tradeDBHandlerMock->expects($this->once())
+            ->method('doesTableExists')
+            ->willReturn(True);
             
             $this->requestHandler->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock);
             $this->requestHandler->setRequest(Request::FETCH_EVENTS);

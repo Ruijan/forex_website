@@ -18,10 +18,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated TradeDBHandlerTest::setUp()
         $this->mysqli = connect_database();
         $this->tradeDBHandler = new TradeDBHandler($this->mysqli);
-        if($this->tradeDBHandler->doesTableExists())
-        {
-            $this->mysqli->query("DROP TABLE trades");
-        }
+        $this->deleteTableIfExists();
     }
 
     /**
@@ -45,34 +42,34 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated constructor
     }
 
-    public function test__constructTableShouldNotExists(){
+    public function testConstructTableShouldNotExists(){
         assert($this->tradeDBHandler->doesTableExists() == False);
     }
 
-    public function test__construct()
+    public function testConstruct()
     {
         assert($this->tradeDBHandler->isInitialized());
         assert($this->tradeDBHandler->getTableName() == "trades");
     }
     
-    public function test__createTable(){
+    public function testCreateTable(){
         $this->tradeDBHandler->createTable();
         assert($this->tradeDBHandler->doesTableExists());
     }
     
-    public function test__deleteTable(){
+    public function testDeleteTable(){
         $this->tradeDBHandler->createTable();
         $this->tradeDBHandler->deleteTable();
         assert(!$this->tradeDBHandler->doesTableExists());
     }
     
-    public function test__checkSizeInEmptyDB_shouldThrowError(){
+    public function testCheckSizeInEmptyDB_shouldThrowError(){
         $this->deleteTableIfExists();
         $this->expectExceptionMessage('Table does not exists.');
         $this->tradeDBHandler->getTableSize();
     }
     
-    public function test__tryAddEventInNonExistingTable_shouldThrowError(){
+    public function testTryAddEventInNonExistingTable_shouldThrowError(){
         $this->deleteTableIfExists();
         $this->expectExceptionMessage('Table does not exists.');
         $this->tradeDBHandler->addTrade(null);
@@ -80,10 +77,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function deleteTableIfExists()
     {
-        if($this->tradeDBHandler->doesTableExists())
-        {
-            $this->mysqli->query("DROP TABLE trades");
-        }
+        $this->tradeDBHandler->deleteTable();
     }  
 }
 

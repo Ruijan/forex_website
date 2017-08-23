@@ -6,11 +6,13 @@ class TradeDBHandler
 {
     private $mysqli = null;
     private $table_name = "";
+    private $existingTable = false;
     
     public function __construct($mysqli)
     {
         $this->mysqli = $mysqli;
         $this->table_name = "trades";
+        $this->existingTable = $this->checkIfTableExist();
     }
     
     public function isInitialized(){
@@ -20,13 +22,18 @@ class TradeDBHandler
     public function getTableName(){return $this->table_name;}
     
     public function doesTableExists(){
+        return $this->existingTable;
+
+    }
+    private function checkIfTableExist()
+    {
         if ($result = $this->mysqli->query("SHOW TABLES LIKE '".$this->table_name."'")) {
             if($result->num_rows >= 1) {
                 return true;
             }
         }
-        return false;
-    }
+        return false;}
+
     
     public function createTable(){
         if(!$this->doesTableExists()){
@@ -49,12 +56,22 @@ class TradeDBHandler
             if ($this->mysqli->query($query) === FALSE) {
                 throw new ErrorException("Couldn't create database.");
             }
+            $this->existingTable = true;
         }
     }
     
     public function deleteTable(){
         if($this->doesTableExists()){
             $this->mysqli->query("DROP TABLE ".$this->table_name);
+            $this->existingTable = false;
+        }
+    }
+    
+    public function emptyTable(){
+        $this->throwIfTableDoesNotExist();
+        $query = "TRUNCATE TABLE ".$this->table_name;
+        if($this->mysqli->query($query) === FALSE){
+            throw new Exception("Error: " . $query . "<br>" . $this->mysqli->error);
         }
     }
     

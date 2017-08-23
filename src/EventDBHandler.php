@@ -4,21 +4,29 @@ require_once 'Event.php';
 class EventDBHandler
 {
     private $mysqli;
+    private $existingTable = False;
+    
     public function __construct($mysqli)
-    {$this->mysqli = $mysqli;}
+    {
+        $this->mysqli = $mysqli;
+        $this->existingTable = $this->checkIfTableExist();
+    }
     
     public function doesTableExists(){
+        return $this->existingTable;
+    }
+    
+    private function checkIfTableExist(){
         if ($result = $this->mysqli->query("SHOW TABLES LIKE 'events'")) {
             if($result->num_rows >= 1) {
-                return true;
+                return True;
             }
         }
-        return false;
+        return False;
     }
     
     public function createTable(){
         if(!$this->doesTableExists()){
-            
             $query = "CREATE TABLE events (
                         ID int(11) AUTO_INCREMENT UNIQUE,
                         ID_EVENT int(11) NOT NULL UNIQUE,
@@ -34,12 +42,14 @@ class EventDBHandler
             if ($this->mysqli->query($query) === FALSE) {
                 throw new ErrorException("Couldn't create database.");
             }
+            $this->existingTable = true;
         }
     }
     
     public function deleteTable(){
         if($this->doesTableExists()){
             $this->mysqli->query("DROP TABLE events");
+            $this->existingTable = false;
         }
     }
     
