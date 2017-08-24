@@ -50,26 +50,26 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function testAddingEventExpectIncrementInSize(){
-        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $identifier = $this->eventDBHandler->tryAddingEvent($this->event);
         assert($this->eventDBHandler->getTableSize() == 1);
         assert($identifier != 2);
         assert($identifier == 1);
     }
     
     public function testRemovingEventExpectDecrementationInSize(){
-        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $identifier = $this->eventDBHandler->tryAddingEvent($this->event);
         $this->eventDBHandler->removeEventById($identifier);
         assert($this->eventDBHandler->getTableSize() == 0);
     }
     
     public function testGetInvalidEventIdShouldThrow(){
-        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $identifier = $this->eventDBHandler->tryAddingEvent($this->event);
         $this->expectExceptionMessage("Event does not exists, id:".($identifier+1));
         $this->eventDBHandler->getEventById($identifier+1);
     }
     
     public function testAddingEventExpectSameValueInDBandEvent(){
-        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $identifier = $this->eventDBHandler->tryAddingEvent($this->event);
         $this->event->setId($identifier);
         $db_event = $this->eventDBHandler->getEventById($identifier);
         assert($db_event->getEventId() == $this->event->getEventId());
@@ -86,7 +86,7 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function testUpdateEventExpectSameValueInDBandEvent(){
-        $identifier = $this->eventDBHandler->addEvent($this->event);
+        $identifier = $this->eventDBHandler->tryAddingEvent($this->event);
         $this->event->setId($identifier);
         $this->event->update(2.5, (new DateTime("NOW"))->add(new DateInterval("PT5M")));
         $this->eventDBHandler->updateEvent($this->event);
@@ -99,7 +99,7 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function testEmptyTable(){
-        $this->eventDBHandler->addEvent($this->event);
+        $this->eventDBHandler->tryAddingEvent($this->event);
         $this->eventDBHandler->emptyTable();
         assert($this->eventDBHandler->getTableSize() == 0);
     }
@@ -180,7 +180,7 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function addListOfEvents($events){
         foreach($events as $event){
-            $event->setId($this->eventDBHandler->addEvent($event));
+            $event->setId($this->eventDBHandler->tryAddingEvent($event));
         }
     }
     

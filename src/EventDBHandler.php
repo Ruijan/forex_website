@@ -33,7 +33,7 @@ class EventDBHandler extends DBHandler
         }
     }
     
-    public function addEvent($event){
+    private function addEvent($event){
         $this->throwIfTableDoesNotExist();
         $query = "INSERT INTO events
                     (ID, ID_EVENT, ID_NEWS, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,

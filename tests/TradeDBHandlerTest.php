@@ -57,8 +57,8 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     public function testRemovingTradeExpectDecrementationInSize(){
         $trade = new Trade(999, new DateTime('NOW'), "EUR_USD");
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $this->tradeDBHandler->removeTradeById($id);
+        $identifier = $this->tradeDBHandler->addTrade($trade);
+        $this->tradeDBHandler->removeTradeById($identifier);
         assert($this->tradeDBHandler->getTableSize() == 0);
     }
     
