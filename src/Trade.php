@@ -203,27 +203,6 @@ class Trade
         $this->setState(TradeState::FILLED);
     }
     
-    
-    static public function createTradeFromDbArray($result)
-    {
-        $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]), $result["CURRENCY"]);
-        $trade->setId((int)$result["ID"]);
-        if((int)$result["STATE"] >= TradeState::OPEN){
-            $trade->setOpenTime(new DateTime($result["OPEN_TIME"]));
-        }
-        if((int)$result["STATE"] >= TradeState::CLOSE){
-            $trade->setCloseTime(new DateTime($result["CLOSE_TIME"]));
-        }
-        $trade->setDv_p_tm5((float)$result["DV_P_TM5"]);
-        $trade->setDv_p_t0((float)$result["DV_P_T0"]);
-        $trade->setPrediction((int)$result["PREDICTION"]);
-        $trade->setP_proba((float)$result["PREDICTION_PROBA"]);
-        $trade->setGain((float)$result["GAIN"]);
-        $trade->setCommission((float)$result["COMMISSION"]);
-        $trade->setState((int)$result["STATE"]);
-        return $trade;
-    }
-    
     public function getStringFromState($state){
         switch($state){
             case TradeState::INITIALIZED:

@@ -11,12 +11,7 @@ class TradeDBHandlerCreationTest extends PHPUnit_Framework_TestCase
         $this->mysqli = connect_database();
         $this->currency = "EUR_USD";
         $this->tradeDBHandler = new TradeDBHandler($this->mysqli, $this->currency);
-        if($this->tradeDBHandler->doesTableExists())
-        {
-            $this->mysqli->query("DROP TABLE trades_".$this->currency);
-        }
         $this->tradeDBHandler->createTable();
-        
     }
     
     protected function tearDown()

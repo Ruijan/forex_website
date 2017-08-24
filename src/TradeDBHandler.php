@@ -161,7 +161,7 @@ class TradeDBHandler
         }
         while($row = $result->fetch_array())
         {
-            return Trade::createTradeFromDbArray($row);
+            return $this->createTradeFromDbArray($row);
         }
     }
     
@@ -174,7 +174,7 @@ class TradeDBHandler
         }
         while($row = $result->fetch_array())
         {
-            return Trade::createTradeFromDbArray($row);
+            return $this->createTradeFromDbArray($row);
         }
     }
     
@@ -189,9 +189,31 @@ class TradeDBHandler
         }
         while($row = $result->fetch_array())
         {
-            $trades[] = Trade::createTradeFromDbArray($row);
+            $trades[] = $this->createTradeFromDbArray($row);
         }
         return $trades;
+    }
+    
+    public function createTradeFromDbArray($result)
+    {
+        $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]), $result["CURRENCY"]);
+        $trade->setId((int)$result["ID"]);
+        if((int)$result["STATE"] >= TradeState::FILLED){
+            $trade->fillMarketInfo((float)$result["DV_P_TM5"], (float)$result["DV_P_T0"]);
+        }
+        if((int)$result["STATE"] >= TradeState::PREDICTED){
+            $trade->predict((int)$result["PREDICTION"], (float)$result["PREDICTION_PROBA"]);
+        }
+        if((int)$result["STATE"] >= TradeState::OPEN){
+            $trade->open(new DateTime($result["OPEN_TIME"]));
+        }
+        
+        if((int)$result["STATE"] >= TradeState::CLOSE){
+            $trade->close((float)$result["GAIN"], (float)$result["COMMISSION"], 
+                new DateTime($result["CLOSE_TIME"]));
+        }
+        $trade->setState((int)$result["STATE"]);
+        return $trade;
     }
     
     private function buildSelectQueryFromToState($fromDate, $toDate, $state, $currency)
