@@ -107,17 +107,6 @@ class Event
         $this->state = $state;
     }
     
-    static public function createEventFromDbArray($result)
-    {
-        $event = new Event((int)$result["ID_EVENT"], (int)$result["ID_NEWS"], 
-            new DateTime($result["ANNOUNCED_TIME"]), (float)$result["PREVIOUS"], (int)$result["NEXT_EVENT"]);
-        $event->setId((int)$result["ID"]);
-        $event->setActual((float)$result["ACTUAL"]);
-        $event->setState((int)$result["STATE"]);
-        $event->setRealTime(new DateTime($result["REAL_TIME"]));
-        return $event;
-    }
-    
     public function update($actual, $real_time){
         $this->setActual($actual);
         $this->setRealTime($real_time);
