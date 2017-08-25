@@ -20,7 +20,7 @@ class CollectEventsRequest extends ForexRequest
         $this->eventParser->createEventsFromTable();
         $events = $this->eventParser->getEvents();
         $todayUTC = new \DateTime();
-        $todayUTC->createFromFormat('Y-m-d H:i:s',gmdate('Y-m-d H:i:s', time()));
+        $todayUTC = $todayUTC->createFromFormat('Y-m-d H:i:s',gmdate('Y-m-d H:i:s', time()));
         $db_events = $this->eventDBHandler->getEventsFromTo($todayUTC, $todayUTC);
         
         foreach($events as $event){
@@ -38,7 +38,7 @@ class CollectEventsRequest extends ForexRequest
                     if($db_event->getState() != $event->getState()){
                         $this->eventDBHandler->updateEvent($event);
                         $todayUTC = new \DateTime();
-                        $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
+                        $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
                         $this->tradeDBHandler->tryAddingTrade(
                             new Trade($event->getEventId(), $todayUTC, "EUR_USD"));
                     }

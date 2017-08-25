@@ -69,7 +69,8 @@ class EventParser
         $previous_node = $this->table->getElementByID('eventPrevious_'.$news_id)->nodeValue;
         $previous = $this->getFloatFromString($previous_node);
         $eventDateTime = new \DateTime();
-        $eventDateTime->createFromFormat('Y-m-d H:i:s', $line->getAttribute('event_timestamp'));
+        $eventDateTime = $eventDateTime->createFromFormat('Y-m-d H:i:s', 
+            $line->getAttribute('event_timestamp'));
         $event = new Event((int)$line->getAttribute('event_attr_id'), 
             (int)$news_id , 
             $eventDateTime, 
@@ -82,10 +83,10 @@ class EventParser
     {
         $actual_node = $this->table->getElementByID('eventActual_'.$event->getNewsId())->nodeValue;
         $actual = $this->getFloatFromString($actual_node);
-        if (!is_null($actual))
+        if ($actual != 0)
         {
             $realTime = new DateTime();
-            $realTime->createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
+            $realTime = $realTime->createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
             $event->update($actual, $realTime);
         }
     }

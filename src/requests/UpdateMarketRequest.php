@@ -40,7 +40,7 @@ class UpdateMarketRequest extends ForexRequest
     public function execute(){
         $this->validateRequest();
         $todayUTC = new \DateTime();
-        $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
+        $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
         $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::INITIALIZED, 
             $this->parameters["currency"]);
         foreach ($trades as $trade){

@@ -28,7 +28,7 @@ class CloseTradeRequest extends ForexRequest
         $this->validateRequest();
         $trade = $this->tradeDBHandler->getTradeByID($this->parameters["trade_id"]);
         $todayUTC = new \DateTime();
-        $todayUTC->createFromFormat('Y-m-d H:i:s',gmdate('Y-m-d H:i:s', time()));
+        $todayUTC = $todayUTC->createFromFormat('Y-m-d H:i:s',gmdate('Y-m-d H:i:s', time()));
         $trade->close($this->parameters["gain"],
             $this->parameters["commission"],
             $todayUTC);

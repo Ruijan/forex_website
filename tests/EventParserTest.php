@@ -30,9 +30,6 @@ class EventParserTest extends PHPUnit_Framework_TestCase
         $this->eventParser = new EventParser($this->link);
     }
 
-    /**
-     * Cleans up the environment after running a test.
-     */
     protected function tearDown()
     {
         // TODO Auto-generated EventParserTest::tearDown()
@@ -41,21 +38,24 @@ class EventParserTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    /**
-     * Constructs the test case.
-     */
+
     public function __construct()
     {
         // TODO Auto-generated constructor
     }
 
-    /**
-     * Tests EventParser->__construct()
-     */
-    public function test__construct()
+    public function testConstruct()
     {
         
         assert($this->eventParser->getLink() == $this->link, "Links should be equal");
+    }
+    
+    public function testGetFloatFromZeroIntStringSuccess(){
+        assert($this->eventParser->getFloatFromString("0") == 0);
+    }
+    
+    public function testGetFloatFromFloatStringSuccess(){
+        assert($this->eventParser->getFloatFromString("1.2345") == 1.2345);
     }
     
     public function testSetLinkWithWrongTypeShouldThrow(){
@@ -64,7 +64,7 @@ class EventParserTest extends PHPUnit_Framework_TestCase
         $this->eventParser->setLink($link);
     }
 
-    public function test__retrieveTableOfEvents()
+    public function testRetrieveTableOfEvents()
     {
         $link = "https://sslecal2.forexprostools.com?columns=exc_flags,exc_currency,".
             "exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,".
@@ -75,7 +75,7 @@ class EventParserTest extends PHPUnit_Framework_TestCase
         assert(!is_null($this->eventParser->getTable()->getElementByID('ecEventsTable')));
     }
     
-    public function test__createEventsFromTable(){
+    public function testCreateEventsFromTable(){
         $link = "https://sslecal2.forexprostools.com?columns=exc_flags,exc_currency,".
             "exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,".
             "timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5".
@@ -98,5 +98,7 @@ class EventParserTest extends PHPUnit_Framework_TestCase
             "Last event next event should be the difference with midnight :".
             $last_event->getNextEvent()." expected ".$time_diff);
     }
+    
+    
 }
 

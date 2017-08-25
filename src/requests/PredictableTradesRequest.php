@@ -24,7 +24,7 @@ class PredictableTradesRequest extends ForexRequest
     
     public function execute(){
         $todayUTC = new \DateTime();
-        $todayUTC->createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
+        $todayUTC = $todayUTC->createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
         $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::FILLED);
         foreach ($trades as $trade){
             echo $this->displayer->displayTrade($trade)."<br/>";

@@ -25,10 +25,10 @@ class Event
         $this->setEventId($event_id);
         $this->setNewsId($news_id);
         $this->setAnnouncedTime($announced_time);
-        $this->setRealTime(new DateTime("0000-00-00 00:00:00"));
+        $this->setRealTime(new DateTime());
+        $this->setRealTime($this->getRealTime()->createFromFormat('Y-m-d H:i:s',"1970-01-01 00:00:00"));
         $this->setPrevious($previous);
         $this->setNextEvent($next_event);
-        
     }
     public function getId(){return $this->identifier;}
     public function getNewsId(){return $this->news_id;}
