@@ -317,7 +317,6 @@ class TcCalendar{
 		$params = $this->createParamsArray();
 
 		$paramStr = (sizeof($params)>0) ? "?".implode("&", $params) : "";
-
 		$div_display = "visible";
 		$div_position = "relative";
 		$div_align = "";
@@ -333,14 +332,15 @@ class TcCalendar{
 				$line_height = $img_attribs[1]+2;
 			}
 
-			$div_align = $this->createCSSAlignement();
+			$div_align = $this->createCSSAlignement($line_height);
 		}
 
 		$mout_str = ($this->auto_hide && $this->date_picker) ? " onmouseout=\"javascript:prepareHide('"
 		    .$this->objname."', ".$this->auto_hide_time.");\"" : "";
 
 		$mover_str = " onmouseover=\"javascript:cancelHide('".$this->objname."');\"";
-
+		$mout_str = "";
+		$mover_str = "";
 		$str = $this->generateCalendarContainerString($paramStr, $div_display, $div_position, 
 		    $div_align, $mout_str, $mover_str);
 
@@ -362,7 +362,7 @@ class TcCalendar{
         return $str;
     }
 
-    private function createCSSAlignement()
+    private function createCSSAlignement($line_height)
     {
         $div_align = "";
 
@@ -426,7 +426,7 @@ class TcCalendar{
 		if($param != "") $params[] = "och=".$param;
 		if($this->startDate != "") $params[] = "str=".$this->startDate;
 		if($this->rtl != "") $params[] = "rtl=".$this->rtl;
-		if($$this->show_week != "") $params[] = "wks=".$this->show_week;
+		if($this->show_week != "") $params[] = "wks=".$this->show_week;
 		if($this->interval != "") $params[] = "int=".$this->interval;
 		if($this->auto_hide != "") $params[] = "hid=".$this->auto_hide;
 		if($this->auto_hide_time != "") $params[] = "hdt=".$this->auto_hide_time;

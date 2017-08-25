@@ -1,16 +1,19 @@
 <?php
+use src\requests\ForexRequest;
 
-require_once 'calendar/classes/TcCalendar.php';
+$pathToCalendar = str_replace("src\\requests", "calendar", __DIR__."/");
+$pathToCalendar = str_replace("src/requests", "calendar", $pathToCalendar."/");
 
-class GUIHTMLDisplayer
+require_once('ForexRequest.php');
+require_once($pathToCalendar.'classes/TcCalendar.php');
+
+class GUIDisplayerRequest extends ForexRequest
 {
-    
-    public function __construct($display_mode)
+    public function __construct()
     {
-        parent::__construct($display_mode);
     }
     
-    public function createPage(){
+    public function execute(){
         return $this->createTopHeader().$this->createHeader().$this->createTopNavBar()
         .$this->createLeftNavBar().$this->createTopBodyTag().$this->createBody().$this->createBottomBodyTag();
     }
@@ -68,10 +71,10 @@ class GUIHTMLDisplayer
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">';
         $list = '<ul class="nav nav-sidebar">
-            <li '. (!isset($_REQUEST['stat']) || $_REQUEST['stat'] == 'events' ? 'class="active"' : '') .'><a href="index.php?stat=events">Events <span class="sr-only">(current)</span></a></li>
-            <li '. (isset($_REQUEST['stat']) && $_REQUEST['stat'] == 'trades' ? 'class="active"' : "").'><a href="index.php?stat=trades">Trades</a></li>
+            <li '. (!isset($this->parameters['stat']) || $this->parameters['stat'] == 'events' ? 'class="active"' : '') .'><a href="index.php?stat=events">Events <span class="sr-only">(current)</span></a></li>
+            <li '. (isset($this->parameters['stat']) && $this->parameters['stat'] == 'trades' ? 'class="active"' : "").'><a href="index.php?stat=trades">Trades</a></li>
           </ul>';
-        $calendars = "<hr/>".createFromToCalendars();
+        $calendars = "<hr/>".$this->createFromToCalendars();
         $bottomtag = '
         </div>
       </div>
@@ -89,27 +92,38 @@ class GUIHTMLDisplayer
       <section id="conteneur"><article>';
     }
     private function createBody(){
-        $events = "";
-        $mysqli = connect_database();
-        $date = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
-        if(isset($_GET['year_from']) and isset($_GET['month_from']) and isset($_GET['day_from'])){
-            $date = mktime(0,0,0, (int)$_GET['month_from'], (int)$_GET['day_from'], (int)$_GET['year_from']);
+        
+        $fromDate = $this->createDateFromParameters("from");
+        $toDate = $this->createDateFromParameters("to");
+        if (isset($this->parameters['stat']) and $this->parameters['stat'] == 'trades'){
+            return $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate);
         }
-        if (isset($_REQUEST['stat']) && $_REQUEST['stat'] == 'trades'){
-            $events = getEventsFromDate($mysqli, $date, 5);
-        }
-        else{
-            $events = getEventsFromDate($mysqli, $date);
-        }
-        return $events;
+        return $this->eventDBHandler->getEventsFromTo($fromDate, $toDate);
     }
+    
+    private function createDateFromParameters($parameterSuffix)
+    {
+        $date = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
+        if(isset($this->parameters['year_'.$parameterSuffix]) 
+            and isset($this->parameters['month_'.$parameterSuffix]) 
+            and isset($this->parameters['day_'.$parameterSuffix])){
+                $date = mktime(0,0,0, 
+                    (int)$this->parameters['month_'.$parameterSuffix], 
+                    (int)$this->parameters['day_'.$parameterSuffix], 
+                    (int)$this->parameters['year_'.$parameterSuffix]);
+        }
+        return $date;
+    }
+
     private function createFromToCalendars(){
         
         $toptag = "<div sytle='margin: auto; width:100%; text-align: center;'>";
-        $from_calendar = "From: ".createCalendar('from','to', date("Y-m-d"));
-        $to_calendar = "To: ".createCalendar('to','from', date("Y-m-d"));
-        $form = "<form action='index.php' method='get'>
-    <input id='stat' name='stat' value='".(isset($_REQUEST['stat']) ? $_REQUEST['stat'] : 'events')."' type='hidden'/>
+        $from_calendar = "From: ".$this->createCalendar('from','to', date("Y-m-d"));
+        $to_calendar = "To: ".$this->createCalendar('to','from', date("Y-m-d"));
+        $form = "<form action='index.php' method='post'>
+    <input id='stat' name='stat' value='".
+    (isset($this->parameters['stat']) ? $this->parameters['stat'] : 'events').
+    "' type='hidden'/>
     <input id='year_from' name='year_from' value='' type='hidden'/>
     <input id='month_from' name='month_from' value='' type='hidden'/>
     <input id='day_from' name='day_from' value='' type='hidden'/>
@@ -122,7 +136,7 @@ class GUIHTMLDisplayer
         return $toptag.$from_calendar.'<br/>'.$to_calendar.$form.$validate.$bottomtag;
     }
     private function createCalendar($date1, $date2, $default){
-        $myCalendar = new TcCalendar($date1, true,false);
+        $myCalendar = new TcCalendar($date1, true, false);
         $myCalendar->setIcon("calendar/images/iconCalendar.gif");
         $myCalendar->setDate(date('d', strtotime($default))
             , date('m', strtotime($default))
@@ -136,7 +150,7 @@ class GUIHTMLDisplayer
         $myCalendar->setDatePair($date1, $date2, $default);
         $myCalendar->setAlignment('left', 'bottom');
         $myCalendar->setTheme('theme3');
-        $calendar = '
+        $onChangeScript = '
     <script language="javascript">
     <!--
     function myChanged(v){
@@ -147,7 +161,7 @@ class GUIHTMLDisplayer
     }
     //-->
     </script>';
-        return $calendar.$myCalendar->getScript();
+        return $onChangeScript.($myCalendar->getScript(true));
     }
     
     private function createBottomBodyTag(){

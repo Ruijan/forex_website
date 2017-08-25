@@ -53,7 +53,7 @@ $date_pair1 = getParameter("pr1");
 $date_pair2 = getParameter("pr2");
 
 $date_pair_value = getParameter("prv");
-$path = getParameter("pth");
+$pathToCalendar = getParameter("pth");
 
 $sp_dates = (isset($_REQUEST["spd"])) ? @TcCalendar::check_json_decode(htmlspecialchars_decode($_REQUEST["spd"], ENT_QUOTES)) : array(array(), array(), array());
 //echo("<br />".htmlspecialchars_decode($_REQUEST["spd"], ENT_QUOTES));
@@ -531,7 +531,7 @@ function submitNow(dvalue, mvalue, yvalue){
 			<input name="pr1" type="hidden" id="pr1" value="<?php echo($date_pair1);?>" />
 			<input name="pr2" type="hidden" id="pr2" value="<?php echo($date_pair2);?>" />
 			<input name="prv" type="hidden" id="prv" value="<?php echo($date_pair_value);?>" />
-			<input name="pth" type="hidden" id="pth" value="<?php echo($path);?>" />
+			<input name="pth" type="hidden" id="pth" value="<?php echo($pathToCalendar);?>" />
 
 			<input name="spd" type="hidden" id="spd" value="<?php echo(htmlspecialchars($cobj->check_json_encode($sp_dates), ENT_QUOTES));?>" />
 			<input name="spt" type="hidden" id="spt" value="<?php echo($sp_type);?>" />
