@@ -1,6 +1,6 @@
 <?php
 
-require_once(str_replace("tests", "src", __DIR__."/").'GUIDisplayerRequest.php');;
+require_once(str_replace("tests", "src", __DIR__."/").'GUIDisplayerRequest.php');
 
 $pathToVendor = str_replace("tests\\requests", "vendor", __DIR__."/");
 $pathToVendor = str_replace("tests/requests", "vendor", $pathToVendor."/");

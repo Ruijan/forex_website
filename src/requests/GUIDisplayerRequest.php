@@ -71,8 +71,11 @@ class GUIDisplayerRequest extends ForexRequest
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">';
         $list = '<ul class="nav nav-sidebar">
-            <li '. (!isset($this->parameters['stat']) || $this->parameters['stat'] == 'events' ? 'class="active"' : '') .'><a href="index.php?stat=events">Events <span class="sr-only">(current)</span></a></li>
-            <li '. (isset($this->parameters['stat']) && $this->parameters['stat'] == 'trades' ? 'class="active"' : "").'><a href="index.php?stat=trades">Trades</a></li>
+            <li '. (!isset($this->parameters['stat']) || $this->parameters['stat'] == 'events' ? 
+                'class="active"' : '') .'><a href="index.php?stat=events">Events '.
+                '<span class="sr-only">(current)</span></a></li>
+            <li '. (isset($this->parameters['stat']) && $this->parameters['stat'] == 'trades' ? 
+                'class="active"' : "").'><a href="index.php?stat=trades">Trades</a></li>
           </ul>';
         $calendars = "<hr/>".$this->createFromToCalendars();
         $bottomtag = '
