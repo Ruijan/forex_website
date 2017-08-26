@@ -50,7 +50,7 @@ class TradeDBHandler extends DBHandler
                     PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, CURRENCY, STATE) 
                     VALUES (NULL,'".$trade->getIDDBEvent()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
                     NULL,NULL,NULL,NULL,NULL,
-                    NULL, NULL, NULL, '".$trade->getCurrency()."', NULL)";
+                    NULL, NULL, NULL, '".$trade->getCurrency()."', 0)";
         $this->throwIfQueryFailed($query, $this->mysqli->query($query));
         return $this->mysqli->insert_id;
     }

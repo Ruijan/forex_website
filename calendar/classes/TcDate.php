@@ -7,7 +7,7 @@
 
 require_once('TcDateMain.php');
 
-class TcCate extends TcDateMain{
+class TcDate extends TcDateMain{
 	var $compatible;
 
 	public function __construct(){
