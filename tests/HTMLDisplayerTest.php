@@ -88,7 +88,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
             "<td class='market'>0.00050</td><td class='market'>-0.00010</td>".
             "<td class='prediction'>1</td><td class='p_prediction'>0.75</td>".
             "<td class='gain'>0.56</td><td class='commission'>0.12</td>".
-            "<td class='currency'>EUR_USD</td><td class='state'>Close</td>";
+            "<td class='currency'>EUR_USD</td><td class='state Close won'>Close</td>";
         $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"), "EUR_USD");
         $trade->setId(1);
         $trade->fillMarketInfo(0.00050, -0.00010);
@@ -113,7 +113,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
         $string_display = "<td class='id'>1</td><td class='id_event'>555</td><td class='id_news'>888</td>".
             "<td class='announced'>2017-08-04 20:00:00</td><td class='real'>2017-08-04 20:05:00</td>".
             "<td class='actual'>235</td><td class='previous'>325</td><td class='next_event'>1865</td>".
-            "<td class='state'>Passed</td>";
+            "<td class='state Passed'>Passed</td>";
         $event = new Event(555, 888, new DateTime("04-08-2017 20:00:00"), 325, 1865);
         $event->setId(1);
         $event->update(235, new DateTime("2017-08-04 20:05:00"));
