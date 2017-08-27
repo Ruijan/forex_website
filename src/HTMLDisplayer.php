@@ -1,5 +1,4 @@
 <?php
-require_once(str_replace("src", "calendar", __DIR__."/").'classes/TcCalendar.php');
 require_once('Trade.php');
 require_once('Event.php');
 
@@ -93,13 +92,15 @@ class SimpleHTMLDisplayer
     
     private function tableDisplayEvent($event)
     {
-        $event_string = "<td class='id'>".$event->getId()."</td><td class='id_event'>".$event->getEventId().
-        "</td><td class='id_news'>".$event->getNewsId()."</td><td class='announced'>".
-        $event->getAnnouncedTime()->format('Y-m-d H:i:s')."</td><td class='real'>".
-        $event->getRealTime()->format('Y-m-d H:i:s')."</td><td class='actual'>".
-        $event->getActual()."</td><td class='previous'>".$event->getPrevious().
-        "</td><td class='next_event'>".$event->getNextEvent()."</td><td class='state'>".
-        Event::getStringFromState($event->getState())."</td>";
+        $event_string = "<td class='id'>".$event->getId()."</td>".
+        "<td class='id_event'>".$event->getEventId()."</td>".
+        "<td class='id_news'>".$event->getNewsId()."</td>".
+        "<td class='announced'>".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."</td>".
+        "<td class='real'>".$event->getRealTime()->format('Y-m-d H:i:s')."</td>".
+        "<td class='actual'>".$event->getActual()."</td>".
+        "<td class='previous'>".$event->getPrevious()."</td>".
+        "<td class='next_event'>".$event->getNextEvent()."</td>".
+        "<td class='state'>".Event::getStringFromState($event->getState())."</td>";
         return $event_string;
     }
     

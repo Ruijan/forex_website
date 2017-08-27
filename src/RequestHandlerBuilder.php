@@ -39,7 +39,8 @@ class RequestHandlerBuilder
             new CloseTradeRequest(),
             new CancelTradeRequest(),
             new NextActionRequest(),
-            new CollectEventsRequest()
+            new CollectEventsRequest(),
+            new \GUIDisplayerRequest()
         ];
         
         foreach($handlers as $handler){
