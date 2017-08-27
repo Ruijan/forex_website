@@ -10,11 +10,11 @@ class Event
 {
     // property declaration
     public $identifier = 0;
-    public $event_id;
-    public $news_id;
-    public $announced_time;
-    public $real_time;
-    public $next_event = 0;
+    public $eventId;
+    public $newsId;
+    public $announcedTime;
+    public $releasedTime;
+    public $nextEventTime = 0;
     public $actual = 0;
     public $previous = 0;
     public $state = EventState::PENDING;
@@ -26,18 +26,18 @@ class Event
         $this->setNewsId($news_id);
         $this->setAnnouncedTime($announced_time);
         $this->setRealTime(new DateTime());
-        $this->setRealTime($this->getRealTime()->createFromFormat('Y-m-d H:i:s',"1970-01-01 00:00:00"));
+        $this->setRealTime($this->getReleasedTime()->createFromFormat('Y-m-d H:i:s',"1970-01-01 00:00:00"));
         $this->setPrevious($previous);
         $this->setNextEvent($next_event);
     }
     public function getId(){return $this->identifier;}
-    public function getNewsId(){return $this->news_id;}
-    public function getEventId(){return $this->event_id;}
-    public function getAnnouncedTime(){return $this->announced_time;}
-    public function getRealTime(){return $this->real_time;}
+    public function getNewsId(){return $this->newsId;}
+    public function getEventId(){return $this->eventId;}
+    public function getAnnouncedTime(){return $this->announcedTime;}
+    public function getReleasedTime(){return $this->releasedTime;}
     public function getActual(){return $this->actual;}
     public function getPrevious(){return $this->previous;}
-    public function getNextEvent(){return $this->next_event;}
+    public function getNextEvent(){return $this->nextEventTime;}
     public function getState(){return $this->state;}
     
     public function setId($identifier){
@@ -47,32 +47,32 @@ class Event
         $this->identifier = $identifier;
     }
     
-    public function setEventId($event_id){
-        if(!is_int($event_id)){
-            throw new ErrorException("Wrong type for event_id. Expected int got: ".gettype($event_id));
+    public function setEventId($eventId){
+        if(!is_int($eventId)){
+            throw new ErrorException("Wrong type for event_id. Expected int got: ".gettype($eventId));
         }
-        $this->event_id = $event_id;
+        $this->eventId = $eventId;
     }
     
-    public function setNewsId($news_id){
-        if(!is_int($news_id)){
-            throw new ErrorException("Wrong type for news_id. Expected int got: ".gettype($news_id));
+    public function setNewsId($newsId){
+        if(!is_int($newsId)){
+            throw new ErrorException("Wrong type for news_id. Expected int got: ".gettype($newsId));
         }
-        $this->news_id = $news_id;
+        $this->newsId = $newsId;
     }
     
-    public function setAnnouncedTime($actual_time){
-        if(!is_a($actual_time, 'DateTime')){
-            throw new ErrorException("Wrong type for actual_time. Expected DateTime got: ".gettype($actual_time));
+    public function setAnnouncedTime($actualTime){
+        if(!is_a($actualTime, 'DateTime')){
+            throw new ErrorException("Wrong type for actual_time. Expected DateTime got: ".gettype($actualTime));
         }
-        $this->announced_time = $actual_time;
+        $this->announcedTime = $actualTime;
     }
     
-    public function setRealTime($real_time){
-        if(!is_a($real_time, 'DateTime')){
-            throw new ErrorException("Wrong type for real_time. Expected DateTime got: ".gettype($real_time));
+    public function setRealTime($releasedTime){
+        if(!is_a($releasedTime, 'DateTime')){
+            throw new ErrorException("Wrong type for real_time. Expected DateTime got: ".gettype($releasedTime));
         }
-        $this->real_time = $real_time;
+        $this->releasedTime = $releasedTime;
     }
     
     public function setActual($actual)
@@ -91,12 +91,12 @@ class Event
         $this->previous = $previous;
     }
     
-    public function setNextEvent($next_event)
+    public function setNextEvent($nextEventTime)
     {
-        if(!is_int($next_event) or $next_event < 0){
-            throw new ErrorException("Wrong type for next_event. Expected int got: ".gettype($next_event));
+        if(!is_int($nextEventTime) or $nextEventTime < 0){
+            throw new ErrorException("Wrong type for next_event. Expected int got: ".gettype($nextEventTime));
         }
-        $this->next_event = $next_event;
+        $this->nextEventTime = $nextEventTime;
     }
     
     public function setState($state)
@@ -107,9 +107,9 @@ class Event
         $this->state = $state;
     }
     
-    public function update($actual, $real_time){
+    public function update($actual, $releasedTime){
         $this->setActual($actual);
-        $this->setRealTime($real_time);
+        $this->setRealTime($releasedTime);
         $this->setState(EventState::UPDATED);
     }
     

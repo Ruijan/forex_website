@@ -91,9 +91,9 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->event->update(2.5, (new DateTime("NOW"))->add(new DateInterval("PT5M")));
         $this->eventDBHandler->updateEvent($this->event);
         $db_event = $this->eventDBHandler->getEventById($identifier);
-        assert($db_event->getRealTime() == $this->event->getRealTime(), "Real times should be equal: ".
-            $this->event->getRealTime()->format("Y-m-d H:i:s"). " and ".
-            $db_event->getRealTime()->format("Y-m-d H:i:s"));
+        assert($db_event->getReleasedTime() == $this->event->getReleasedTime(), "Real times should be equal: ".
+            $this->event->getReleasedTime()->format("Y-m-d H:i:s"). " and ".
+            $db_event->getReleasedTime()->format("Y-m-d H:i:s"));
         assert($db_event->getActual() == $this->event->getActual(), "Actual values should be equal");
         assert($db_event->getState() == $this->event->getState(), "State should be equal to 1");
     }
