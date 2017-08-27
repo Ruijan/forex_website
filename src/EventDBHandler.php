@@ -40,7 +40,7 @@ class EventDBHandler extends DBHandler
                     NEXT_EVENT, STATE)
                     VALUES (NULL,".$event->getEventId().",".$event->getNewsId().",
                     '".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."',
-                    '".$event->getRealTime()->format('Y-m-d H:i:s')."',".$event->getActual().", 
+                    '".$event->getReleasedTime()->format('Y-m-d H:i:s')."',".$event->getActual().", 
                     ".$event->getPrevious().", ".$event->getNextEvent().", ".$event->getState().")";
         if($this->mysqli->query($query) === FALSE){
             throw new Exception("Event already in table: ". $this->mysqli->error);
@@ -95,7 +95,7 @@ class EventDBHandler extends DBHandler
     public function updateEvent($event){
         $this->throwIfTableDoesNotExist();
         $query = "UPDATE events SET ACTUAL = ".$event->getActual().",
-                REAL_TIME='".$event->getRealTime()->format('Y-m-d H:i:s')."', 
+                REAL_TIME='".$event->getReleasedTime()->format('Y-m-d H:i:s')."', 
                 STATE=".$event->getState()." WHERE ID=".$event->getId();
         $this->throwIfQueryFailed($query, $this->mysqli->query($query));
     }

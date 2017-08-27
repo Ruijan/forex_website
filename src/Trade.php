@@ -11,28 +11,28 @@ abstract class TradeState{
 class Trade
 {
     private $identifier = null;
-    private $id_db_event = null;
-    private $creation_time = null;
-    private $open_time = null;
-    private $close_time = null;
-    private $dv_p_tm5 = 0;
-    private $dv_p_t0 = 0;
+    private $idDbEvent = null;
+    private $creationTime = null;
+    private $openTime = null;
+    private $closeTime = null;
+    private $dvPTm5 = 0;
+    private $dvPT0 = 0;
     private $prediction = 0;
-    private $p_proba = 0;
+    private $pProba = 0;
     private $gain = 0;
     private $commission = 0;
     private $currency = "";
     private $state = TradeState::INITIALIZED;
     
     public function getId(){return $this->identifier;}
-    public function getIDDBEvent(){return $this->id_db_event;}
-    public function getCreationTime(){return $this->creation_time;}
-    public function getOpenTime(){return $this->open_time;}
-    public function getCloseTime(){return $this->close_time;}
-    public function getDv_p_tm5(){return $this->dv_p_tm5;}
-    public function getDv_p_t0(){return $this->dv_p_t0;}
+    public function getIDDBEvent(){return $this->idDbEvent;}
+    public function getCreationTime(){return $this->creationTime;}
+    public function getOpenTime(){return $this->openTime;}
+    public function getCloseTime(){return $this->closeTime;}
+    public function getDvPTm5(){return $this->dvPTm5;}
+    public function getDvPT0(){return $this->dvPT0;}
     public function getPrediction(){return $this->prediction;}
-    public function getP_proba(){return $this->p_proba;}
+    public function getPProba(){return $this->pProba;}
     public function getGain(){return $this->gain;}
     public function getCommission(){return $this->commission;}
     public function getCurrency(){return $this->currency;}
@@ -58,44 +58,44 @@ class Trade
         $this->currency = $currency;
     }
 
-    private function setCreationTime($creation_time)
+    private function setCreationTime($creationTime)
     {
-        if(!is_a($creation_time, 'DateTime')){
-            throw new ErrorException("Wrong type for creation_time. Expected DateTime got: ".gettype($creation_time));
+        if(!is_a($creationTime, 'DateTime')){
+            throw new ErrorException("Wrong type for creation_time. Expected DateTime got: ".gettype($creationTime));
         }
-        $this->creation_time = $creation_time;
+        $this->creationTime = $creationTime;
     }
     
-    private function setOpenTime($open_time)
+    private function setOpenTime($openTime)
     {
-        if(!is_a($open_time, 'DateTime')){
-            throw new ErrorException("Wrong type for open_time. Expected DateTime got: ".gettype($open_time));
+        if(!is_a($openTime, 'DateTime')){
+            throw new ErrorException("Wrong type for open_time. Expected DateTime got: ".gettype($openTime));
         }
-        $this->open_time = $open_time;
+        $this->openTime = $openTime;
     }
 
-    private function setCloseTime($close_time)
+    private function setCloseTime($closeTime)
     {
-        if(!is_a($close_time, 'DateTime')){
-            throw new ErrorException("Wrong type for close_time. Expected DateTime got: ".gettype($close_time));
+        if(!is_a($closeTime, 'DateTime')){
+            throw new ErrorException("Wrong type for close_time. Expected DateTime got: ".gettype($closeTime));
         }
-        $this->close_time = $close_time;
+        $this->closeTime = $closeTime;
     }
 
-    public function setDv_p_tm5($dv_p_tm5)
+    public function setDvPTm5($dvPTm5)
     {
-        if(!is_float($dv_p_tm5) and !is_double($dv_p_tm5)){
-            throw new ErrorException("Wrong type for dv_p_tm5. Expected float or double got: ".gettype($dv_p_tm5));
+        if(!is_float($dvPTm5) and !is_double($dvPTm5)){
+            throw new ErrorException("Wrong type for dv_p_tm5. Expected float or double got: ".gettype($dvPTm5));
         }
-        $this->dv_p_tm5 = $dv_p_tm5;
+        $this->dvPTm5 = $dvPTm5;
     }
 
-    public function setDv_p_t0($dv_p_t0)
+    public function setDvPT0($dvPT0)
     {
-        if(!is_float($dv_p_t0) and !is_double($dv_p_t0)){
-            throw new ErrorException("Wrong type for dv_p_t0. Expected float or double got: ".gettype($dv_p_t0));
+        if(!is_float($dvPT0) and !is_double($dvPT0)){
+            throw new ErrorException("Wrong type for dv_p_t0. Expected float or double got: ".gettype($dvPT0));
         }
-        $this->dv_p_t0 = $dv_p_t0;
+        $this->dvPT0 = $dvPT0;
     }
 
     public function setPrediction($prediction)
@@ -109,15 +109,15 @@ class Trade
         $this->prediction = $prediction;
     }
 
-    public function setP_proba($p_proba)
+    public function setPProba($pProba)
     {
-        if(!is_float($p_proba) and !is_double($p_proba)){
-            throw new ErrorException("Wrong type for p_proba. Expected float or double got: ".gettype($p_proba));
+        if(!is_float($pProba) and !is_double($pProba)){
+            throw new ErrorException("Wrong type for p_proba. Expected float or double got: ".gettype($pProba));
         }
-        if ($p_proba < 0 or $p_proba > 1){
-            throw new ErrorException("Prediction probability out of range:".$p_proba.". Should be between 0 and 1");
+        if ($pProba < 0 or $pProba > 1){
+            throw new ErrorException("Prediction probability out of range:".$pProba.". Should be between 0 and 1");
         }
-        $this->p_proba = $p_proba;
+        $this->pProba = $pProba;
     }
 
     public function setGain($gain)
@@ -148,14 +148,14 @@ class Trade
 
     public function __construct($id_db_event, $creation_time, $currency)
     {
-        $this->id_db_event = $id_db_event;
+        $this->idDbEvent = $id_db_event;
         $this->setCreationTime($creation_time);
         $this->setCurrency($currency);
     }
     
     public function isInitialized()
     {
-        return $this->identifier != null and $this->id_db_event != null;
+        return $this->identifier != null and $this->idDbEvent != null;
     }
     
     public function close($gain, $commission, $close_time){
@@ -170,36 +170,36 @@ class Trade
         $this->setState(TradeState::CLOSE);
     }
     
-    public function open($open_time){
+    public function open($openTime){
         if($this->state != TradeState::PREDICTED){
             throw new ErrorException("Cannot switch to open state. Actual state is : ".
                 $this->getStringFromState($this->getState()).". Next expected state is ".
                 $this->getStringFromState($this->getState()+1));
         }
-        $this->setOpenTime($open_time);
+        $this->setOpenTime($openTime);
         $this->setState(TradeState::OPEN);
     }
     
-    public function predict($prediction, $p_predict){
+    public function predict($prediction, $pPredict){
         if($this->state != TradeState::FILLED){
             throw new ErrorException("Cannot switch to predicted state. Actual state is : ".
                 $this->getStringFromState($this->getState()).". Next expected state is ".
                 $this->getStringFromState($this->getState()+1));
         }
         $this->setPrediction($prediction);
-        $this->setP_proba($p_predict);
+        $this->setPProba($pPredict);
         $this->setState(TradeState::PREDICTED);
         
     }
     
-    public function fillMarketInfo($dv_p_tm5, $dv_p_t0){
+    public function fillMarketInfo($dvPTm5, $dvPT0){
         if($this->state != TradeState::INITIALIZED){
             throw new ErrorException("Cannot switch to initialized state. Actual state is : ".
                 $this->getStringFromState($this->getState()).". Next expected state is ".
                 $this->getStringFromState($this->getState()+1));
         }
-        $this->setDv_p_t0($dv_p_t0);
-        $this->setDv_p_tm5($dv_p_tm5);
+        $this->setDvPT0($dvPT0);
+        $this->setDvPTm5($dvPTm5);
         $this->setState(TradeState::FILLED);
     }
     

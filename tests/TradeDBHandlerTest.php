@@ -42,7 +42,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         assert($this->tradeDBHandler->getTableSize() == 0);
     }
     
-    public function testAddingTrade_expectIncrementInSize(){
+    public function testAddingTradeExpectIncrementInSize(){
         $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
         assert($this->tradeDBHandler->getTableSize() == 2);
@@ -64,12 +64,12 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     public function testAddingTradeExpectExactParameters(){
         $trade = $this->createRandomDummyTrade();
-        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
-        assert($trade->getCreationTime() == $db_trade->getCreationTime(), "Expect same Creation Time: ".
+        $dbTrade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        assert($trade->getCreationTime() == $dbTrade->getCreationTime(), "Expect same Creation Time: ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'). " got ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'));
-        assert($trade->getId() == $db_trade->getId(), "Expect same ID");
-        assert($trade->getIDDBEvent() == $db_trade->getIDDBEvent(), "Expect same event Id");
+        assert($trade->getId() == $dbTrade->getId(), "Expect same ID");
+        assert($trade->getIDDBEvent() == $dbTrade->getIDDBEvent(), "Expect same event Id");
     }
     
     public function testTryAddingTradeSecondTimeSizeShouldBeOne(){
@@ -88,15 +88,15 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     private function createRandomDummyTrade()
     {
         $trade = new Trade(rand(1,10000), new DateTime('NOW'), "EUR_USD");
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $trade->setId($id);
+        $identifier = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($identifier);
         return $trade;
     }
 
     public function testOpenTradeShouldUpdateOpenTime(){
         $trade = $this->openTrade();
-        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
-        $this->checkIfOpenDBTradeEqualTrade($trade, $db_trade);
+        $dbTrade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        $this->checkIfOpenDBTradeEqualTrade($trade, $dbTrade);
     }
     
     private function checkIfOpenDBTradeEqualTrade($trade, $db_trade)
@@ -111,8 +111,8 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     private function openTrade()
     {
         $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $trade->setId($id);
+        $identifier = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($identifier);
         $trade->fillMarketInfo(0.0005, 0.0001);
         $trade->predict(1, 0.05);
         $trade->open(new DateTime('NOW'));
@@ -122,8 +122,8 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testCloseTradeShouldUpdateCloseTimeGainCommissionState(){
         $trade = $this->openCloseTrade();
-        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
-        $this->checkIfClosedDBtradeEqualTrade($trade, $db_trade);
+        $dbTrade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        $this->checkIfClosedDBtradeEqualTrade($trade, $dbTrade);
     }
     
     private function checkIfClosedDBtradeEqualTrade($trade, $db_trade)
@@ -149,35 +149,35 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     public function testFillMarketTradeShouldUpdateMarketState(){
         $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $trade->setId($id);
+        $identifier = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($identifier);
         $trade->fillMarketInfo(0.005, 0.0001);
         $this->tradeDBHandler->fillTradeWithMarketInfo($trade);
-        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
-        $this->checkIfFilledDBTradeEqualTrade($trade, $db_trade);
+        $dbTrade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        $this->checkIfFilledDBTradeEqualTrade($trade, $dbTrade);
     }
     
     private function checkIfFilledDBTradeEqualTrade($trade, $db_trade)
     {
-        assert($db_trade->getDv_p_tm5() == $trade->getDv_p_tm5(), "Expect equal p_prediction in DB");
-        assert($db_trade->getDv_p_t0() == $trade->getDv_p_t0(), "Expect equal prediction in DB");
+        assert($db_trade->getDvPTm5() == $trade->getDvPTm5(), "Expect equal p_prediction in DB");
+        assert($db_trade->getDvPT0() == $trade->getDvPT0(), "Expect equal prediction in DB");
         assert($db_trade->getState() == $trade->getState(), "Expect equal state of 1");
     }
 
     public function testPredictTradeShouldUpdatePredictPProbaState(){
         $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
-        $id = $this->tradeDBHandler->addTrade($trade);
-        $trade->setId($id);
+        $identifier = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($identifier);
         $trade->fillMarketInfo(0.0005, 0.0001);
         $trade->predict(1, 0.75);
         $this->tradeDBHandler->predictTrade($trade);
-        $db_trade = $this->tradeDBHandler->getTradeByID($trade->getId());
-        $this->checkIfPredictedDBTradeEqualTrade($trade, $db_trade);
+        $dbTrade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        $this->checkIfPredictedDBTradeEqualTrade($trade, $dbTrade);
     }
     
     private function checkIfPredictedDBTradeEqualTrade($trade, $db_trade)
     {
-        assert($db_trade->getP_proba() == $trade->getP_proba(), "Expect equal p_prediction in DB");
+        assert($db_trade->getPProba() == $trade->getPProba(), "Expect equal p_prediction in DB");
         assert($db_trade->getPrediction() == $trade->getPrediction(), "Expect equal prediction in DB");
         assert($db_trade->getState() == $trade->getState(), "Expect equal state of 2");
     }
@@ -202,15 +202,15 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $fromDate = new DateTime("2017-08-03");
         $toDate = new DateTime("2017-08-05");
         
-        $all_trades = $this->generateDummyTrades();
-        $trades_to_get = [$all_trades[0], $all_trades[1], $all_trades[2]];
-        $this->addListOfTrades($all_trades);
+        $allTrades = $this->generateDummyTrades();
+        $tradesToGet = [$allTrades[0], $allTrades[1], $allTrades[2]];
+        $this->addListOfTrades($allTrades);
         $trades = $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate);
         
-        $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
-        assert(sizeof($trades) == sizeof($trades_to_get),
-            "Different number of trades expected. Expected ".sizeof($trades_to_get)." got ".sizeof($trades));
-        assert($all_here, "Trades were not equals");
+        $allHere = $this->areListOfTradesEquals($tradesToGet, $trades);
+        assert(sizeof($trades) == sizeof($tradesToGet),
+            "Different number of trades expected. Expected ".sizeof($tradesToGet)." got ".sizeof($trades));
+        assert($allHere, "Trades were not equals");
     }
     
     public function testGetTradesFromToState(){
@@ -218,20 +218,20 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $toDate = new DateTime("2017-08-06");
         $state = TradeState::OPEN;
         
-        $all_trades = $this->generateDummyTrades();
-        $trades_to_get = [$all_trades[2]];
-        $this->addListOfTrades($all_trades);
-        $all_trades[2]->fillMarketInfo(0.002,0.003);
-        $all_trades[2]->predict(1, 0.75);
-        $all_trades[2]->open(new DateTime("2017-08-05 17:30:00"));
-        $this->tradeDBHandler->fillTradeWithMarketInfo($all_trades[2]);
-        $this->tradeDBHandler->predictTrade($all_trades[2]);
-        $this->tradeDBHandler->openTrade($all_trades[2]);
+        $allTrades = $this->generateDummyTrades();
+        $tradesToGet = [$allTrades[2]];
+        $this->addListOfTrades($allTrades);
+        $allTrades[2]->fillMarketInfo(0.002,0.003);
+        $allTrades[2]->predict(1, 0.75);
+        $allTrades[2]->open(new DateTime("2017-08-05 17:30:00"));
+        $this->tradeDBHandler->fillTradeWithMarketInfo($allTrades[2]);
+        $this->tradeDBHandler->predictTrade($allTrades[2]);
+        $this->tradeDBHandler->openTrade($allTrades[2]);
         $trades = $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate, $state);
-        $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
-        assert(sizeof($trades) == sizeof($trades_to_get),
-            "Different number of trades expected. Expected ".sizeof($trades_to_get)." got ".sizeof($trades));
-        assert($all_here, "Trades were not equals");
+        $allHere = $this->areListOfTradesEquals($tradesToGet, $trades);
+        assert(sizeof($trades) == sizeof($tradesToGet),
+            "Different number of trades expected. Expected ".sizeof($tradesToGet)." got ".sizeof($trades));
+        assert($allHere, "Trades were not equals");
     }
     
     public function testGetTradesFromToCurrency(){
@@ -239,29 +239,29 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $toDate = new DateTime("2017-08-06");
         $dbCurrency = "USD_CAD";
         
-        $all_trades = $this->generateDummyTrades();
-        $trades_to_get = [$all_trades[2]];
-        $this->addListOfTrades($all_trades);
+        $allTrades = $this->generateDummyTrades();
+        $tradesToGet = [$allTrades[2]];
+        $this->addListOfTrades($allTrades);
         $trades = $this->tradeDBHandler->getTradesFromTo($fromDate, $toDate, -1, $dbCurrency);
-        $all_here = $this->areListOfTradesEquals($trades_to_get, $trades);
-        assert(sizeof($trades) == sizeof($trades_to_get),
-            "Different number of trades expected. Expected ".sizeof($trades_to_get)." got ".sizeof($trades));
-        assert($all_here, "Trades were not equals");
+        $allHere = $this->areListOfTradesEquals($tradesToGet, $trades);
+        assert(sizeof($trades) == sizeof($tradesToGet),
+            "Different number of trades expected. Expected ".sizeof($tradesToGet)." got ".sizeof($trades));
+        assert($allHere, "Trades were not equals");
     }
     
     private function areListOfTradesEquals($trades_to_get, $trades)
     {
-        $all_here = sizeof($trades) == sizeof($trades_to_get);
+        $allHere = sizeof($trades) == sizeof($trades_to_get);
         foreach($trades as $trade){
             $tradeHere = false;
-            foreach($trades_to_get as $expected_trade){
-                if($expected_trade == $trade){
+            foreach($trades_to_get as $expectedTrade){
+                if($expectedTrade == $trade){
                     $tradeHere = true;
                 }
             }
-            $all_here = $tradeHere ? $all_here : $tradeHere;
+            $allHere = $tradeHere ? $allHere : $tradeHere;
         }
-        return $all_here;
+        return $allHere;
     }
     
     private function addListOfTrades($trades){
@@ -272,14 +272,14 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function generateDummyTrades()
     {
-        $all_trades = [];
-        $all_trades[] = new Trade(65, new DateTime("2017-08-03 00:30:00"), "EUR_USD");
-        $all_trades[] = new Trade(35, new DateTime("2017-08-05 17:30:00"), "EUR_USD");
-        $all_trades[] = new Trade(61, new DateTime("2017-08-04 18:05:00"), "USD_CAD");
-        $all_trades[] = new Trade(30, new DateTime("2017-08-02 00:30:00"), "EUR_USD");
-        $all_trades[] = new Trade(1, new DateTime("2017-08-10 00:30:00"), "EUR_USD");
-        $all_trades[] = new Trade(5, new DateTime("2017-08-01 00:30:00"), "EUR_USD");
-        return $all_trades;
+        $allTrades = [];
+        $allTrades[] = new Trade(65, new DateTime("2017-08-03 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(35, new DateTime("2017-08-05 17:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(61, new DateTime("2017-08-04 18:05:00"), "USD_CAD");
+        $allTrades[] = new Trade(30, new DateTime("2017-08-02 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(1, new DateTime("2017-08-10 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(5, new DateTime("2017-08-01 00:30:00"), "EUR_USD");
+        return $allTrades;
     }
     
     private function deleteTableIfExists()

@@ -80,15 +80,15 @@ class TradeDBHandler extends DBHandler
     
     public function fillTradeWithMarketInfo($trade){
         $this->throwIfTableDoesNotExist();
-        $query = "UPDATE ".$this->tableName." SET DV_P_TM5 = ".$trade->getDv_p_tm5().",
-                        DV_P_T0 = ".$trade->getDv_p_t0().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
+        $query = "UPDATE ".$this->tableName." SET DV_P_TM5 = ".$trade->getDvPTm5().",
+                        DV_P_T0 = ".$trade->getDvPT0().", STATE=".$trade->getState()." WHERE ID=".$trade->getId();
         $this->throwIfQueryFailed($query, $this->mysqli->query($query));
     }
     
     public function predictTrade($trade){
         $this->throwIfTableDoesNotExist();
         $query = "UPDATE ".$this->tableName." SET PREDICTION = ".$trade->getPrediction().",
-                    PREDICTION_PROBA = ".$trade->getP_proba().", STATE=".$trade->getState()." WHERE ID="
+                    PREDICTION_PROBA = ".$trade->getPProba().", STATE=".$trade->getState()." WHERE ID="
                         .$trade->getId();
         $this->throwIfQueryFailed($query, $this->mysqli->query($query));
     }

@@ -26,10 +26,6 @@ class TradeTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
 
     public function testEmptyConstructor()
     {
@@ -59,149 +55,149 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->setId($identifier);
     }
     
-    public function testSetDVPTM5WithWrongArgument_expectError(){
+    public function testSetDVPTM5WithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for dv_p_tm5. Expected float or double got: "
             .gettype("string"));
-        $this->trade->setDv_p_tm5("string");
+        $this->trade->setDvPTm5("string");
     }
     
-    public function testSetDVPT0WithWrongArgument_expectError(){
+    public function testSetDVPT0WithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for dv_p_t0. Expected float or double got: "
             .gettype("string"));
-        $this->trade->setDv_p_t0("string");
+        $this->trade->setDvPT0("string");
     }
     
-    public function testSetPredictionWithWrongArgument_expectError(){
+    public function testSetPredictionWithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for prediction. Expected int got: ".gettype(0.5));
         $this->trade->setPrediction(0.5);
     }
     
-    public function testSetPredictionWithWrongResult_expectError(){
+    public function testSetPredictionWithWrongResultShouldThrow(){
         $this->expectExceptionMessage("Prediction value out of range:2. Shoudl be 0 or 1");
         $this->trade->setPrediction(2);
     }
     
-    public function testSetPredictionProbaWithWrongArgument_expectError(){
+    public function testSetPredictionProbaWithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for p_proba. Expected float or double got: "
             .gettype("0.5"));
-        $this->trade->setP_proba("0.5");
+        $this->trade->setPProba("0.5");
     }
     
-    public function testSetPredictionProbaWithOutOfRangeProba_expectError(){
+    public function testSetPredictionProbaWithOutOfRangeProbaShouldThrow(){
         $this->expectExceptionMessage("Prediction probability out of range:1.2. Should be between 0 and 1");
-        $this->trade->setP_proba(1.2);
+        $this->trade->setPProba(1.2);
     }
     
-    public function testSetGainWithWrongArgument_expectError(){
+    public function testSetGainWithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for gain. Expected float or double or int got: "
             .gettype("0.5"));
         $this->trade->setGain("0.5");
     }
     
-    public function testSetCommissionWithWrongArgument_expectError(){
+    public function testSetCommissionWithWrongArgumentShouldThrow(){
         
         $this->expectExceptionMessage("Wrong type for commission. Expected float or double or int got: "
             .gettype("0.5"));
         $this->trade->setCommission("0.5");
     }
     
-    public function testSetStateWithWrongArgument_expectError(){
+    public function testSetStateWithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for state. Expected int got: ".gettype(0.5));
         $this->trade->setState(0.5);
     }
     
     public function testCloseTrade(){
         $prediction = 1;
-        $p_proba = 0.76;
-        $open_time = new DateTime('NOW');
+        $pProba = 0.76;
+        $openTime = new DateTime('NOW');
         $gain = 0.50;
         $commission = 0.12;
-        $close_time = new DateTime('NOW');
+        $closeTime = new DateTime('NOW');
         $this->trade->fillMarketInfo(0.005, 0.00010);
-        $this->trade->predict($prediction, $p_proba);
-        $this->trade->open($open_time);
-        $this->trade->close($gain, $commission, $close_time);
+        $this->trade->predict($prediction, $pProba);
+        $this->trade->open($openTime);
+        $this->trade->close($gain, $commission, $closeTime);
         assert($this->trade->getGain() == $gain, "Expect equal gain");
         assert($this->trade->getCommission() == $commission, "Expect equal commission");
-        assert($this->trade->getCloseTime() == $close_time, "Expect equal close time");
+        assert($this->trade->getCloseTime() == $closeTime, "Expect equal close time");
         assert($this->trade->getState() == TradeState::CLOSE, "Expect sate to be 4");
     }
     
     public function testCloseTradeWhenNotOpenShouldThrow(){
         $gain = 0.50;
         $commission = 0.12;
-        $close_time = new DateTime('NOW');
+        $closeTime = new DateTime('NOW');
         
         $this->expectExceptionMessage("Cannot switch to close state. Actual state is : ".
             $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
             $this->trade->getStringFromState($this->trade->getState()+1));
         
-        $this->trade->close($gain, $commission, $close_time);
+        $this->trade->close($gain, $commission, $closeTime);
     }
     
     public function testOpenTrade(){
         $prediction = 1;
-        $p_proba = 0.76;
-        $open_time = new DateTime('NOW');
+        $pProba = 0.76;
+        $openTime = new DateTime('NOW');
         $this->trade->fillMarketInfo(0.005, 0.00010);
-        $this->trade->predict($prediction, $p_proba);
-        $this->trade->open($open_time);
-        assert($this->trade->getOpenTime() == $open_time, "Expect equal open time");
+        $this->trade->predict($prediction, $pProba);
+        $this->trade->open($openTime);
+        assert($this->trade->getOpenTime() == $openTime, "Expect equal open time");
         assert($this->trade->getState() == TradeState::OPEN, "Expect sate to be 3");
     }
     
     public function testOpenTradeWhenNotPredictedShouldThrow(){
-        $open_time = new DateTime('NOW');
+        $openTime = new DateTime('NOW');
         
         $this->expectExceptionMessage("Cannot switch to open state. Actual state is : ".
             $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
             $this->trade->getStringFromState($this->trade->getState()+1));
         
-        $this->trade->open($open_time);
+        $this->trade->open($openTime);
     }
     
     public function testPredictTrade(){
         $prediction = 1;
-        $p_proba = 0.76;
+        $pProba = 0.76;
         $this->trade->fillMarketInfo(0.005, 0.00010);
-        $this->trade->predict($prediction, $p_proba);
+        $this->trade->predict($prediction, $pProba);
         assert($this->trade->getPrediction() == $prediction, "Expect equal close time");
-        assert($this->trade->getP_proba() == $p_proba, "Expect equal p_proba");
+        assert($this->trade->getPProba() == $pProba, "Expect equal p_proba");
         assert($this->trade->getState() == TradeState::PREDICTED, "Expect state to be 2");
     }
     
     public function testPredictTradeWhenNotFilledShouldThrow(){
         $prediction = 1;
-        $p_proba = 0.76;
+        $pProba = 0.76;
         
         $this->expectExceptionMessage("Cannot switch to predicted state. Actual state is : ".
             $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
             $this->trade->getStringFromState($this->trade->getState()+1));
         
-        $this->trade->predict($prediction, $p_proba);
+        $this->trade->predict($prediction, $pProba);
     }
     
     public function testFillMarketInfoTrade(){
-        $dv_p_t0 = 0.00500;
-        $dv_p_tm5 = 0.00200;
-        $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
-        assert($this->trade->getDv_p_t0() == $dv_p_t0, "Expect equal dv_p_t0 time");
-        assert($this->trade->getDv_p_tm5() == $dv_p_tm5, "Expect equal dv_p_tm5");
+        $dvPT0 = 0.00500;
+        $dvTPm5 = 0.00200;
+        $this->trade->fillMarketInfo($dvTPm5, $dvPT0);
+        assert($this->trade->getDvPT0() == $dvPT0, "Expect equal dv_p_t0 time");
+        assert($this->trade->getDvPTm5() == $dvTPm5, "Expect equal dv_p_tm5");
         assert($this->trade->getState() == TradeState::FILLED, "Expect state to be 1");
     }
     
     public function testFillTradeWhenInPredictedStateShouldThrow(){
-        $dv_p_t0 = 0.00500;
-        $dv_p_tm5 = 0.00200;
+        $dvPT0 = 0.00500;
+        $dvPTm5 = 0.00200;
         $prediction = 1;
-        $p_proba = 0.76;
-        $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
-        $this->trade->predict($prediction, $p_proba);
+        $pProba = 0.76;
+        $this->trade->fillMarketInfo($dvPTm5, $dvPT0);
+        $this->trade->predict($prediction, $pProba);
         $this->expectExceptionMessage("Cannot switch to initialized state. Actual state is : ".
             $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
             $this->trade->getStringFromState($this->trade->getState()+1));
         
-        $this->trade->fillMarketInfo($dv_p_tm5, $dv_p_t0);
+        $this->trade->fillMarketInfo($dvPTm5, $dvPT0);
     }
     
     public function testGetStringFromTradeInitializedState(){

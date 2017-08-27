@@ -70,10 +70,10 @@ class SimpleHTMLDisplayer
         ";".$trade->getCreationTime()->format('Y-m-d H:i:s').
         ";".$trade->getOpenTime()->format('Y-m-d H:i:s').
         ";".$trade->getCloseTime()->format('Y-m-d H:i:s').
-        ";".sprintf("%01.5f", $trade->getDv_p_tm5()).
-        ";".sprintf("%01.5f", $trade->getDv_p_t0()).
+        ";".sprintf("%01.5f", $trade->getDvPTm5()).
+        ";".sprintf("%01.5f", $trade->getDvPT0()).
         ";".$trade->getPrediction().
-        ";".$trade->getP_proba().
+        ";".$trade->getPProba().
         ";".$trade->getGain().
         ";".$trade->getCommission().
         ";".$trade->getState();
@@ -89,10 +89,10 @@ class SimpleHTMLDisplayer
             (is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).
         "</td><td class='close_time'>".
         (is_null($trade->getCloseTime()) ? "" : $trade->getCloseTime()->format('Y-m-d H:i:s')).
-        "</td><td class='market'>".sprintf("%01.5f", $trade->getDv_p_tm5()).
-        "</td><td class='market'>".sprintf("%01.5f", $trade->getDv_p_t0()).
+        "</td><td class='market'>".sprintf("%01.5f", $trade->getDvPTm5()).
+        "</td><td class='market'>".sprintf("%01.5f", $trade->getDvPT0()).
         "</td><td class='prediction'>".$trade->getPrediction().
-        "</td><td class='p_prediction'>".$trade->getP_proba().
+        "</td><td class='p_prediction'>".$trade->getPProba().
         "</td><td class='gain'>".$trade->getGain().
         "</td><td class='commission'>".$trade->getCommission().
         "</td><td class='currency'>".$trade->getCurrency().
@@ -132,7 +132,7 @@ class SimpleHTMLDisplayer
         "<td class='id_event'>".$event->getEventId()."</td>".
         "<td class='id_news'>".$event->getNewsId()."</td>".
         "<td class='announced'>".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."</td>".
-        "<td class='real'>".$event->getRealTime()->format('Y-m-d H:i:s')."</td>".
+        "<td class='real'>".$event->getReleasedTime()->format('Y-m-d H:i:s')."</td>".
         "<td class='actual'>".$event->getActual()."</td>".
         "<td class='previous'>".$event->getPrevious()."</td>".
         "<td class='next_event'>".$event->getNextEvent()."</td>".
@@ -147,7 +147,7 @@ class SimpleHTMLDisplayer
         ";".$event->getEventId().
         ";".$event->getNewsId().
         ";".$event->getAnnouncedTime()->format('Y-m-d H:i:s').
-        ";".$event->getRealTime()->format('Y-m-d H:i:s').
+        ";".$event->getReleasedTime()->format('Y-m-d H:i:s').
         ";".$event->getActual().
         ";".$event->getPrevious().
         ";".$event->getNextEvent().
