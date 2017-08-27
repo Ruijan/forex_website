@@ -105,11 +105,15 @@ class GUIDisplayerRequest extends ForexRequest
             if(isset($this->parameters["from"])){
                 $body .= " from ".$fromDate->format("Y-m-d");
             }
+            else{
+                $body .= " from Today";
+            }
             if(isset($this->parameters["to"])){
                 $body .= " to ".$toDate->format("Y-m-d");
             }
-            $body .= "</h1>";
+            $body .= "</h1><br/>";
             $body .= "<table>";
+            $body .= $simpleDisplayer->displayHeaderForTableInTrade();
             foreach($trades as $trade){
                 $body .= "<tr>".$simpleDisplayer->displayTrade($trade)."</tr>";
             }
@@ -120,11 +124,16 @@ class GUIDisplayerRequest extends ForexRequest
             if(isset($this->parameters["from"])){
                 $body .= " from ".$fromDate->format("Y-m-d");
             }
+            else{
+                $body .= " from Today";
+            }
+            
             if(isset($this->parameters["to"])){
                 $body .= " to ".$toDate->format("Y-m-d");
             }
-            $body .= "</h1>";
+            $body .= "</h1><br/>";
             $body .= "<table>";
+            $body .= $simpleDisplayer->displayHeaderForTableInEvent();
             foreach($events as $event){
                 $body .= "<tr>".$simpleDisplayer->displayEvent($event)."</tr>";
             }
@@ -135,8 +144,8 @@ class GUIDisplayerRequest extends ForexRequest
     private function createDateFromParameters($parameterName)
     {
         $date = new DateTime();
-        $date->createFromFormat("Y-m-d",gmdate('Y-m-d', time()));
-        if(isset($this->parameters[$parameterName])){
+        $date = $date->createFromFormat("Y-m-d",gmdate('Y-m-d', time()));
+        if(isset($this->parameters[$parameterName]) and $this->parameters[$parameterName]!= ""){
             $date = $date->createFromFormat("m/d/Y",$this->parameters[$parameterName]);
         }
         return $date;
