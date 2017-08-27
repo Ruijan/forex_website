@@ -136,8 +136,8 @@ class SimpleHTMLDisplayer
         "<td class='actual'>".$event->getActual()."</td>".
         "<td class='previous'>".$event->getPrevious()."</td>".
         "<td class='next_event'>".$event->getNextEvent()."</td>".
-        "<td class='state ".Event::getStringFromState($event->getState())."'>"
-            .Event::getStringFromState($event->getState())."</td>";
+        "<td class='state ".$event->getStringFromState($event->getState())."'>"
+            .$event->getStringFromState($event->getState())."</td>";
         return $event_string;
     }
     
