@@ -84,19 +84,20 @@ class EventParserTest extends PHPUnit_Framework_TestCase
         $this->eventParser->retrieveTableOfEvents();
         $this->eventParser->createEventsFromTable();
         $events = $this->eventParser->getEvents();
-        $last_event = $events[sizeof($events)-1];
-        $end_of_the_day = DateTime::createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
-        $end_of_the_day->setTime(23,59,59);
-        $time_diff = $end_of_the_day->diff($last_event->getAnnouncedTime());
-        $time_diff = $time_diff->s +
-            $time_diff->i*60 +
-            $time_diff->h*60*60 +
-            $time_diff->d*24*60*60;
+        $lastEvent = $events[sizeof($events)-1];
+        $endOfTheday = new DateTime();
+        $endOfTheday = $endOfTheday->createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
+        $endOfTheday->setTime(23,59,59);
+        $timeDiff = $endOfTheday->diff($lastEvent->getAnnouncedTime());
+        $timeDiff = $timeDiff->s +
+            $timeDiff->i*60 +
+            $timeDiff->h*60*60 +
+            $timeDiff->d*24*60*60;
         
         assert(sizeof($events) > 0, "Check Size of Events :".sizeof($events));
-        assert($last_event->getNextEvent() == $time_diff, 
+        assert($lastEvent->getNextEvent() == $timeDiff, 
             "Last event next event should be the difference with midnight :".
-            $last_event->getNextEvent()." expected ".$time_diff);
+            $lastEvent->getNextEvent()." expected ".$timeDiff);
     }
     
     

@@ -31,8 +31,8 @@ class DBHandler
     public function getTableSize(){
         $this->throwIfTableDoesNotExist();
         $sql1 = $this->mysqli->query("SELECT * FROM ".$this->tableName);
-        $row_count= mysqli_num_rows($sql1);
-        return $row_count;
+        $rowCount= mysqli_num_rows($sql1);
+        return $rowCount;
     }
     
     public function doesTableExists(){

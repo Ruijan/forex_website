@@ -154,7 +154,7 @@ class GUIDisplayerRequest extends ForexRequest
     private function createFromToCalendars(){
         
         $toptag = "<div sytle='margin: auto; width:100%; text-align: center;'>";
-        $calendar = $this->createCalendar('from','to', date("Y-m-d"));
+        $calendar = $this->createCalendar();
         $form = "<form action='index.php' method='post'>
     <input id='stat' name='stat' value='".
     (isset($this->parameters['stat']) ? $this->parameters['stat'] : 'events').
@@ -172,7 +172,7 @@ class GUIDisplayerRequest extends ForexRequest
         $bottomtag = "</form></div>";
         return $toptag.$calendar.'<br/>'.$form.$validate.$bottomtag;
     }
-    private function createCalendar($date1, $date2, $default){
+    private function createCalendar(){
         $onChangeScript = '
     <script>
         $("selector").datepicker({

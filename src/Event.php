@@ -21,14 +21,14 @@ class Event
     
    
     // method declaration
-    function __construct($event_id, $news_id, $announced_time, $previous, $next_event) {
-        $this->setEventId($event_id);
-        $this->setNewsId($news_id);
-        $this->setAnnouncedTime($announced_time);
+    public function __construct($eventId, $newsId, $announcedTime, $previous, $nextEventTime) {
+        $this->setEventId($eventId);
+        $this->setNewsId($newsId);
+        $this->setAnnouncedTime($announcedTime);
         $this->setRealTime(new DateTime());
         $this->setRealTime($this->getReleasedTime()->createFromFormat('Y-m-d H:i:s',"1970-01-01 00:00:00"));
         $this->setPrevious($previous);
-        $this->setNextEvent($next_event);
+        $this->setNextEvent($nextEventTime);
     }
     public function getId(){return $this->identifier;}
     public function getNewsId(){return $this->newsId;}
@@ -86,7 +86,8 @@ class Event
     public function setPrevious($previous)
     {
         if(!is_float($previous) && !is_int($previous) && !is_double($previous)){
-            throw new ErrorException("Wrong type for previous. Expected float or double or int got: ".gettype($previous));
+            throw new ErrorException("Wrong type for previous. Expected float or double or int got: "
+                .gettype($previous));
         }
         $this->previous = $previous;
     }
@@ -113,7 +114,7 @@ class Event
         $this->setState(EventState::UPDATED);
     }
     
-    static function getStringFromState($state){
+    public static function getStringFromState($state){
         switch($state){
             case EventState::PENDING:
                 return "Pending";
