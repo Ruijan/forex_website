@@ -58,13 +58,13 @@ class TradeTest extends PHPUnit_Framework_TestCase
     public function testSetDVPTM5WithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for dv_p_tm5. Expected float or double got: "
             .gettype("string"));
-        $this->trade->setDv_p_tm5("string");
+        $this->trade->setDvPTm5("string");
     }
     
     public function testSetDVPT0WithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for dv_p_t0. Expected float or double got: "
             .gettype("string"));
-        $this->trade->setDv_p_t0("string");
+        $this->trade->setDvPT0("string");
     }
     
     public function testSetPredictionWithWrongArgumentShouldThrow(){
@@ -80,12 +80,12 @@ class TradeTest extends PHPUnit_Framework_TestCase
     public function testSetPredictionProbaWithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for p_proba. Expected float or double got: "
             .gettype("0.5"));
-        $this->trade->setP_proba("0.5");
+        $this->trade->setPProba("0.5");
     }
     
     public function testSetPredictionProbaWithOutOfRangeProbaShouldThrow(){
         $this->expectExceptionMessage("Prediction probability out of range:1.2. Should be between 0 and 1");
-        $this->trade->setP_proba(1.2);
+        $this->trade->setPProba(1.2);
     }
     
     public function testSetGainWithWrongArgumentShouldThrow(){
@@ -162,7 +162,7 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->fillMarketInfo(0.005, 0.00010);
         $this->trade->predict($prediction, $pProba);
         assert($this->trade->getPrediction() == $prediction, "Expect equal close time");
-        assert($this->trade->getP_proba() == $pProba, "Expect equal p_proba");
+        assert($this->trade->getPProba() == $pProba, "Expect equal p_proba");
         assert($this->trade->getState() == TradeState::PREDICTED, "Expect state to be 2");
     }
     
@@ -181,23 +181,23 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $dvPT0 = 0.00500;
         $dvTPm5 = 0.00200;
         $this->trade->fillMarketInfo($dvTPm5, $dvPT0);
-        assert($this->trade->getDv_p_t0() == $dvPT0, "Expect equal dv_p_t0 time");
-        assert($this->trade->getDv_p_tm5() == $dvTPm5, "Expect equal dv_p_tm5");
+        assert($this->trade->getDvPT0() == $dvPT0, "Expect equal dv_p_t0 time");
+        assert($this->trade->getDvPTm5() == $dvTPm5, "Expect equal dv_p_tm5");
         assert($this->trade->getState() == TradeState::FILLED, "Expect state to be 1");
     }
     
     public function testFillTradeWhenInPredictedStateShouldThrow(){
         $dvPT0 = 0.00500;
-        $$dvPTm5 = 0.00200;
+        $dvPTm5 = 0.00200;
         $prediction = 1;
         $pProba = 0.76;
-        $this->trade->fillMarketInfo($$dvPTm5, $dvPT0);
+        $this->trade->fillMarketInfo($dvPTm5, $dvPT0);
         $this->trade->predict($prediction, $pProba);
         $this->expectExceptionMessage("Cannot switch to initialized state. Actual state is : ".
             $this->trade->getStringFromState($this->trade->getState()).". Next expected state is ".
             $this->trade->getStringFromState($this->trade->getState()+1));
         
-        $this->trade->fillMarketInfo($$dvPTm5, $dvPT0);
+        $this->trade->fillMarketInfo($dvPTm5, $dvPT0);
     }
     
     public function testGetStringFromTradeInitializedState(){

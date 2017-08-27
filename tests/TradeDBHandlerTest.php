@@ -159,8 +159,8 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function checkIfFilledDBTradeEqualTrade($trade, $db_trade)
     {
-        assert($db_trade->getDv_p_tm5() == $trade->getDv_p_tm5(), "Expect equal p_prediction in DB");
-        assert($db_trade->getDv_p_t0() == $trade->getDv_p_t0(), "Expect equal prediction in DB");
+        assert($db_trade->getDvPTm5() == $trade->getDvPTm5(), "Expect equal p_prediction in DB");
+        assert($db_trade->getDvPT0() == $trade->getDvPT0(), "Expect equal prediction in DB");
         assert($db_trade->getState() == $trade->getState(), "Expect equal state of 1");
     }
 
@@ -177,7 +177,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function checkIfPredictedDBTradeEqualTrade($trade, $db_trade)
     {
-        assert($db_trade->getP_proba() == $trade->getP_proba(), "Expect equal p_prediction in DB");
+        assert($db_trade->getPProba() == $trade->getPProba(), "Expect equal p_prediction in DB");
         assert($db_trade->getPrediction() == $trade->getPrediction(), "Expect equal prediction in DB");
         assert($db_trade->getState() == $trade->getState(), "Expect equal state of 2");
     }

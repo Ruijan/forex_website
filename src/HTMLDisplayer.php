@@ -73,7 +73,7 @@ class SimpleHTMLDisplayer
         ";".sprintf("%01.5f", $trade->getDvPTm5()).
         ";".sprintf("%01.5f", $trade->getDvPT0()).
         ";".$trade->getPrediction().
-        ";".$trade->getP_proba().
+        ";".$trade->getPProba().
         ";".$trade->getGain().
         ";".$trade->getCommission().
         ";".$trade->getState();
@@ -87,12 +87,12 @@ class SimpleHTMLDisplayer
         "</td><td class='creation_time'>".$trade->getCreationTime()->format('Y-m-d H:i:s').
         "</td><td class='open_time'>".
             (is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).
-        "</td><td class='close_time'>".s
+        "</td><td class='close_time'>".
         (is_null($trade->getCloseTime()) ? "" : $trade->getCloseTime()->format('Y-m-d H:i:s')).
         "</td><td class='market'>".sprintf("%01.5f", $trade->getDvPTm5()).
         "</td><td class='market'>".sprintf("%01.5f", $trade->getDvPT0()).
         "</td><td class='prediction'>".$trade->getPrediction().
-        "</td><td class='p_prediction'>".$trade->getP_proba().
+        "</td><td class='p_prediction'>".$trade->getPProba().
         "</td><td class='gain'>".$trade->getGain().
         "</td><td class='commission'>".$trade->getCommission().
         "</td><td class='currency'>".$trade->getCurrency().
