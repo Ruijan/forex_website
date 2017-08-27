@@ -9,15 +9,8 @@ require_once(str_replace("tests", "src", __DIR__."/").'ForexRequest.php');
 class ForexRequestTest extends PHPUnit_Framework_TestCase
 {
 
-    /**
-     *
-     * @var ForexRequest
-     */
     private $forexRequest;
 
-    /**
-     * Prepares the environment before running a test.
-     */
     protected function setUp()
     {
         parent::setUp();
@@ -27,9 +20,6 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         $this->forexRequest = new ForexRequest(/* parameters */);
     }
 
-    /**
-     * Cleans up the environment after running a test.
-     */
     protected function tearDown()
     {
         // TODO Auto-generated ForexRequestTest::tearDown()
@@ -38,13 +28,6 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
 
     public function testSetWrongTypeEventDBHandlerShouldThrow(){
         $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
@@ -85,7 +68,7 @@ class ForexRequestTest extends PHPUnit_Framework_TestCase
         $this->forexRequest->init($tradeDBHandlerMock, $eventDBHandlerMock, $eventParserMock, []);
     }
     
-    public function test__setWrongTypeParametersShouldThrow(){
+    public function testSetWrongTypeParametersShouldThrow(){
         $tradeDBHandlerMock = $this->getMockBuilder('TradeDBHandler')
         ->disableOriginalConstructor()->getMock();
         $eventDBHandlerMock = $this->getMockBuilder('EventDBHandler')

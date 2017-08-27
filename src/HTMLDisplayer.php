@@ -65,7 +65,7 @@ class SimpleHTMLDisplayer
     
     private function simpleDisplayTrade($trade)
     {
-        $trade_string = $trade->getId().
+        $tradeString = $trade->getId().
         ";".$trade->getIDDBEvent().
         ";".$trade->getCreationTime()->format('Y-m-d H:i:s').
         ";".$trade->getOpenTime()->format('Y-m-d H:i:s').
@@ -77,12 +77,12 @@ class SimpleHTMLDisplayer
         ";".$trade->getGain().
         ";".$trade->getCommission().
         ";".$trade->getState();
-        return $trade_string;
+        return $tradeString;
     }
     
     private function tableDisplayTrade($trade)
     {
-        $trade_string = "<td class='id'>".$trade->getId().
+        $tradeString = "<td class='id'>".$trade->getId().
         "</td><td class='id_db_event'>".$trade->getIDDBEvent().
         "</td><td class='creation_time'>".$trade->getCreationTime()->format('Y-m-d H:i:s').
         "</td><td class='open_time'>".
@@ -99,7 +99,7 @@ class SimpleHTMLDisplayer
         "</td><td class='state ".$trade->getStringFromState($trade->getState())." "
             .($trade->getGain() > 0 ? "won" : "lost")."'>"
             .$trade->getStringFromState($trade->getState())."</td>";
-        return $trade_string;
+        return $tradeString;
     }
 
     
@@ -128,7 +128,7 @@ class SimpleHTMLDisplayer
     
     private function tableDisplayEvent($event)
     {
-        $event_string = "<td class='id'>".$event->getId()."</td>".
+        $eventString = "<td class='id'>".$event->getId()."</td>".
         "<td class='id_event'>".$event->getEventId()."</td>".
         "<td class='id_news'>".$event->getNewsId()."</td>".
         "<td class='announced'>".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."</td>".
@@ -138,12 +138,12 @@ class SimpleHTMLDisplayer
         "<td class='next_event'>".$event->getNextEvent()."</td>".
         "<td class='state ".$event->getStringFromState($event->getState())."'>"
             .$event->getStringFromState($event->getState())."</td>";
-        return $event_string;
+        return $eventString;
     }
     
     private function simpleDisplayEvent($event)
     {
-        $event_string = $event->getId().
+        $eventString = $event->getId().
         ";".$event->getEventId().
         ";".$event->getNewsId().
         ";".$event->getAnnouncedTime()->format('Y-m-d H:i:s').
@@ -152,7 +152,7 @@ class SimpleHTMLDisplayer
         ";".$event->getPrevious().
         ";".$event->getNextEvent().
         ";".$event->getState();
-        return $event_string;
+        return $eventString;
     }
 
 }

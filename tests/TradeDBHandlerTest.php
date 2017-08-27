@@ -99,13 +99,13 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->checkIfOpenDBTradeEqualTrade($trade, $dbTrade);
     }
     
-    private function checkIfOpenDBTradeEqualTrade($trade, $db_trade)
+    private function checkIfOpenDBTradeEqualTrade($trade, $dbTrade)
     {
         assert($this->tradeDBHandler->getTradeByID($trade->getId())->getOpenTime()->format('Y-m-d H:i:s') == 
             $trade->getOpenTime()->format('Y-m-d H:i:s'), 
             "Expect equal closing time. Got:".$trade->getOpenTime()->format('Y-m-d H:i:s').
-            " and ".$db_trade->getOpenTime()->format('Y-m-d H:i:s'));
-        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 2");
+            " and ".$dbTrade->getOpenTime()->format('Y-m-d H:i:s'));
+        assert($dbTrade->getState() == $trade->getState(), "Expect equal state of 2");
     }
 
     private function openTrade()
@@ -126,14 +126,14 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->checkIfClosedDBtradeEqualTrade($trade, $dbTrade);
     }
     
-    private function checkIfClosedDBtradeEqualTrade($trade, $db_trade)
+    private function checkIfClosedDBtradeEqualTrade($trade, $dbTrade)
     {
-        assert($db_trade->getCloseTime()->format('Y-m-d H:i:s') == $trade->getCloseTime()->format('Y-m-d H:i:s'), 
+        assert($dbTrade->getCloseTime()->format('Y-m-d H:i:s') == $trade->getCloseTime()->format('Y-m-d H:i:s'), 
             "Expect equal closing time. Got:".$trade->getCloseTime()->format('Y-m-d H:i:s').
-            " and ".$db_trade->getCloseTime()->format('Y-m-d H:i:s'));
-        assert($db_trade->getGain() == $trade->getGain(), "Expect equal gain in DB");
-        assert($db_trade->getCommission() == $trade->getCommission(), "Expect equal commission in DB");
-        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 3");
+            " and ".$dbTrade->getCloseTime()->format('Y-m-d H:i:s'));
+        assert($dbTrade->getGain() == $trade->getGain(), "Expect equal gain in DB");
+        assert($dbTrade->getCommission() == $trade->getCommission(), "Expect equal commission in DB");
+        assert($dbTrade->getState() == $trade->getState(), "Expect equal state of 3");
     }
 
     
@@ -157,11 +157,11 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->checkIfFilledDBTradeEqualTrade($trade, $dbTrade);
     }
     
-    private function checkIfFilledDBTradeEqualTrade($trade, $db_trade)
+    private function checkIfFilledDBTradeEqualTrade($trade, $dbTrade)
     {
-        assert($db_trade->getDvPTm5() == $trade->getDvPTm5(), "Expect equal p_prediction in DB");
-        assert($db_trade->getDvPT0() == $trade->getDvPT0(), "Expect equal prediction in DB");
-        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 1");
+        assert($dbTrade->getDvPTm5() == $trade->getDvPTm5(), "Expect equal p_prediction in DB");
+        assert($dbTrade->getDvPT0() == $trade->getDvPT0(), "Expect equal prediction in DB");
+        assert($dbTrade->getState() == $trade->getState(), "Expect equal state of 1");
     }
 
     public function testPredictTradeShouldUpdatePredictPProbaState(){
@@ -175,11 +175,11 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->checkIfPredictedDBTradeEqualTrade($trade, $dbTrade);
     }
     
-    private function checkIfPredictedDBTradeEqualTrade($trade, $db_trade)
+    private function checkIfPredictedDBTradeEqualTrade($trade, $dbTrade)
     {
-        assert($db_trade->getPProba() == $trade->getPProba(), "Expect equal p_prediction in DB");
-        assert($db_trade->getPrediction() == $trade->getPrediction(), "Expect equal prediction in DB");
-        assert($db_trade->getState() == $trade->getState(), "Expect equal state of 2");
+        assert($dbTrade->getPProba() == $trade->getPProba(), "Expect equal p_prediction in DB");
+        assert($dbTrade->getPrediction() == $trade->getPrediction(), "Expect equal prediction in DB");
+        assert($dbTrade->getState() == $trade->getState(), "Expect equal state of 2");
     }
     
     public function testGetTradesFromToWithBadArgumentsShouldThrow(){

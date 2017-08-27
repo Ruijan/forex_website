@@ -71,12 +71,12 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     public function testAddingEventExpectSameValueInDBandEvent(){
         $identifier = $this->eventDBHandler->tryAddingEvent($this->event);
         $this->event->setId($identifier);
-        $db_event = $this->eventDBHandler->getEventById($identifier);
-        assert($db_event->getEventId() == $this->event->getEventId());
-        assert($db_event->getNewsId() == $this->event->getNewsId());
-        assert($db_event->getAnnouncedTime() == $this->event->getAnnouncedTime());
-        assert($db_event->getPrevious() == $this->event->getPrevious());
-        assert($db_event->getNextEvent() == $this->event->getNextEvent());
+        $dbEvent = $this->eventDBHandler->getEventById($identifier);
+        assert($dbEvent->getEventId() == $this->event->getEventId());
+        assert($dbEvent->getNewsId() == $this->event->getNewsId());
+        assert($dbEvent->getAnnouncedTime() == $this->event->getAnnouncedTime());
+        assert($dbEvent->getPrevious() == $this->event->getPrevious());
+        assert($dbEvent->getNextEvent() == $this->event->getNextEvent());
     }
     
     public function testTryAddingSameEventExpectSameDBSize(){
@@ -90,12 +90,12 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->event->setId($identifier);
         $this->event->update(2.5, (new DateTime("NOW"))->add(new DateInterval("PT5M")));
         $this->eventDBHandler->updateEvent($this->event);
-        $db_event = $this->eventDBHandler->getEventById($identifier);
-        assert($db_event->getReleasedTime() == $this->event->getReleasedTime(), "Real times should be equal: ".
+        $dbEvent = $this->eventDBHandler->getEventById($identifier);
+        assert($dbEvent->getReleasedTime() == $this->event->getReleasedTime(), "Real times should be equal: ".
             $this->event->getReleasedTime()->format("Y-m-d H:i:s"). " and ".
-            $db_event->getReleasedTime()->format("Y-m-d H:i:s"));
-        assert($db_event->getActual() == $this->event->getActual(), "Actual values should be equal");
-        assert($db_event->getState() == $this->event->getState(), "State should be equal to 1");
+            $dbEvent->getReleasedTime()->format("Y-m-d H:i:s"));
+        assert($dbEvent->getActual() == $this->event->getActual(), "Actual values should be equal");
+        assert($dbEvent->getState() == $this->event->getState(), "State should be equal to 1");
     }
     
     public function testEmptyTable(){
@@ -119,15 +119,15 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         $fromDate = new DateTime("2017-08-03");
         $toDate = new DateTime("2017-08-05");
         
-        $all_events = $this->generateDummyEvents();
-        $events_to_get = [$all_events[0], $all_events[1], $all_events[4]];
-        $this->addListOfEvents($all_events);
+        $allEvents = $this->generateDummyEvents();
+        $eventsToGet = [$allEvents[0], $allEvents[1], $allEvents[4]];
+        $this->addListOfEvents($allEvents);
         $events = $this->eventDBHandler->getEventsFromTo($fromDate, $toDate);
         
-        $all_here = $this->areListOfEventsEquals($events_to_get, $events);
-        assert(sizeof($events) == sizeof($events_to_get),
-            "Different number of events expected. Expected ".sizeof($events_to_get)." got ".sizeof($events));
-        assert($all_here, "Events were not equals");
+        $allHere = $this->areListOfEventsEquals($eventsToGet, $events);
+        assert(sizeof($events) == sizeof($eventsToGet),
+            "Different number of events expected. Expected ".sizeof($eventsToGet)." got ".sizeof($events));
+        assert($allHere, "Events were not equals");
     }
     
     public function testGetEventsFromToState(){
@@ -135,15 +135,15 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         $toDate = new DateTime("2017-08-05");
         $state = EventState::UPDATED;
         
-        $all_events = $this->generateEventsWithDifferentStates();
-        $events_to_get = [$all_events[0], $all_events[3]];
-        $this->addListOfEvents($all_events);
+        $allEvents = $this->generateEventsWithDifferentStates();
+        $eventsToGet = [$allEvents[0], $allEvents[3]];
+        $this->addListOfEvents($allEvents);
         $events = $this->eventDBHandler->getEventsFromTo($fromDate, $toDate, $state);
         
-        $all_here = $this->areListOfEventsEquals($events_to_get, $events);
-        assert(sizeof($events) == sizeof($events_to_get),
-            "Different number of events expected. Expected ".sizeof($events_to_get)." got ".sizeof($events));
-        assert($all_here, "Events were not equals");
+        $allHere = $this->areListOfEventsEquals($eventsToGet, $events);
+        assert(sizeof($events) == sizeof($eventsToGet),
+            "Different number of events expected. Expected ".sizeof($eventsToGet)." got ".sizeof($events));
+        assert($allHere, "Events were not equals");
     }
     
     public function testGetEventsFromToWithBadArgumentsShouldThrow(){
@@ -164,17 +164,17 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function areListOfEventsEquals($events_to_get, $events)
     {
-        $all_here = sizeof($events) == sizeof($events_to_get);
+        $allHere = sizeof($events) == sizeof($events_to_get);
         foreach($events as $event){
             $eventHere = false;
-            foreach($events_to_get as $expected_event){
-                if($expected_event == $event){
+            foreach($events_to_get as $expectedEvent){
+                if($expectedEvent == $event){
                     $eventHere = true;
                 }
             }
-            $all_here = $eventHere ? $all_here : $eventHere;
+            $allHere = $eventHere ? $allHere : $eventHere;
         }
-        return $all_here;
+        return $allHere;
     }
 
     
@@ -198,28 +198,28 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function generateDummyEvents()
     {
-        $all_events = [];
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
-        return $all_events;
+        $allEvents = [];
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
+        return $allEvents;
     }
     
     private function generateEventsWithDifferentStates()
     {
-        $all_events = [];
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 12:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
-        $all_events[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
-        $all_events[0]->update(325, new DateTime("2017-08-03 00:31:00"));
-        $all_events[3]->update(325, new DateTime("2017-08-03 12:35:00"));
-        return $all_events;
+        $allEvents = [];
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 00:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-05 12:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 12:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-03 12:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-02 00:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-06 00:30:00"), 0.01, 500);
+        $allEvents[] = new Event(rand(1,10000), 65954, new DateTime("2017-08-04 00:30:00"), 0.01, 500);
+        $allEvents[0]->update(325, new DateTime("2017-08-03 00:31:00"));
+        $allEvents[3]->update(325, new DateTime("2017-08-03 12:35:00"));
+        return $allEvents;
     }
 
 }

@@ -132,21 +132,22 @@ class EventDBHandler extends DBHandler
     
     private function buildSelectQueryFromToState($fromDate, $toDate, $state)
     {
-        $state_suffix = "";
+        $stateSuffix = "";
         if($state != -1){
-            $state_suffix = " AND STATE=".$state;
+            $stateSuffix = " AND STATE=".$state;
         }
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM events WHERE DATEDIFF(ANNOUNCED_TIME,'".$fromDate->format('Y-m-d H:i:s').
         "') >= 0 AND DATEDIFF(ANNOUNCED_TIME,'".$toDate->format('Y-m-d H:i:s').
-        "') <= 0".$state_suffix;
+        "') <= 0".$stateSuffix;
         return $query;
     }
     
     private function throwIfWrongArgumentType($fromDate, $toDate, $state)
     {
         if(!is_a($fromDate, 'DateTime') || !is_a($toDate, 'DateTime')){
-            throw new ErrorException("Wrong type for from or to. Expected DateTime got: ".gettype($fromDate)." and ".gettype($toDate));
+            throw new ErrorException("Wrong type for from or to. Expected DateTime got: "
+                .gettype($fromDate)." and ".gettype($toDate));
         }
         if(!is_int($state)){
             throw new ErrorException("Wrong type for state. Expected int got: ".gettype($state));

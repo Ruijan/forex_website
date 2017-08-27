@@ -35,16 +35,8 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
         
         parent::tearDown();
     }
-
-    /**
-     * Constructs the test case.
-     */
-    public function __construct()
-    {
-        // TODO Auto-generated constructor
-    }
     
-    public function test__constructSuccess(){
+    public function testConstructSuccess(){
         $displayMode = DisplayMode::TABLE;
         assert((new SimpleHTMLDisplayer($displayMode))->getDisplayMode() == $displayMode);
     }

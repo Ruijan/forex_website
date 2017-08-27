@@ -40,10 +40,6 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    public function __construct()
-    {
-    }
-
     public function testExecuteNoEventInDB()
     {
         try{
