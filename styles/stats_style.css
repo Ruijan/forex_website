@@ -68,22 +68,43 @@ h2{
 table{
 	width: 100%;
 }
-.eventwon{
+
+.state{
+	text-align: center;
+}
+.won{
 	background-color: #58FA58;
 }
-.eventfailed{
+.lost{
 	background-color: #FA5858;
 }
-.eventinprogress{
+.Open{
 	background-color: #FE9A2E;
 }
-.eventunplayable{
+.Initialized{
 	background-color: grey;
 }
-.tradeinprogress{
+.Market{
 	background-color: #58FAF4;
+}
+.Predicted{
+	background-color: #ffff80;
+}
+
+
+
+.Passed{
+	background-color: #58FA58;
+}
+.Pending{
+	background-color: #FE9A2E;
 }
 
 th{
-	size: 20px;
+	padding: 5px;
+	text-align: center;
+}
+td{
+	padding-left: 5px;
+	padding-right: 5px;
 }

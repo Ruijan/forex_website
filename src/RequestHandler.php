@@ -7,6 +7,7 @@ require_once('TradeDBHandler.php');
 $pathToRequest = __DIR__."/requests/";
 
 require_once($pathToRequest.'CollectEventsRequest.php');
+require_once($pathToRequest.'GUIDisplayerRequest.php');
 require_once($pathToRequest.'UpdateMarketRequest.php');
 require_once($pathToRequest.'ForexRequest.php');
 require_once($pathToRequest.'CancelTradeRequest.php');
@@ -18,13 +19,14 @@ require_once($pathToRequest.'NextActionRequest.php');
 
 abstract class Request{
     const FETCH_EVENTS      = 0;
-    const PREDICTABLE_TRADE = 1;
-    const NEXT_ACTION       = 2;
-    const UPDATE_MARKET     = 3;
-    const PREDICT_TRADE     = 4;
-    const OPEN_TRADE        = 5;
-    const CLOSE_TRADE       = 6;
-    const CANCEL_TRADE      = 7;
+    const GUI               = 1;
+    const PREDICTABLE_TRADE = 2;
+    const NEXT_ACTION       = 3;
+    const UPDATE_MARKET     = 4;
+    const PREDICT_TRADE     = 5;
+    const OPEN_TRADE        = 6;
+    const CLOSE_TRADE       = 7;
+    const CANCEL_TRADE      = 8;
 }
 
 
@@ -39,6 +41,8 @@ class RequestHandler{
         switch($strRequest){
             case "fetch_events":
                 return Request::FETCH_EVENTS;
+            case "":
+                return Request::GUI;
             case "predictable_trade":
                 return Request::PREDICTABLE_TRADE;
             case "next_action":
@@ -130,6 +134,9 @@ class RequestHandler{
     {
         if(strstr(get_class($handler),"UpdateMarketRequest")){
             $this->requestHandlers[Request::UPDATE_MARKET] = $handler;
+        }
+        elseif(strstr(get_class($handler),"GUIDisplayerRequest")){
+            $this->requestHandlers[Request::GUI] = $handler;
         }
         elseif (strstr(get_class($handler),"CollectEventsRequest")){
             $this->requestHandlers[Request::FETCH_EVENTS] = $handler;

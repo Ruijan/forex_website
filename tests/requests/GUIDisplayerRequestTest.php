@@ -46,7 +46,7 @@ class GUIDisplayerRequestTest extends PHPUnit_Framework_TestCase
                 $this->eventParserMock, ["stat" => "events"]);
             $this->eventDBHandlerMock->expects($this->once())
             ->method('getEventsFromTo')
-            ->willReturn("");
+            ->willReturn([]);
             $this->gUIDisplayerRequest->execute();
             assert(true);
         }
@@ -63,7 +63,7 @@ class GUIDisplayerRequestTest extends PHPUnit_Framework_TestCase
                 $this->eventParserMock, ["stat" => "trades"]);
             $this->tradeDBHandlerMock->expects($this->once())
             ->method('getTradesFromTo')
-            ->willReturn("");
+            ->willReturn([]);
             $this->gUIDisplayerRequest->execute();
             assert(true);
         }
