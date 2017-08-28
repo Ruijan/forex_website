@@ -146,10 +146,10 @@ class Trade
         $this->state = $state;
     }
 
-    public function __construct($id_db_event, $creation_time, $currency)
+    public function __construct($idDBEvent, $creationTime, $currency)
     {
-        $this->idDbEvent = $id_db_event;
-        $this->setCreationTime($creation_time);
+        $this->idDbEvent = $idDBEvent;
+        $this->setCreationTime($creationTime);
         $this->setCurrency($currency);
     }
     
@@ -158,7 +158,7 @@ class Trade
         return $this->identifier != null and $this->idDbEvent != null;
     }
     
-    public function close($gain, $commission, $close_time){
+    public function close($gain, $commission, $closeTime){
         if($this->state != TradeState::OPEN){
             throw new ErrorException("Cannot switch to close state. Actual state is : ".
                 $this->getStringFromState($this->getState()).". Next expected state is ".
@@ -166,7 +166,7 @@ class Trade
         }
         $this->setGain($gain);
         $this->setCommission($commission);
-        $this->setCloseTime($close_time);
+        $this->setCloseTime($closeTime);
         $this->setState(TradeState::CLOSE);
     }
     

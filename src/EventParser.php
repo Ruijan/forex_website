@@ -33,13 +33,13 @@ class EventParser
         $this->events = array();
         $lines = $this->table->getElementByID('ecEventsTable')->getElementsByTagName('tbody')[0]
         ->getElementsByTagName("tr");
-        $previous_event = null;
+        $previousEvent = null;
         foreach($lines as $line){
             if  ($line->hasAttribute('event_attr_id') && $line->hasAttribute('id')){
                 $event = $this->createEventFromLine($line);
                 $this->setActualValueIfExists($event);
-                $this->setNextEventTime($previous_event, $event);
-                $previous_event = $event;
+                $this->setNextEventTime($previousEvent, $event);
+                $previousEvent = $event;
                 
                 $this->events[] = $event;
             }
@@ -47,17 +47,17 @@ class EventParser
         $this->setNextEventTimeToDiffToMidnight($event);
     }
     
-    private function setNextEventTime($previous_event, $event)
+    private function setNextEventTime($previousEvent, $event)
     {
-        if(!is_null($previous_event)){
-            $time_diff = $event->getAnnouncedTime()->diff($previous_event->getAnnouncedTime());
-            $time_diff = $time_diff->s +
-                $time_diff->i*60 +
-                $time_diff->h*60*60 +
-                $time_diff->d*24*60*60;
-            $previous_event->setNextEvent($time_diff);
-            if($time_diff == 0){
-                $event->setNextEvent($time_diff);
+        if(!is_null($previousEvent)){
+            $timeDiff = $event->getAnnouncedTime()->diff($previousEvent->getAnnouncedTime());
+            $timeDiff = $timeDiff->s +
+                $timeDiff->i*60 +
+                $timeDiff->h*60*60 +
+                $timeDiff->d*24*60*60;
+            $previousEvent->setNextEvent($timeDiff);
+            if($timeDiff == 0){
+                $event->setNextEvent($timeDiff);
             }
         }
     }
@@ -65,14 +65,14 @@ class EventParser
     
     private function createEventFromLine($line)
     {
-        $news_id = explode('_',$line->getAttribute('id'))[1];
-        $previous_node = $this->table->getElementByID('eventPrevious_'.$news_id)->nodeValue;
-        $previous = $this->getFloatFromString($previous_node);
+        $newsId = explode('_',$line->getAttribute('id'))[1];
+        $previousNode = $this->table->getElementByID('eventPrevious_'.$newsId)->nodeValue;
+        $previous = $this->getFloatFromString($previousNode);
         $eventDateTime = new \DateTime();
         $eventDateTime = $eventDateTime->createFromFormat('Y-m-d H:i:s', 
             $line->getAttribute('event_timestamp'));
         $event = new Event((int)$line->getAttribute('event_attr_id'), 
-            (int)$news_id , 
+            (int)$newsId , 
             $eventDateTime, 
             $previous, 0);
         return $event;
@@ -81,8 +81,8 @@ class EventParser
     
     private function setActualValueIfExists($event)
     {
-        $actual_node = $this->table->getElementByID('eventActual_'.$event->getNewsId())->nodeValue;
-        $actual = $this->getFloatFromString($actual_node);
+        $actualNode = $this->table->getElementByID('eventActual_'.$event->getNewsId())->nodeValue;
+        $actual = $this->getFloatFromString($actualNode);
         if ($actual != 0)
         {
             $realTime = new DateTime();
@@ -97,12 +97,12 @@ class EventParser
         $endOfTheDay = new DateTime();
         $endOfTheDay->createFromFormat('Y-m-d H:i:s',(gmdate('Y-m-d H:i:s', time())));
         $endOfTheDay->setTime(23,59,59);
-        $time_diff = $endOfTheDay->diff($event->getAnnouncedTime());
-        $time_diff = $time_diff->s +
-            $time_diff->i*60 +
-            $time_diff->h*60*60 +
-            $time_diff->d*24*60*60;
-        $event->setNextEvent($time_diff);
+        $timeDiff = $endOfTheDay->diff($event->getAnnouncedTime());
+        $timeDiff = $timeDiff->s +
+            $timeDiff->i*60 +
+            $timeDiff->h*60*60 +
+            $timeDiff->d*24*60*60;
+        $event->setNextEvent($timeDiff);
     }
 
     

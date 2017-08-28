@@ -21,19 +21,19 @@ class CollectEventsRequest extends ForexRequest
         $events = $this->eventParser->getEvents();
         $todayUTC = new \DateTime();
         $todayUTC = $todayUTC->createFromFormat('Y-m-d H:i:s',gmdate('Y-m-d H:i:s', time()));
-        $db_events = $this->eventDBHandler->getEventsFromTo($todayUTC, $todayUTC);
+        $dbEvents = $this->eventDBHandler->getEventsFromTo($todayUTC, $todayUTC);
         
         foreach($events as $event){
             $event->setId($this->eventDBHandler->tryAddingEvent($event));
-            $this->updateEvents($db_events, $event);
+            $this->updateEvents($dbEvents, $event);
         }
     }
     
     
-    private function updateEvents($db_events, $event)
+    private function updateEvents($dbEvents, $event)
     {
-        if(sizeof($db_events) > 0){
-            foreach ($db_events as $db_event){
+        if(sizeof($dbEvents) > 0){
+            foreach ($dbEvents as $db_event){
                 if($event->getId() == $db_event->getId()){
                     if($db_event->getState() != $event->getState()){
                         $this->eventDBHandler->updateEvent($event);
