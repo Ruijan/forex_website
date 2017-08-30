@@ -33,18 +33,65 @@ class CollectEventsRequest extends ForexRequest
     private function updateEvents($dbEvents, $event)
     {
         if(sizeof($dbEvents) > 0){
-            foreach ($dbEvents as $db_event){
-                if($event->getId() == $db_event->getId()){
-                    if($db_event->getState() != $event->getState()){
+            foreach ($dbEvents as $dbEvent){
+                if($event->getId() == $dbEvent->getId()){
+                    if($dbEvent->getState() != $event->getState()){
                         $this->eventDBHandler->updateEvent($event);
-                        $todayUTC = new \DateTime();
-                        $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
-                        $this->tradeDBHandler->tryAddingTrade(
-                            new Trade($event->getEventId(), $todayUTC, "EUR_USD"));
+                        $this->addTradeToDbFromEvent($event);
+                        $this->addTradeToDbFromEvents($event, $dbEvents);
                     }
                 }
             }
         }
     }
+    
+    public function addTradeToDbFromEvent($event)
+    {
+        if($event->getPreviousEvent() != 0 and $event->getNextEvent() != 0){
+            $todayUTC = new \DateTime();
+            $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
+            $this->tradeDBHandler->tryAddingTrade(
+                new Trade($event->getId(), $event->getEventId(), $todayUTC, "EUR_USD"));
+        }
+    }
+    
+    public function addTradeToDbFromEvents($event, $dbEvents){
+        if($event->getPreviousEvent() == 0 or $event->getNextEvent() == 0){
+            $newsId = "";
+            $groupId = "";
+            $shouldAddTrade = $this->generateIds($event, $dbEvents, $newsId, $groupId);
+            if($shouldAddTrade){
+                $todayUTC = new \DateTime();
+                $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
+                $this->tradeDBHandler->tryAddingTrade(new Trade($newsId, $groupId, $todayUTC, "EUR_USD"));
+            }
+        }
+    }
+    private function generateIds($event, $dbEvents, $newsId, $groupId)
+    {
+        $groupOfEvents = [];
+        $isInGroup = false;
+        $allUpdated = true;
+        $groupId = "";
+        $newsId = "";
+        foreach($dbEvents as $dbEvent){
+            if($dbEvent->getAnnouncedTime() == $event->getAnnouncedTime() and $dbEvent->getStrength() > 1){
+                $groupOfEvents[] = $dbEvent;
+                $groupId .= $dbEvent->getEventId()."_";
+                $newsId .= $dbEvent->getId()."_";
+                if($dbEvent == $event){
+                    $isInGroup = true;
+                }
+                if($dbEvent->getState() == \EventState::PENDING){
+                    $allUpdated = false;
+                }
+            }
+        }
+        $groupId = substr($groupId,0,-1);
+        $newsId = substr($newsId,0,-1);
+        return $isInGroup and $allUpdated;
+    }
+
+
 }
 

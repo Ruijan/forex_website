@@ -66,15 +66,40 @@ class EventParser
     private function createEventFromLine($line)
     {
         $newsId = explode('_',$line->getAttribute('id'))[1];
-        $previousNode = $this->table->getElementByID('eventPrevious_'.$newsId)->nodeValue;
-        $previous = $this->getFloatFromString($previousNode);
+        $previousNode = $this->table->getElementByID('eventPrevious_'.$newsId);
+        $previous = $this->getFloatFromString($previousNode->nodeValue);
         $eventDateTime = new \DateTime();
         $eventDateTime = $eventDateTime->createFromFormat('Y-m-d H:i:s', 
             $line->getAttribute('event_timestamp'));
+        $name = "";
+        $speech = false;
+        $columns = $line->getElementsByTagName("td");
+        $strength = 0;
+        foreach($columns as $column){
+            if($column->getAttribute('class') == "left event"){
+                $name = $column->nodeValue;
+                $extensionNodes = $column->getElementsByTagName("span");
+                foreach($extensionNodes as $extension){
+                    if($extension->getAttribute('title') == "Speech"){
+                        $speech = true;
+                    }
+                }
+            }
+            if($column->getAttribute('class') == "sentiment"){
+                $extensionNodes = $column->getElementsByTagName("i");
+                foreach($extensionNodes as $extension){
+                    $strength += 1;
+                }
+            }
+        }
         $event = new Event((int)$line->getAttribute('event_attr_id'), 
-            (int)$newsId , 
+            (int)$newsId, 
+            $speech,
+            $strength,
             $eventDateTime, 
-            $previous, 0);
+            $previous, 
+            0,
+            0);
         return $event;
     }
 

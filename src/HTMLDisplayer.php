@@ -48,7 +48,8 @@ class SimpleHTMLDisplayer
     public function displayHeaderForTableInTrade(){
         return "<tr>
             <th>Id</th>
-            <th>Id Event</th>
+            <th>Id News</th>
+            <th>Ids Event</th>
             <th>Creation Time</th>
             <th>Open Time</th>
             <th>Close Time</th>
@@ -66,7 +67,8 @@ class SimpleHTMLDisplayer
     private function simpleDisplayTrade($trade)
     {
         $tradeString = $trade->getId().
-        ";".$trade->getIDDBEvent().
+        ";".$trade->getNewsId().
+        ";".$trade->getEventId().
         ";".$trade->getCreationTime()->format('Y-m-d H:i:s').
         ";".(is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).
         ";".(is_null($trade->getCloseTime()) ? "" : $trade->getCloseTime()->format('Y-m-d H:i:s')).
@@ -83,7 +85,8 @@ class SimpleHTMLDisplayer
     private function tableDisplayTrade($trade)
     {
         $tradeString = "<td class='id'>".$trade->getId().
-        "</td><td class='id_db_event'>".$trade->getIDDBEvent().
+        "</td><td class='id_news'>".$trade->getNewsId().
+        "</td><td class='id_events'>".$trade->getEventId().
         "</td><td class='creation_time'>".$trade->getCreationTime()->format('Y-m-d H:i:s').
         "</td><td class='open_time'>".
             (is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).
@@ -117,11 +120,13 @@ class SimpleHTMLDisplayer
             <th>Id</th>
             <th>Id Event</th>
             <th>Id News</th>
+            <th>Speech</th>
             <th>Announced Time</th>
             <th>Released Time</th>
             <th>Actual</th>
             <th>Previous</th>
-            <th>Time Before Next Event</th>
+            <th>Time After<br/>Previous Event</th>
+            <th>Time Before<br/>Next Event</th>
             <th>State</th>
             </tr>";
     }
@@ -131,10 +136,13 @@ class SimpleHTMLDisplayer
         $eventString = "<td class='id'>".$event->getId()."</td>".
         "<td class='id_event'>".$event->getEventId()."</td>".
         "<td class='id_news'>".$event->getNewsId()."</td>".
+        "<td class='speech'>".$event->isASpeech()."</td>".
+        "<td class='strength'>".$event->getStrength()."</td>".
         "<td class='announced'>".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."</td>".
         "<td class='real'>".$event->getReleasedTime()->format('Y-m-d H:i:s')."</td>".
         "<td class='actual'>".$event->getActual()."</td>".
         "<td class='previous'>".$event->getPrevious()."</td>".
+        "<td class='previous_event'>".$event->getPreviousEvent()."</td>".
         "<td class='next_event'>".$event->getNextEvent()."</td>".
         "<td class='state ".$event->getStringFromState($event->getState())."'>"
             .$event->getStringFromState($event->getState())."</td>";
@@ -146,10 +154,13 @@ class SimpleHTMLDisplayer
         $eventString = $event->getId().
         ";".$event->getEventId().
         ";".$event->getNewsId().
+        ";".$event->isASpeech().
+        ";".$event->getStrength().
         ";".$event->getAnnouncedTime()->format('Y-m-d H:i:s').
         ";".$event->getReleasedTime()->format('Y-m-d H:i:s').
         ";".$event->getActual().
         ";".$event->getPrevious().
+        ";".$event->getPreviousEvent().
         ";".$event->getNextEvent().
         ";".$event->getState();
         return $eventString;

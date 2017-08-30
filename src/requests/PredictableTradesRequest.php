@@ -28,11 +28,15 @@ class PredictableTradesRequest extends ForexRequest
         $todayUTC = new \DateTime();
         $todayUTC = $todayUTC->createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
         $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::FILLED);
-        
         echo "<table>";
         foreach ($trades as $trade){
-            $event = $this->eventDBHandler->getEventByEventId($trade->getIDDBEvent());
-            echo "<tr>".$this->displayer->displayTrade($trade).$this->displayer->displayEvent($event)."</tr>";
+            echo "<tr>".$this->displayer->displayTrade($trade);
+            $eventIds = explode("_", $trade->getEventId());
+            foreach($eventIds as $eventId){
+                echo $this->displayer->displayEvent($this->eventDBHandler->getEventById($eventId));
+            }
+            echo "</tr>";
+            
         }
         echo "</table>";
     }

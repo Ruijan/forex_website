@@ -11,11 +11,12 @@ class TradeTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->id_db_event = 50;
+        $this->newsId = "50_350";
+        $this->eventId = "841_262";
         $this->creation_time = new DateTime('NOW');
         $this->currency = "EUR_USD";
         // TODO Auto-generated TradeTest::setUp()
-        $this->trade = new Trade($this->id_db_event, $this->creation_time, "EUR_USD");
+        $this->trade = new Trade($this->newsId, $this->eventId, $this->creation_time, "EUR_USD");
     }
 
     protected function tearDown()
@@ -30,6 +31,11 @@ class TradeTest extends PHPUnit_Framework_TestCase
     public function testEmptyConstructor()
     {
         assert(!$this->trade->isInitialized());
+    }
+    
+    public function testConstructionForGroupedNewsShouldThrow(){
+        $this->expectExceptionMessage("News Id and Event Ids should be the same length.");
+        $this->trade = new Trade(300, "250_365", $this->creation_time, "EUR_USD");
     }
     
     public function testInitialization()

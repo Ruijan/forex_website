@@ -69,6 +69,56 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
             assert(false);
         }
     }
+    public function testAddingTradeFromGroupOfEventsFailure(){
+        $allEvents = $this->generateDummyEvents();
+        $allEvents[0]->update(325, new DateTime("2017-08-03 12:31:00"));
+        $allEvents[1]->update(125, new DateTime("2017-08-03 12:35:00"));
+        $allEvents[2]->update(220, new DateTime("2017-08-03 12:36:00"));
+        $this->collectEvents->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+            $this->eventParserMock, []);
+        $this->tradeDBHandlerMock->expects($this->exactly(0))
+        ->method('tryAddingTrade')
+        ->willReturn($this->returnArgument(0));
+        $this->collectEvents->addTradeToDbFromEvents($allEvents[3], $allEvents);
+    }
+    
+    public function testAddingTradeFromPendingGroupOfEventsFailure(){
+        $allEvents = $this->generateDummyEvents();
+        $allEvents[0]->update(325, new DateTime("2017-08-03 12:31:00"));
+        $allEvents[2]->update(220, new DateTime("2017-08-03 12:36:00"));
+        $this->collectEvents->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+            $this->eventParserMock, []);
+        $this->tradeDBHandlerMock->expects($this->exactly(0))
+        ->method('tryAddingTrade')
+        ->willReturn($this->returnArgument(0));
+        $this->collectEvents->addTradeToDbFromEvents($allEvents[2], $allEvents);
+    }
+    
+    public function testAddingTradeFromGroupOfEventsSuccess(){
+        $allEvents = $this->generateDummyEvents();
+        $allEvents[0]->update(325, new DateTime("2017-08-03 12:31:00"));
+        $allEvents[1]->update(125, new DateTime("2017-08-03 12:35:00"));
+        $allEvents[2]->update(220, new DateTime("2017-08-03 12:36:00"));
+        $this->collectEvents->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+            $this->eventParserMock, []);
+        $this->tradeDBHandlerMock->expects($this->once())
+        ->method('tryAddingTrade')
+        ->willReturn($this->returnArgument(0));
+        $this->collectEvents->addTradeToDbFromEvents($allEvents[2], $allEvents);
+    }
+    private function generateDummyEvents()
+    {
+        $allEvents[] = new Event(rand(1,10000), rand(1,10000), false,
+            2, new DateTime("2017-08-03 12:30:00"), 0.01, -300, 0);
+        $allEvents[] = new Event(rand(1,10000), rand(1,10000), false,
+            2, new DateTime("2017-08-03 12:30:00"), 0.01, 0, 0);
+        $allEvents[] = new Event(rand(1,10000), rand(1,10000), false,
+            2, new DateTime("2017-08-03 12:30:00"), 0.01, 0, 500);
+        $allEvents[] = new Event(rand(1,10000), rand(1,10000), false,
+            2, new DateTime("2017-08-03 13:30:00"), 0.01, -3600, 500);
+        return $allEvents;
+    }
+
     
     public function testExecuteSuccess(){
         try{
@@ -96,7 +146,13 @@ class CollectEventsRequestTest extends PHPUnit_Framework_TestCase
             $eventMock->expects($this->once())
             ->method('getId')
             ->willReturn($anId);
-            $this->eventMock->expects($this->once())
+            $this->eventMock->expects($this->any())
+            ->method('getPreviousEvent')
+            ->willReturn(-50);
+            $this->eventMock->expects($this->any())
+            ->method('getNextEvent')
+            ->willReturn(50);
+            $this->eventMock->expects($this->exactly(2))
             ->method('getId')
             ->willReturn($anId);
             $eventMock->expects($this->once())
