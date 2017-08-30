@@ -49,7 +49,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     
     public function testSimpleDisplayTrade(){
         $stringDisplay = $this->createSimpleTradeString();
-        $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"), "EUR_USD");
+        $trade = new Trade("555_842", "250_300", new DateTime("04-08-2017 20:00:00"), "EUR_USD");
         $trade->setId(1);
         $trade->fillMarketInfo(0.00050, -0.00010);
         $trade->predict(1, 0.75);
@@ -60,7 +60,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     }
     private function createSimpleTradeString()
     {
-        $idsStr = "1;555;";
+        $idsStr = "1;555_842;250_300;";
         $dates = "2017-08-04 20:00:00;2017-08-04 20:05:00;2017-08-04 21:00:00;";
         $marketInfos = "0.00050;-0.00010;";
         $prediction = "1;0.75;";
@@ -73,7 +73,9 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     
     public function testTableDisplayTrade(){
         $this->htmlDisplayer->setDisplayMode(DisplayMode::TABLE);
-        $stringDisplay = "<td class='id'>1</td><td class='id_db_event'>555</td>".
+        $stringDisplay = "<td class='id'>1</td>".
+            "<td class='id_news'>555</td>".
+            "<td class='id_events'>250</td>".
             "<td class='creation_time'>2017-08-04 20:00:00</td>".
             "<td class='open_time'>2017-08-04 20:05:00</td>".
             "<td class='close_time'>2017-08-04 21:00:00</td>".
@@ -81,7 +83,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
             "<td class='prediction'>1</td><td class='p_prediction'>0.75</td>".
             "<td class='gain'>0.56</td><td class='commission'>0.12</td>".
             "<td class='currency'>EUR_USD</td><td class='state Close won'>Close</td>";
-        $trade = new Trade(555, new DateTime("04-08-2017 20:00:00"), "EUR_USD");
+        $trade = new Trade(555, 250, new DateTime("04-08-2017 20:00:00"), "EUR_USD");
         $trade->setId(1);
         $trade->fillMarketInfo(0.00050, -0.00010);
         $trade->predict(1, 0.75);
@@ -92,21 +94,29 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     }
     
     public function testSimpleDisplayEvent(){
-        $stringDisplay = "1;555;888;2017-08-04 20:00:00;2017-08-04 20:05:00;235;325;1865;1";
-        $event = new Event(555, 888, false, 2, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
+        $stringDisplay = "1;555;888;1;2;2017-08-04 20:00:00;2017-08-04 20:05:00;235;325;-300;1865;1";
+        $event = new Event(555, 888, true, 2, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
         $event->setId(1);
         $event->update(235, new DateTime("2017-08-04 20:05:00"));
         $displayed = $this->htmlDisplayer->displayEvent($event);
-        assert($displayed == $stringDisplay, "Wrong string");
+        assert($displayed == $stringDisplay, "Wrong string:".$displayed);
     }
     
     public function testTableDisplayEvent(){
         $this->htmlDisplayer->setDisplayMode(DisplayMode::TABLE);
-        $stringDisplay = "<td class='id'>1</td><td class='id_event'>555</td><td class='id_news'>888</td>".
-            "<td class='announced'>2017-08-04 20:00:00</td><td class='real'>2017-08-04 20:05:00</td>".
-            "<td class='actual'>235</td><td class='previous'>325</td><td class='next_event'>1865</td>".
+        $stringDisplay = "<td class='id'>1</td>".
+            "<td class='id_event'>555</td>".
+            "<td class='id_news'>888</td>".
+            "<td class='speech'>1</td>".
+            "<td class='strength'>2</td>".
+            "<td class='announced'>2017-08-04 20:00:00</td>".
+            "<td class='real'>2017-08-04 20:05:00</td>".
+            "<td class='actual'>235</td>".
+            "<td class='previous'>325</td>".
+            "<td class='previous_event'>-300</td>".
+            "<td class='next_event'>1865</td>".
             "<td class='state Passed'>Passed</td>";
-        $event = new Event(555, 888, false, 2, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
+        $event = new Event(555, 888, true, 2, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
         $event->setId(1);
         $event->update(235, new DateTime("2017-08-04 20:05:00"));
         $displayed = $this->htmlDisplayer->displayEvent($event);
