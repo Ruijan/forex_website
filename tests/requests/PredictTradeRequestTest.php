@@ -85,3 +85,5 @@ class PredictTradeRequestTest extends PHPUnit_Framework_TestCase
     }
 }
 
+
+

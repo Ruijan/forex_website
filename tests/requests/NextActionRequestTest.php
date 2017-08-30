@@ -24,9 +24,11 @@ class NextActionRequestTest extends PHPUnit_Framework_TestCase
         ->disableOriginalConstructor()->getMock();
         $this->tradeMock = $this->getMockBuilder('Trade')
         ->disableOriginalConstructor()->getMock();
+        $this->eventMock = $this->getMockBuilder('Event')
+        ->disableOriginalConstructor()->getMock();
         $this->displayerMock = $this->getMockBuilder('SimpleHTMLDisplayer')
         ->disableOriginalConstructor()->getMock();
-        $this->nextActionRequest = new NextActionRequest();
+        
     }
 
     protected function tearDown()
@@ -44,21 +46,37 @@ class NextActionRequestTest extends PHPUnit_Framework_TestCase
         $htmlDisplayer = $this->tradeMock;
         $this->expectExceptionMessage("Wrong type for htmlDisplayer. Expected SimpleHTMLDisplayer got: "
             .gettype($htmlDisplayer));
-        $this->nextActionRequest->setHTMLDisplayer($htmlDisplayer);
+        $this->nextActionRequest = new NextActionRequest($htmlDisplayer);
+    }
+    
+    public function testExecuteWithBadRequestShouldThrow(){
+        $parameters = ["currency" => "EURUSD"];
+        $this->expectExceptionMessage("Wrong currency: ".$parameters["currency"]);
+        $this->nextActionRequest = new NextActionRequest($this->displayerMock);
+        $this->nextActionRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
+            $this->eventParserMock, $parameters);
+        $this->nextActionRequest->execute();
     }
     
     public function testExecuteSuccess(){
         try{
+            $parameters = ["currency" => "EUR_USD"];
             $this->tradeDBHandlerMock->expects($this->once())
             ->method("getTradesFromTo")
             ->willReturn([$this->tradeMock, $this->tradeMock]);
+            $this->eventDBHandlerMock->expects($this->any())
+            ->method("getEventByEventId")
+            ->willReturn([$this->eventMock]);
             $this->displayerMock->expects($this->any())
             ->method("displayTrade")
             ->willReturn("");
+            $this->displayerMock->expects($this->any())
+            ->method("displayEvent")
+            ->willReturn("");
             
-            $this->nextActionRequest->setHTMLDisplayer($this->displayerMock);
+            $this->nextActionRequest = new NextActionRequest($this->displayerMock);
             $this->nextActionRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
-                $this->eventParserMock, []);
+                $this->eventParserMock, $parameters);
             
             $this->nextActionRequest->execute();
         }

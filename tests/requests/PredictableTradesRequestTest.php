@@ -30,7 +30,7 @@ class PredictableTradesRequestTest extends PHPUnit_Framework_TestCase
         ->disableOriginalConstructor()->getMock();
         $this->displayerMock = $this->getMockBuilder('SimpleHTMLDisplayer')
         ->disableOriginalConstructor()->getMock();
-        $this->predictableTradesRequest = new PredictableTradesRequest();
+        
     }
 
     protected function tearDown()
@@ -40,15 +40,11 @@ class PredictableTradesRequestTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    public function __construct()
-    {
-    }
-
     public function testSetDisplayerWithWrongTypeShouldThrow(){
-        $htmlDisplayer = $this->tradeMock;
+        
         $this->expectExceptionMessage("Wrong type for htmlDisplayer. Expected SimpleHTMLDisplayer got: "
-            .gettype($htmlDisplayer));
-        $this->predictableTradesRequest->setHTMLDisplayer($htmlDisplayer);
+            .gettype($this->tradeMock));
+        $this->predictableTradesRequest = new PredictableTradesRequest($this->tradeMock);
     }
     
     public function testExecuteSuccess(){
@@ -60,7 +56,7 @@ class PredictableTradesRequestTest extends PHPUnit_Framework_TestCase
             ->method("displayTrade")
             ->willReturn("");
             
-            $this->predictableTradesRequest->setHTMLDisplayer($this->displayerMock);
+            $this->predictableTradesRequest = new PredictableTradesRequest($this->displayerMock);
             $this->predictableTradesRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
                 $this->eventParserMock, []);
             

@@ -72,7 +72,7 @@ class CloseTradeRequestTest extends PHPUnit_Framework_TestCase
     }
     
     public function testExecuteWithInvalidParametersTypeShouldThrow(){
-        $parameters = ["trade_id" => "5", "gain" => 0.75, "commission" => 0.12];
+        $parameters = ["trade_id" => "5.5", "gain" => 0.75, "commission" => 0.12];
         $this->closeTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, $parameters);
         $this->expectExceptionMessage("Invalid Request: bad parameters type");

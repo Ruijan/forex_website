@@ -16,13 +16,20 @@ class UpdateMarketRequest extends ForexRequest
     {}
     
     public function validateRequest(){
+        
+        
         if(!isset($this->parameters["dv_p_tm5"]) or !isset($this->parameters["dv_p_t0"]) or
             !isset($this->parameters["currency"])){
             throw new ErrorException("Ill-formed request: missing parameters");           
         }
+        $this->parameters["dv_p_tm5"] = floatval($this->parameters["dv_p_tm5"]);
+        $this->parameters["dv_p_t0"] = floatval($this->parameters["dv_p_t0"]);
         if(!$this->isDecimal($this->parameters["dv_p_tm5"]) || !$this->isDecimal($this->parameters["dv_p_t0"]) ||
             !$this->isValidCurrency($this->parameters["currency"])){
-            throw new ErrorException("Invalid Request: bad parameters type");
+                throw new ErrorException("Invalid Request: bad parameters type. Got "
+                    .gettype($this->parameters["dv_p_tm5"]). " "
+                    .gettype($this->parameters["dv_p_t0"]). " and "
+                    .gettype($this->parameters["currency"]). ". Expected double double and string.");
         }
     }
     
