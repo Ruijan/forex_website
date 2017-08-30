@@ -6,6 +6,7 @@ abstract class TradeState{
     const PREDICTED = 2;
     const OPEN = 3;
     const CLOSE = 4;
+    const CANCELLED = 5;
 }
 
 class Trade
@@ -203,8 +204,14 @@ class Trade
         $this->setState(TradeState::FILLED);
     }
     
+    public function cancel(){
+        $this->setState(TradeState::CANCELLED);
+    }
+    
     public function getStringFromState($state){
         switch($state){
+            case TradeState::CANCELLED:
+                return "Cancelled";
             case TradeState::INITIALIZED:
                 return "Initialized";
             case TradeState::FILLED:

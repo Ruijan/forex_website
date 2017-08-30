@@ -40,7 +40,13 @@ class CancelTradeRequestTest extends PHPUnit_Framework_TestCase
     public function testExecuteSuccess(){
         try{
             $this->tradeDBHandlerMock->expects($this->once())
-            ->method("removeTradeById")
+            ->method("getTradeById")
+            ->willReturn($this->tradeMock);
+            $this->tradeMock->expects($this->once())
+            ->method("cancel")
+            ->willReturn($this->returnArgument(0));
+            $this->tradeDBHandlerMock->expects($this->once())
+            ->method("cancelTrade")
             ->willReturn($this->returnArgument(0));
             $parameters = ["trade_id" => 5];
             $this->cancelTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
