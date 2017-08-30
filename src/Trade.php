@@ -12,7 +12,8 @@ abstract class TradeState{
 class Trade
 {
     private $identifier = null;
-    private $idDbEvent = null;
+    private $idNews = null;
+    private $idEvent = "";
     private $creationTime = null;
     private $openTime = null;
     private $closeTime = null;
@@ -26,7 +27,8 @@ class Trade
     private $state = TradeState::INITIALIZED;
     
     public function getId(){return $this->identifier;}
-    public function getIDDBEvent(){return $this->idDbEvent;}
+    public function getNewsId(){return $this->idNews;}
+    public function getEventId(){return $this->idEvent;}
     public function getCreationTime(){return $this->creationTime;}
     public function getOpenTime(){return $this->openTime;}
     public function getCloseTime(){return $this->closeTime;}
@@ -147,16 +149,22 @@ class Trade
         $this->state = $state;
     }
 
-    public function __construct($idDBEvent, $creationTime, $currency)
+    public function __construct($newsId, $eventId, $creationTime, $currency)
     {
-        $this->idDbEvent = $idDBEvent;
+        $newsIds = explode("_", $newsId);
+        $eventIds = explode("_", $eventId);
+        if(count($newsIds) != count($eventIds)){
+            throw new ErrorException("News Id and Event Ids should be the same length.");
+        }
+        $this->idNews = $newsId;
+        $this->idEvent = $eventId;
         $this->setCreationTime($creationTime);
         $this->setCurrency($currency);
     }
     
     public function isInitialized()
     {
-        return $this->identifier != null and $this->idDbEvent != null;
+        return $this->identifier != null and $this->idNews != null and $this->idEvent != "";
     }
     
     public function close($gain, $commission, $closeTime){

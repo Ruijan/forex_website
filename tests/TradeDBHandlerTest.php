@@ -52,11 +52,11 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     public function testGetTradeByEventID(){
         $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
-        assert($this->tradeDBHandler->getTradeByEventId($trade2->getIDDBEvent()) == $trade2);
+        assert($this->tradeDBHandler->getTradeByNewsId($trade2->getNewsId()) == $trade2);
     }
     
     public function testRemovingTradeExpectDecrementationInSize(){
-        $trade = new Trade(999, new DateTime('NOW'), "EUR_USD");
+        $trade = new Trade("999_9595", "250_300", new DateTime('NOW'), "EUR_USD");
         $identifier = $this->tradeDBHandler->addTrade($trade);
         $this->tradeDBHandler->removeTradeById($identifier);
         assert($this->tradeDBHandler->getTableSize() == 0);
@@ -69,7 +69,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
             $trade->getCreationTime()->format('Y-m-d H:i:s'). " got ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'));
         assert($trade->getId() == $dbTrade->getId(), "Expect same ID");
-        assert($trade->getIDDBEvent() == $dbTrade->getIDDBEvent(), "Expect same event Id");
+        assert($trade->getNewsId() == $dbTrade->getNewsId(), "Expect same event Id");
     }
     
     public function testTryAddingTradeSecondTimeSizeShouldBeOne(){
@@ -79,15 +79,15 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     
     private function tryCreatingTwoSameDummyTrades()
     {
-        $trade1 = new Trade(60, new DateTime('NOW'), "EUR_USD");
-        $trade2 = new Trade(60, new DateTime('NOW'), "EUR_USD");
+        $trade1 = new Trade("999_9595", "250_300", new DateTime('NOW'), "EUR_USD");
+        $trade2 = new Trade("999_9595", "250_300", new DateTime('NOW'), "EUR_USD");
         $trade1->setId($this->tradeDBHandler->addTrade($trade1));
         $trade2->setId($this->tradeDBHandler->tryAddingTrade($trade2));
     }
     
     private function createRandomDummyTrade()
     {
-        $trade = new Trade(rand(1,10000), new DateTime('NOW'), "EUR_USD");
+        $trade = new Trade(rand(1,10000), "250", new DateTime('NOW'), "EUR_USD");
         $identifier = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($identifier);
         return $trade;
@@ -110,7 +110,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
 
     private function openTrade()
     {
-        $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
+        $trade = new Trade(60, "250", new DateTime('NOW'), "EUR_USD");
         $identifier = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($identifier);
         $trade->fillMarketInfo(0.0005, 0.0001);
@@ -148,7 +148,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function testFillMarketTradeShouldUpdateMarketState(){
-        $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
+        $trade = new Trade(60, "250", new DateTime('NOW'), "EUR_USD");
         $identifier = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($identifier);
         $trade->fillMarketInfo(0.005, 0.0001);
@@ -165,7 +165,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     }
 
     public function testPredictTradeShouldUpdatePredictPProbaState(){
-        $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
+        $trade = new Trade(60, "250", new DateTime('NOW'), "EUR_USD");
         $identifier = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($identifier);
         $trade->fillMarketInfo(0.0005, 0.0001);
@@ -183,7 +183,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     public function testCancellingTradeShouldSetState(){
-        $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
+        $trade = new Trade(60, "250", new DateTime('NOW'), "EUR_USD");
         $identifier = $this->tradeDBHandler->addTrade($trade);
         $trade->setId($identifier);
         $trade->cancel();
@@ -283,12 +283,12 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     private function generateDummyTrades()
     {
         $allTrades = [];
-        $allTrades[] = new Trade(65, new DateTime("2017-08-03 00:30:00"), "EUR_USD");
-        $allTrades[] = new Trade(35, new DateTime("2017-08-05 17:30:00"), "EUR_USD");
-        $allTrades[] = new Trade(61, new DateTime("2017-08-04 18:05:00"), "USD_CAD");
-        $allTrades[] = new Trade(30, new DateTime("2017-08-02 00:30:00"), "EUR_USD");
-        $allTrades[] = new Trade(1, new DateTime("2017-08-10 00:30:00"), "EUR_USD");
-        $allTrades[] = new Trade(5, new DateTime("2017-08-01 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(65, "250", new DateTime("2017-08-03 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(35, "250", new DateTime("2017-08-05 17:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(61, "250", new DateTime("2017-08-04 18:05:00"), "USD_CAD");
+        $allTrades[] = new Trade(30, "250", new DateTime("2017-08-02 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(1, "250", new DateTime("2017-08-10 00:30:00"), "EUR_USD");
+        $allTrades[] = new Trade(5, "250", new DateTime("2017-08-01 00:30:00"), "EUR_USD");
         return $allTrades;
     }
     

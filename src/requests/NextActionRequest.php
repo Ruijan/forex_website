@@ -45,8 +45,12 @@ class NextActionRequest extends ForexRequest
         $todayUTC = $todayUTC->createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
         $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::PREDICTED);
         foreach ($trades as $trade){
-            $event = $this->eventDBHandler->getEventByEventId($trade->getIDDBEvent());
-            echo $this->displayer->displayTrade($trade).$this->displayer->displayEvent($event)."<br/>";
+            echo $this->displayer->displayTrade($trade);
+            $eventIds = explode("_", $trade->getEventId());
+            foreach($eventIds as $eventId){
+                echo $this->displayer->displayEvent($this->eventDBHandler->getEventById($eventId));
+            }
+            echo "<br/>";
         }
         
     }

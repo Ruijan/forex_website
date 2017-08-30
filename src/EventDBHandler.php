@@ -16,12 +16,15 @@ class EventDBHandler extends DBHandler
         if(!$this->doesTableExists()){
             $query = "CREATE TABLE events (
                         ID int(11) AUTO_INCREMENT UNIQUE,
-                        ID_EVENT int(11) NOT NULL UNIQUE,
-                        ID_NEWS int(11) NOT NULL,
+                        ID_EVENT int(11) NOT NULL,
+                        ID_NEWS int(11) NOT NULL UNIQUE,
+                        SPEECH int(1),
+                        STRENGTH int(1),
                         ANNOUNCED_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         REAL_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         ACTUAL double NULL,
                         PREVIOUS double NULL,
+                        PREVIOUS_EVENT int NULL,
                         NEXT_EVENT int NULL,
                         STATE int NULL,
                         PRIMARY KEY  (ID)
@@ -36,14 +39,22 @@ class EventDBHandler extends DBHandler
     private function addEvent($event){
         $this->throwIfTableDoesNotExist();
         $query = "INSERT INTO events
-                    (ID, ID_EVENT, ID_NEWS, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,
-                    NEXT_EVENT, STATE)
-                    VALUES (NULL,".$event->getEventId().",".$event->getNewsId().",
-                    '".$event->getAnnouncedTime()->format('Y-m-d H:i:s')."',
-                    '".$event->getReleasedTime()->format('Y-m-d H:i:s')."',".$event->getActual().", 
-                    ".$event->getPrevious().", ".$event->getNextEvent().", ".$event->getState().")";
+                    (ID, ID_EVENT, ID_NEWS, SPEECH, STRENGTH, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,
+                    PREVIOUS_EVENT, NEXT_EVENT, STATE)
+                    VALUES (NULL,"
+                    .$event->getEventId().
+                    ",".$event->getNewsId().
+                    ",".($event->isASpeech() ? "1" : "0").
+                    ",".$event->getStrength().
+                    ",'".$event->getAnnouncedTime()->format('Y-m-d H:i:s').
+                    "','".$event->getReleasedTime()->format('Y-m-d H:i:s').
+                    "',".$event->getActual().
+                    ", ".$event->getPrevious().
+                    ", ".$event->getPreviousEvent().
+                    ", ".$event->getNextEvent().
+                    ", ".$event->getState().")";
         if($this->mysqli->query($query) === FALSE){
-            throw new Exception("Event already in table: ". $this->mysqli->error);
+            throw new Exception(" Event already in table: ". $this->mysqli->error);
         }
         return $this->mysqli->insert_id;
     }
@@ -53,7 +64,10 @@ class EventDBHandler extends DBHandler
             return $this->addEvent($event);
         }
         catch(Exception $e){
-            return $this->getEventByEventId($event->getEventId())->getId();
+            if(stripos($e->getMessage(),"Event already in table:") === FALSE){
+                throw new Exception($e->getMessage());
+            }
+            return $this->getEventByNewsId($event->getNewsId())->getId();
         }
     }
     
@@ -81,9 +95,9 @@ class EventDBHandler extends DBHandler
         }
     }
     
-    public function getEventByEventId($identifier){
+    public function getEventByNewsId($identifier){
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM events WHERE ID_EVENT=".$identifier;
+        $query = "SELECT * FROM events WHERE ID_NEWS=".$identifier;
         $result = $this->mysqli->query($query);
         $this->throwIfQueryFailed($query, $result);
         while($row = $result->fetch_array()){
@@ -121,8 +135,14 @@ class EventDBHandler extends DBHandler
     
     private function createEventFromDbArray($result)
     {
-        $event = new Event((int)$result["ID_EVENT"], (int)$result["ID_NEWS"],
-            new DateTime($result["ANNOUNCED_TIME"]), (float)$result["PREVIOUS"], (int)$result["NEXT_EVENT"]);
+        $event = new Event((int)$result["ID_EVENT"], 
+            (int)$result["ID_NEWS"], 
+            (bool)$result["SPEECH"],
+            (int)$result["STRENGTH"], 
+            new DateTime($result["ANNOUNCED_TIME"]), 
+            (float)$result["PREVIOUS"], 
+            (int)$result["PREVIOUS_EVENT"],
+            (int)$result["NEXT_EVENT"]);
         $event->setId((int)$result["ID"]);
         if((int)$result["STATE"] == EventState::UPDATED){
             $event->update((float)$result["ACTUAL"],new DateTime($result["REAL_TIME"]));
