@@ -93,7 +93,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
     
     public function testSimpleDisplayEvent(){
         $stringDisplay = "1;555;888;2017-08-04 20:00:00;2017-08-04 20:05:00;235;325;1865;1";
-        $event = new Event(555, 888, false, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
+        $event = new Event(555, 888, false, 2, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
         $event->setId(1);
         $event->update(235, new DateTime("2017-08-04 20:05:00"));
         $displayed = $this->htmlDisplayer->displayEvent($event);
@@ -106,7 +106,7 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
             "<td class='announced'>2017-08-04 20:00:00</td><td class='real'>2017-08-04 20:05:00</td>".
             "<td class='actual'>235</td><td class='previous'>325</td><td class='next_event'>1865</td>".
             "<td class='state Passed'>Passed</td>";
-        $event = new Event(555, 888, false, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
+        $event = new Event(555, 888, false, 2, new DateTime("04-08-2017 20:00:00"), 325, -300, 1865);
         $event->setId(1);
         $event->update(235, new DateTime("2017-08-04 20:05:00"));
         $displayed = $this->htmlDisplayer->displayEvent($event);

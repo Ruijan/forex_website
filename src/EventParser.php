@@ -74,6 +74,7 @@ class EventParser
         $name = "";
         $speech = false;
         $columns = $line->getElementsByTagName("td");
+        $strength = 0;
         foreach($columns as $column){
             if($column->getAttribute('class') == "left event"){
                 $name = $column->nodeValue;
@@ -84,10 +85,17 @@ class EventParser
                     }
                 }
             }
+            if($column->getAttribute('class') == "sentiment"){
+                $extensionNodes = $column->getElementsByTagName("i");
+                foreach($extensionNodes as $extension){
+                    $strength += 1;
+                }
+            }
         }
         $event = new Event((int)$line->getAttribute('event_attr_id'), 
             (int)$newsId, 
             $speech,
+            $strength,
             $eventDateTime, 
             $previous, 
             0,

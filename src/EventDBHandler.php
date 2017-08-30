@@ -19,6 +19,7 @@ class EventDBHandler extends DBHandler
                         ID_EVENT int(11) NOT NULL,
                         ID_NEWS int(11) NOT NULL UNIQUE,
                         SPEECH int(1),
+                        STRENGTH int(1),
                         ANNOUNCED_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         REAL_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         ACTUAL double NULL,
@@ -38,12 +39,13 @@ class EventDBHandler extends DBHandler
     private function addEvent($event){
         $this->throwIfTableDoesNotExist();
         $query = "INSERT INTO events
-                    (ID, ID_EVENT, ID_NEWS, SPEECH, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,
+                    (ID, ID_EVENT, ID_NEWS, SPEECH, STRENGTH, ANNOUNCED_TIME, REAL_TIME, ACTUAL, PREVIOUS,
                     PREVIOUS_EVENT, NEXT_EVENT, STATE)
                     VALUES (NULL,"
                     .$event->getEventId().
                     ",".$event->getNewsId().
                     ",".($event->isASpeech() ? "1" : "0").
+                    ",".$event->getStrength().
                     ",'".$event->getAnnouncedTime()->format('Y-m-d H:i:s').
                     "','".$event->getReleasedTime()->format('Y-m-d H:i:s').
                     "',".$event->getActual().
@@ -133,8 +135,13 @@ class EventDBHandler extends DBHandler
     
     private function createEventFromDbArray($result)
     {
-        $event = new Event((int)$result["ID_EVENT"], (int)$result["ID_NEWS"], (bool)$result["SPEECH"],
-            new DateTime($result["ANNOUNCED_TIME"]), (float)$result["PREVIOUS"], (int)$result["PREVIOUS_EVENT"],
+        $event = new Event((int)$result["ID_EVENT"], 
+            (int)$result["ID_NEWS"], 
+            (bool)$result["SPEECH"],
+            (int)$result["STRENGTH"], 
+            new DateTime($result["ANNOUNCED_TIME"]), 
+            (float)$result["PREVIOUS"], 
+            (int)$result["PREVIOUS_EVENT"],
             (int)$result["NEXT_EVENT"]);
         $event->setId((int)$result["ID"]);
         if((int)$result["STATE"] == EventState::UPDATED){

@@ -13,6 +13,7 @@ class Event
     private $eventId;
     private $newsId;
     private $speech;
+    private $strength;
     private $announcedTime;
     private $releasedTime;
     private $nextEventTime = 0;
@@ -23,11 +24,13 @@ class Event
     
    
     // method declaration
-    public function __construct($eventId, $newsId, $speech, $announcedTime, $previous, $previousEventTime,
+    public function __construct($eventId, $newsId, $speech,
+        $strength, $announcedTime, $previous, $previousEventTime,
         $nextEventTime) {
         $this->setEventId($eventId);
         $this->setNewsId($newsId);
         $this->setSpeech($speech);
+        $this->setStrength($strength);
         $this->setAnnouncedTime($announcedTime);
         $this->setRealTime(new DateTime());
         $this->setRealTime($this->getReleasedTime()->createFromFormat('Y-m-d H:i:s',"1970-01-01 00:00:00"));
@@ -39,6 +42,7 @@ class Event
     public function getNewsId(){return $this->newsId;}
     public function getEventId(){return $this->eventId;}
     public function isASpeech(){return $this->speech;}
+    public function getStrength(){return $this->strength;}
     public function getAnnouncedTime(){return $this->announcedTime;}
     public function getReleasedTime(){return $this->releasedTime;}
     public function getActual(){return $this->actual;}
@@ -73,6 +77,13 @@ class Event
             throw new ErrorException("Wrong type for speech. Expected bool got: ".gettype($speech));
         }
         $this->speech = $speech;
+    }
+    
+    public function setStrength($strength){
+        if(!is_int($strength) and $strength >= 0){
+            throw new ErrorException("Wrong type for strength. Expected int got: ".gettype($strength));
+        }
+        $this->strength = $strength;
     }
     
     public function setAnnouncedTime($actualTime){

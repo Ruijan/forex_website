@@ -19,7 +19,7 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         $this->mysqli = connect_database();
         $this->eventDBHandler = new EventDBHandler($this->mysqli);
         $this->eventDBHandler->createTable();
-        $this->event = new Event(254, 65954, false, new DateTime("NOW"), 0.01, -300, 500);
+        $this->event = new Event(254, 65954, false, 2, new DateTime("NOW"), 0.01, -300, 500);
     }
     
     protected function tearDown()
@@ -74,8 +74,11 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
         $dbEvent = $this->eventDBHandler->getEventById($identifier);
         assert($dbEvent->getEventId() == $this->event->getEventId());
         assert($dbEvent->getNewsId() == $this->event->getNewsId());
+        assert($dbEvent->isASpeech() == $this->event->isASpeech());
+        assert($dbEvent->getStrength() == $this->event->getStrength());
         assert($dbEvent->getAnnouncedTime() == $this->event->getAnnouncedTime());
         assert($dbEvent->getPrevious() == $this->event->getPrevious());
+        assert($dbEvent->getPreviousEvent() == $this->event->getPreviousEvent());
         assert($dbEvent->getNextEvent() == $this->event->getNextEvent());
     }
     
@@ -185,13 +188,13 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     private function createDummyEvent(){
-        $event = new Event(254, 65954, false, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
+        $event = new Event(254, 65954, false, 2, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
         $event->setId($this->eventDBHandler->tryAddingEvent($event));
         return $event;
     }
     
     private function createRandomDummyEvent(){
-        $event = new Event(rand(1,10000), rand(1,10000), false, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
+        $event = new Event(rand(1,10000), rand(1,10000), false, 2, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
         $event->setId($this->eventDBHandler->tryAddingEvent($event));
         return $event;
     }
@@ -200,15 +203,15 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         $allEvents = [];
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-05 12:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-05 12:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-02 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-02 00:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-06 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-06 00:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-04 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-04 00:30:00"), 0.01, -300, 500);
         return $allEvents;
     }
     
@@ -216,19 +219,19 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     {
         $allEvents = [];
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-05 12:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-05 12:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-04 12:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-04 12:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-03 12:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-03 12:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-02 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-02 00:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-06 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-06 00:30:00"), 0.01, -300, 500);
         $allEvents[] = new Event(rand(1,10000), rand(1,10000), false, 
-            new DateTime("2017-08-04 00:30:00"), 0.01, -300, 500);
+            2, new DateTime("2017-08-04 00:30:00"), 0.01, -300, 500);
         $allEvents[0]->update(325, new DateTime("2017-08-03 00:31:00"));
         $allEvents[3]->update(325, new DateTime("2017-08-03 12:35:00"));
         return $allEvents;

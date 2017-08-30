@@ -16,6 +16,7 @@ class EventTest extends PHPUnit_Framework_TestCase
         // TODO Auto-generated EventTest::setUp()
         $this->newsId = 255;
         $this->eventId = 68956;
+        $this->strength = 2;
         $this->announced_time = new DateTime("NOW");
         $this->previous = 0.01;
         $this->nextEvent = 50;
@@ -25,6 +26,7 @@ class EventTest extends PHPUnit_Framework_TestCase
             $this->eventId, 
             $this->newsId, 
             $this->speech,
+            $this->strength,
             $this->announced_time, 
             $this->previous,
             $this->previousEvent,
@@ -61,6 +63,11 @@ class EventTest extends PHPUnit_Framework_TestCase
     public function testSetNewsIdWithWrongArgumentShouldThrow(){
         $this->expectExceptionMessage("Wrong type for news_id. Expected int got: ".gettype(0.5));
         $this->event->setNewsId(0.5);
+    }
+    
+    public function testSetStrengthWithWrongArgumentShouldThrow(){
+        $this->expectExceptionMessage("Wrong type for strength. Expected int got: ".gettype(0.5));
+        $this->event->setStrength(0.5);
     }
     
     public function testSetTimeAnnouncedWithWrongArgumentShouldThrow(){
@@ -106,7 +113,7 @@ class EventTest extends PHPUnit_Framework_TestCase
     }
     
     public function testCompare(){
-        $event = new Event($this->eventId, $this->newsId, $this->speech, $this->announced_time, 
+        $event = new Event($this->eventId, $this->newsId, $this->speech, $this->strength, $this->announced_time, 
             $this->previous, $this->previousEvent, $this->nextEvent);
         assert($this->event == $event);
     }
