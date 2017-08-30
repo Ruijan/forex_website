@@ -200,6 +200,11 @@ class TradeTest extends PHPUnit_Framework_TestCase
         $this->trade->fillMarketInfo($dvPTm5, $dvPT0);
     }
     
+    public function testCancelling(){
+        $this->trade->cancel();
+        assert($this->trade->getState() == TradeState::CANCELLED);
+    }
+    
     public function testGetStringFromTradeInitializedState(){
         assert($this->trade->getStringFromState(TradeState::INITIALIZED) == "Initialized");
     }

@@ -101,6 +101,13 @@ class TradeDBHandler extends DBHandler
         $this->throwIfQueryFailed($query, $this->mysqli->query($query));
     }
     
+    public function cancelTrade($trade){
+        $this->throwIfTableDoesNotExist();
+        $query = "UPDATE ".$this->tableName." SET STATE="
+            .$trade->getState()." WHERE ID=".$trade->getId();
+        $this->throwIfQueryFailed($query, $this->mysqli->query($query));
+    }
+    
     public function getTradeByID($identifier){
         $this->throwIfTableDoesNotExist();
         $query = "SELECT * FROM ".$this->tableName." WHERE ID=".$identifier;

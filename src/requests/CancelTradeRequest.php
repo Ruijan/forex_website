@@ -25,7 +25,9 @@ class CancelTradeRequest extends ForexRequest
     }
     public function execute(){
         $this->validateRequest();
-        $this->tradeDBHandler->removeTradeByID($this->parameters["trade_id"]);
+        $trade = $this->tradeDBHandler->getTradeById($this->parameters["trade_id"]);
+        $trade->cancel();
+        $this->tradeDBHandler->cancelTrade($trade);
     }
 }
 

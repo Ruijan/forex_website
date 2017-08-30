@@ -182,6 +182,16 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
         assert($dbTrade->getState() == $trade->getState(), "Expect equal state of 2");
     }
     
+    public function testCancellingTradeShouldSetState(){
+        $trade = new Trade(60, new DateTime('NOW'), "EUR_USD");
+        $identifier = $this->tradeDBHandler->addTrade($trade);
+        $trade->setId($identifier);
+        $trade->cancel();
+        $this->tradeDBHandler->cancelTrade($trade);
+        $dbTrade = $this->tradeDBHandler->getTradeByID($trade->getId());
+        assert($dbTrade->getState() == TradeState::CANCELLED);
+    }
+    
     public function testGetTradesFromToWithBadArgumentsShouldThrow(){
         $fromDate = "coucou";
         $toDate = 32;
