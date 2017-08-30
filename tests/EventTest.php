@@ -14,17 +14,21 @@ class EventTest extends PHPUnit_Framework_TestCase
         parent::setUp();
         
         // TODO Auto-generated EventTest::setUp()
-        $this->news_id = 255;
-        $this->event_id = 68956;
+        $this->newsId = 255;
+        $this->eventId = 68956;
         $this->announced_time = new DateTime("NOW");
         $this->previous = 0.01;
-        $this->next_event = 50;
+        $this->nextEvent = 50;
+        $this->previousEvent = -300;
+        $this->speech = false;
         $this->event = new Event(
-            $this->event_id, 
-            $this->news_id, 
+            $this->eventId, 
+            $this->newsId, 
+            $this->speech,
             $this->announced_time, 
             $this->previous,
-            $this->next_event);
+            $this->previousEvent,
+            $this->nextEvent);
     }
 
     protected function tearDown()
@@ -37,11 +41,11 @@ class EventTest extends PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        assert($this->event->getNewsId() == $this->news_id, "News id should be equal");
-        assert($this->event->getEventId() == $this->event_id, "Event ID should be equal");
+        assert($this->event->getNewsId() == $this->newsId, "News id should be equal");
+        assert($this->event->getEventId() == $this->eventId, "Event ID should be equal");
         assert($this->event->getAnnouncedTime() == $this->announced_time, "Event Announced time should be equal");
         assert($this->event->getPrevious() == $this->previous, "Event previous value should be equal");
-        assert($this->event->getNextEvent() == $this->next_event, "Next event time value should be equal");
+        assert($this->event->getNextEvent() == $this->nextEvent, "Next event time value should be equal");
     }
     
     public function testSetIdWithWrongArgumentShouldThrow(){
@@ -87,6 +91,11 @@ class EventTest extends PHPUnit_Framework_TestCase
         $this->event->setNextEvent(0.5);
     }
     
+    public function testSetPreviousEventsWithWrongArgumentShouldThrow(){
+        $this->expectExceptionMessage("Wrong type for previous_event. Expected int got: ".gettype(0.5));
+        $this->event->setPreviousEvent(0.5);
+    }
+    
     public function testUpdate(){
         $actual = 2.5;
         $realTime = (new DateTime("NOW"))->add(new DateInterval("PT5M"));
@@ -97,7 +106,8 @@ class EventTest extends PHPUnit_Framework_TestCase
     }
     
     public function testCompare(){
-        $event = new Event($this->event_id, $this->news_id, $this->announced_time, $this->previous, $this->next_event);
+        $event = new Event($this->eventId, $this->newsId, $this->speech, $this->announced_time, 
+            $this->previous, $this->previousEvent, $this->nextEvent);
         assert($this->event == $event);
     }
     

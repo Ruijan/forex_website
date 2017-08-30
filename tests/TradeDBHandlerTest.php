@@ -52,7 +52,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
     public function testGetTradeByEventID(){
         $this->createRandomDummyTrade();
         $trade2 = $this->createRandomDummyTrade();
-        assert($this->tradeDBHandler->getTradeByEventId($trade2->getIDDBEvent()) == $trade2);
+        assert($this->tradeDBHandler->getTradeByNewsId($trade2->getNewsId()) == $trade2);
     }
     
     public function testRemovingTradeExpectDecrementationInSize(){
@@ -69,7 +69,7 @@ class TradeDBHandlerTest extends PHPUnit_Framework_TestCase
             $trade->getCreationTime()->format('Y-m-d H:i:s'). " got ".
             $trade->getCreationTime()->format('Y-m-d H:i:s'));
         assert($trade->getId() == $dbTrade->getId(), "Expect same ID");
-        assert($trade->getIDDBEvent() == $dbTrade->getIDDBEvent(), "Expect same event Id");
+        assert($trade->getNewsId() == $dbTrade->getNewsId(), "Expect same event Id");
     }
     
     public function testTryAddingTradeSecondTimeSizeShouldBeOne(){

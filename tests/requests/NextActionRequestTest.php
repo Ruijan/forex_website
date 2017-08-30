@@ -65,7 +65,7 @@ class NextActionRequestTest extends PHPUnit_Framework_TestCase
             ->method("getTradesFromTo")
             ->willReturn([$this->tradeMock, $this->tradeMock]);
             $this->eventDBHandlerMock->expects($this->any())
-            ->method("getEventByEventId")
+            ->method("getEventByNewsId")
             ->willReturn([$this->eventMock]);
             $this->displayerMock->expects($this->any())
             ->method("displayTrade")

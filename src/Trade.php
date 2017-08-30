@@ -12,7 +12,7 @@ abstract class TradeState{
 class Trade
 {
     private $identifier = null;
-    private $idDbEvent = null;
+    private $idNews = null;
     private $creationTime = null;
     private $openTime = null;
     private $closeTime = null;
@@ -26,7 +26,7 @@ class Trade
     private $state = TradeState::INITIALIZED;
     
     public function getId(){return $this->identifier;}
-    public function getIDDBEvent(){return $this->idDbEvent;}
+    public function getNewsId(){return $this->idNews;}
     public function getCreationTime(){return $this->creationTime;}
     public function getOpenTime(){return $this->openTime;}
     public function getCloseTime(){return $this->closeTime;}
@@ -147,16 +147,16 @@ class Trade
         $this->state = $state;
     }
 
-    public function __construct($idDBEvent, $creationTime, $currency)
+    public function __construct($newsId, $creationTime, $currency)
     {
-        $this->idDbEvent = $idDBEvent;
+        $this->idNews = $newsId;
         $this->setCreationTime($creationTime);
         $this->setCurrency($currency);
     }
     
     public function isInitialized()
     {
-        return $this->identifier != null and $this->idDbEvent != null;
+        return $this->identifier != null and $this->idNews != null;
     }
     
     public function close($gain, $commission, $closeTime){

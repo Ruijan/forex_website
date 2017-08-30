@@ -66,7 +66,7 @@ class SimpleHTMLDisplayer
     private function simpleDisplayTrade($trade)
     {
         $tradeString = $trade->getId().
-        ";".$trade->getIDDBEvent().
+        ";".$trade->getNewsId().
         ";".$trade->getCreationTime()->format('Y-m-d H:i:s').
         ";".(is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).
         ";".(is_null($trade->getCloseTime()) ? "" : $trade->getCloseTime()->format('Y-m-d H:i:s')).
@@ -83,7 +83,7 @@ class SimpleHTMLDisplayer
     private function tableDisplayTrade($trade)
     {
         $tradeString = "<td class='id'>".$trade->getId().
-        "</td><td class='id_db_event'>".$trade->getIDDBEvent().
+        "</td><td class='id_db_event'>".$trade->getNewsId().
         "</td><td class='creation_time'>".$trade->getCreationTime()->format('Y-m-d H:i:s').
         "</td><td class='open_time'>".
             (is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).

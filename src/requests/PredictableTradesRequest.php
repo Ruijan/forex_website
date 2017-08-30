@@ -31,7 +31,7 @@ class PredictableTradesRequest extends ForexRequest
         
         echo "<table>";
         foreach ($trades as $trade){
-            $event = $this->eventDBHandler->getEventByEventId($trade->getIDDBEvent());
+            $event = $this->eventDBHandler->getEventByNewsId($trade->getNewsId());
             echo "<tr>".$this->displayer->displayTrade($trade).$this->displayer->displayEvent($event)."</tr>";
         }
         echo "</table>";

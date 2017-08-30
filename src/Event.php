@@ -9,35 +9,42 @@ abstract class EventState
 class Event
 {
     // property declaration
-    public $identifier = 0;
-    public $eventId;
-    public $newsId;
-    public $announcedTime;
-    public $releasedTime;
-    public $nextEventTime = 0;
-    public $actual = 0;
-    public $previous = 0;
-    public $state = EventState::PENDING;
+    private $identifier = 0;
+    private $eventId;
+    private $newsId;
+    private $speech;
+    private $announcedTime;
+    private $releasedTime;
+    private $nextEventTime = 0;
+    private $previousEventTime = 0;
+    private $actual = 0;
+    private $previous = 0;
+    private $state = EventState::PENDING;
     
    
     // method declaration
-    public function __construct($eventId, $newsId, $announcedTime, $previous, $nextEventTime) {
+    public function __construct($eventId, $newsId, $speech, $announcedTime, $previous, $previousEventTime,
+        $nextEventTime) {
         $this->setEventId($eventId);
         $this->setNewsId($newsId);
+        $this->setSpeech($speech);
         $this->setAnnouncedTime($announcedTime);
         $this->setRealTime(new DateTime());
         $this->setRealTime($this->getReleasedTime()->createFromFormat('Y-m-d H:i:s',"1970-01-01 00:00:00"));
         $this->setPrevious($previous);
+        $this->setPreviousEvent($previousEventTime);
         $this->setNextEvent($nextEventTime);
     }
     public function getId(){return $this->identifier;}
     public function getNewsId(){return $this->newsId;}
     public function getEventId(){return $this->eventId;}
+    public function isASpeech(){return $this->speech;}
     public function getAnnouncedTime(){return $this->announcedTime;}
     public function getReleasedTime(){return $this->releasedTime;}
     public function getActual(){return $this->actual;}
     public function getPrevious(){return $this->previous;}
     public function getNextEvent(){return $this->nextEventTime;}
+    public function getPreviousEvent(){return $this->previousEventTime;}
     public function getState(){return $this->state;}
     
     public function setId($identifier){
@@ -59,6 +66,13 @@ class Event
             throw new ErrorException("Wrong type for news_id. Expected int got: ".gettype($newsId));
         }
         $this->newsId = $newsId;
+    }
+    
+    public function setSpeech($speech){
+        if(!is_bool($speech)){
+            throw new ErrorException("Wrong type for speech. Expected bool got: ".gettype($speech));
+        }
+        $this->speech = $speech;
     }
     
     public function setAnnouncedTime($actualTime){
@@ -92,6 +106,14 @@ class Event
         $this->previous = $previous;
     }
     
+    public function setPreviousEvent($previousEventTime)
+    {
+        if(!is_int($previousEventTime) or $previousEventTime > 0){
+            throw new ErrorException("Wrong type for previous_event. Expected int got: ".gettype($previousEventTime));
+        }
+        $this->previousEventTime = $previousEventTime;
+    }
+    
     public function setNextEvent($nextEventTime)
     {
         if(!is_int($nextEventTime) or $nextEventTime < 0){
@@ -99,6 +121,8 @@ class Event
         }
         $this->nextEventTime = $nextEventTime;
     }
+    
+    
     
     public function setState($state)
     {

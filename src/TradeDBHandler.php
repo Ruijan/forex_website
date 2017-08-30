@@ -22,7 +22,7 @@ class TradeDBHandler extends DBHandler
         if(!$this->doesTableExists()){
             $query = "CREATE TABLE ".$this->tableName." (
                         ID int(11) AUTO_INCREMENT UNIQUE,
-                        ID_DB_EVENT int(11) NOT NULL UNIQUE,
+                        ID_NEWS int(11) NOT NULL UNIQUE,
                         CREATION_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         OPEN_TIME datetime DEFAULT '0000-00-00 00:00:00',
                         CLOSE_TIME datetime DEFAULT '0000-00-00 00:00:00',
@@ -46,9 +46,9 @@ class TradeDBHandler extends DBHandler
     public function addTrade($trade){
         $this->throwIfTableDoesNotExist();
         $query = "INSERT INTO ".$this->tableName." 
-                    (ID, ID_DB_EVENT, CREATION_TIME, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
+                    (ID, ID_NEWS, CREATION_TIME, OPEN_TIME, CLOSE_TIME, DV_P_TM5, DV_P_T0, 
                     PREDICTION, PREDICTION_PROBA, GAIN, COMMISSION, CURRENCY, STATE) 
-                    VALUES (NULL,'".$trade->getIDDBEvent()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
+                    VALUES (NULL,'".$trade->getNewsId()."', '".$trade->getCreationTime()->format('Y-m-d H:i:s')."', 
                     NULL,NULL,NULL,NULL,NULL,
                     NULL, NULL, NULL, '".$trade->getCurrency()."', 0)";
         $this->throwIfQueryFailed($query, $this->mysqli->query($query));
@@ -60,7 +60,7 @@ class TradeDBHandler extends DBHandler
             return $this->addTrade($trade);
         }
         catch(Exception $e){
-            return $this->getTradeByEventID($trade->getIDDBEvent())->getId();
+            return $this->getTradeByNewsId($trade->getNewsId())->getId();
         }
     }
     
@@ -127,9 +127,9 @@ class TradeDBHandler extends DBHandler
     }
 
     
-    public function getTradeByEventId($identifier){
+    public function getTradeByNewsId($identifier){
         $this->throwIfTableDoesNotExist();
-        $query = "SELECT * FROM ".$this->tableName." WHERE ID_DB_EVENT=".$identifier;
+        $query = "SELECT * FROM ".$this->tableName." WHERE ID_NEWS=".$identifier;
         $result = $this->mysqli->query($query);
         $this->throwIfQueryFailed($query, $result);
         while($row = $result->fetch_array())
@@ -153,7 +153,7 @@ class TradeDBHandler extends DBHandler
     
     public function createTradeFromDbArray($result)
     {
-        $trade = new Trade($result["ID_DB_EVENT"], new DateTime($result["CREATION_TIME"]), $result["CURRENCY"]);
+        $trade = new Trade($result["ID_NEWS"], new DateTime($result["CREATION_TIME"]), $result["CURRENCY"]);
         $trade->setId((int)$result["ID"]);
         if((int)$result["STATE"] >= TradeState::FILLED){
             $trade->fillMarketInfo((float)$result["DV_P_TM5"], (float)$result["DV_P_T0"]);
