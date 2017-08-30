@@ -194,7 +194,8 @@ class EventDBHandlerTest extends PHPUnit_Framework_TestCase
     }
     
     private function createRandomDummyEvent(){
-        $event = new Event(rand(1,10000), rand(1,10000), false, 2, new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
+        $event = new Event(rand(1,10000), rand(1,10000), false, 2, 
+            new DateTime("2017-08-03 00:30:00"), 0.01, -300, 500);
         $event->setId($this->eventDBHandler->tryAddingEvent($event));
         return $event;
     }

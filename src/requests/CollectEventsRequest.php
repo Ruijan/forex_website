@@ -57,33 +57,41 @@ class CollectEventsRequest extends ForexRequest
     
     public function addTradeToDbFromEvents($event, $dbEvents){
         if($event->getPreviousEvent() == 0 or $event->getNextEvent() == 0){
-            $groupOfEvents = [];
-            $isInGroup = false;
-            $allUpdated = true;
-            $groupId = "";
             $newsId = "";
-            foreach($dbEvents as $dbEvent){
-                if($dbEvent->getAnnouncedTime() == $event->getAnnouncedTime() and $dbEvent->getStrength() > 1){
-                    $groupOfEvents[] = $dbEvent;
-                    $groupId .= $dbEvent->getEventId()."_";
-                    $newsId .= $dbEvent->getId()."_";
-                    if($dbEvent == $event){
-                        $isInGroup = true;
-                    }
-                    if($dbEvent->getState() == \EventState::PENDING){
-                        $allUpdated = false;
-                    }
-                }
-            }
-            $groupId = substr($groupId,0,-1);
-            $newsId = substr($newsId,0,-1);
-            if($isInGroup and $allUpdated){
+            $groupId = "";
+            $shouldAddTrade = $this->generateIds($event, $dbEvents, $newsId, $groupId);
+            if($shouldAddTrade){
                 $todayUTC = new \DateTime();
                 $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
                 $this->tradeDBHandler->tryAddingTrade(new Trade($newsId, $groupId, $todayUTC, "EUR_USD"));
             }
         }
     }
+    private function generateIds($event, $dbEvents, $newsId, $groupId)
+    {
+        $groupOfEvents = [];
+        $isInGroup = false;
+        $allUpdated = true;
+        $groupId = "";
+        $newsId = "";
+        foreach($dbEvents as $dbEvent){
+            if($dbEvent->getAnnouncedTime() == $event->getAnnouncedTime() and $dbEvent->getStrength() > 1){
+                $groupOfEvents[] = $dbEvent;
+                $groupId .= $dbEvent->getEventId()."_";
+                $newsId .= $dbEvent->getId()."_";
+                if($dbEvent == $event){
+                    $isInGroup = true;
+                }
+                if($dbEvent->getState() == \EventState::PENDING){
+                    $allUpdated = false;
+                }
+            }
+        }
+        $groupId = substr($groupId,0,-1);
+        $newsId = substr($newsId,0,-1);
+        return $isInGroup and $allUpdated;
+    }
+
 
 }
 
