@@ -64,7 +64,7 @@ class CancelTradeRequestTest extends PHPUnit_Framework_TestCase
     }
     
     public function testExecuteWithInvalidParametersTypeShouldThrow(){
-        $parameters = ["trade_id" => "5"];
+        $parameters = ["trade_id" => "5.5"];
         $this->cancelTradeRequest->init($this->tradeDBHandlerMock, $this->eventDBHandlerMock,
             $this->eventParserMock, $parameters);
         $this->expectExceptionMessage("Invalid Request: bad parameters type");

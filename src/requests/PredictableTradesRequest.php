@@ -11,8 +11,10 @@ require_once('ForexRequest.php');
 class PredictableTradesRequest extends ForexRequest
 {
     private $displayer;
-    public function __construct()
-    {}
+    public function __construct($displayer)
+    {
+        $this->setHTMLDisplayer($displayer);
+    }
     
     public function setHTMLDisplayer($displayer){
         if(!is_a($displayer,"SimpleHTMLDisplayer")){
@@ -26,10 +28,13 @@ class PredictableTradesRequest extends ForexRequest
         $todayUTC = new \DateTime();
         $todayUTC = $todayUTC->createFromFormat('Y-m-d',(gmdate('Y-m-d', time())));
         $trades = $this->tradeDBHandler->getTradesFromTo($todayUTC, $todayUTC, \TradeState::FILLED);
-        foreach ($trades as $trade){
-            echo $this->displayer->displayTrade($trade)."<br/>";
-        }
         
+        echo "<table>";
+        foreach ($trades as $trade){
+            $event = $this->eventDBHandler->getEventByEventId($trade->getIDDBEvent());
+            echo "<tr>".$this->displayer->displayTrade($trade).$this->displayer->displayEvent($event)."</tr>";
+        }
+        echo "</table>";
     }
 }
 

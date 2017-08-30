@@ -34,11 +34,11 @@ class RequestHandlerBuilder
         $handlers = [
             new UpdateMarketRequest(),
             new PredictTradeRequest(),
-            new PredictableTradesRequest(),
+            new PredictableTradesRequest(new SimpleHTMLDisplayer(DisplayMode::TABLE)),
             new OpenTradeRequest(),
             new CloseTradeRequest(),
             new CancelTradeRequest(),
-            new NextActionRequest(),
+            new NextActionRequest(new SimpleHTMLDisplayer(DisplayMode::SIMPLE)),
             new CollectEventsRequest(),
             new \GUIDisplayerRequest()
         ];

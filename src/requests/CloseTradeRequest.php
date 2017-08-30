@@ -4,6 +4,7 @@ namespace src\requests;
 $path = str_replace("requests\\", "", __DIR__."/");
 $path = str_replace("requests/", "", $path."/");
 require_once($path.'Trade.php');
+require_once($path.'functions.php');
 
 require_once('ForexRequest.php');
 
@@ -18,8 +19,12 @@ class CloseTradeRequest extends ForexRequest
             !isset($this->parameters["commission"])){
             throw new \ErrorException("Ill-formed request: missing parameters");
         }
-        if(!is_int($this->parameters["trade_id"]) or !$this->isDecimal($this->parameters["gain"]) or
-            !$this->isDecimal($this->parameters["commission"])){
+        if(!is_numeric($this->parameters["trade_id"])
+            or !is_int(getNumeric($this->parameters["trade_id"])) or 
+            !is_numeric($this->parameters["gain"])
+            or !$this->isDecimal(getNumeric($this->parameters["gain"])) or
+            !is_numeric($this->parameters["commission"])
+            or !$this->isDecimal(getNumeric($this->parameters["commission"]))){
             throw new \ErrorException("Invalid Request: bad parameters type");
         }
     }

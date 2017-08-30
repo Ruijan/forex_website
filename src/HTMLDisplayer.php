@@ -68,8 +68,8 @@ class SimpleHTMLDisplayer
         $tradeString = $trade->getId().
         ";".$trade->getIDDBEvent().
         ";".$trade->getCreationTime()->format('Y-m-d H:i:s').
-        ";".$trade->getOpenTime()->format('Y-m-d H:i:s').
-        ";".$trade->getCloseTime()->format('Y-m-d H:i:s').
+        ";".(is_null($trade->getOpenTime()) ? "" : $trade->getOpenTime()->format('Y-m-d H:i:s')).
+        ";".(is_null($trade->getCloseTime()) ? "" : $trade->getCloseTime()->format('Y-m-d H:i:s')).
         ";".sprintf("%01.5f", $trade->getDvPTm5()).
         ";".sprintf("%01.5f", $trade->getDvPT0()).
         ";".$trade->getPrediction().
@@ -101,7 +101,6 @@ class SimpleHTMLDisplayer
             .$trade->getStringFromState($trade->getState())."</td>";
         return $tradeString;
     }
-
     
     public function displayEvent($event){
         if($this->displayMode == DisplayMode::SIMPLE){
@@ -117,6 +116,7 @@ class SimpleHTMLDisplayer
         return "<tr>
             <th>Id</th>
             <th>Id Event</th>
+            <th>Id News</th>
             <th>Announced Time</th>
             <th>Released Time</th>
             <th>Actual</th>

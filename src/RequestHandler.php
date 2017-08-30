@@ -124,7 +124,7 @@ class RequestHandler{
     public function setRequestHandlers($requestHandlers){
         if(sizeof($requestHandlers) < 8){
             throw new ErrorException("Wrong number of request handlers. Got ".
-                sizeof($requestHandlers)." expected 8");
+                sizeof($requestHandlers)." expected 9");
         }
         foreach ($requestHandlers as $handler){
             $this->tryAddingRequestHandler($handler);

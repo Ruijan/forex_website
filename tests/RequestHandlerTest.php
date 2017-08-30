@@ -42,6 +42,8 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
         ->disableOriginalConstructor()->getMock();
         $this->nextActionMock = $this->getMockBuilder('NextActionRequest')
         ->disableOriginalConstructor()->getMock();
+        $this->guiDisplayerMock = $this->getMockBuilder('GUIDisplayerRequest')
+        ->disableOriginalConstructor()->getMock();
         $this->requestHandler = new RequestHandler();
         // TODO Auto-generated RequestHandlerTest::setUp()
 
@@ -70,6 +72,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
         assert($this->requestHandler->getRequestTypeFromstring("open_trade") == Request::OPEN_TRADE);
         assert($this->requestHandler->getRequestTypeFromstring("close_trade") == Request::CLOSE_TRADE);
         assert($this->requestHandler->getRequestTypeFromstring("cancel_trade") == Request::CANCEL_TRADE);
+        assert($this->requestHandler->getRequestTypeFromstring("") == Request::GUI);
     }
     
     public function testGetRequestTypeFromInvalidStringShouldThrow(){
@@ -114,7 +117,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
     public function testSettingRequestsArrayWithWrongSizeShouldThrow(){
         $marketRequestMock = $this->getMockBuilder('UpdateMarketRequest')
         ->disableOriginalConstructor()->getMock();
-        $this->expectExceptionMessage("Wrong number of request handlers. Got 1 expected 8");
+        $this->expectExceptionMessage("Wrong number of request handlers. Got 1 expected 9");
         $this->requestHandler->setRequestHandlers([$marketRequestMock]);
     }
     
@@ -137,7 +140,8 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
             $this->openTradeMock,
             $this->closeTradeMock,
             $this->cancelTradeMock,
-            $this->nextActionMock
+            $this->nextActionMock,
+            $this->guiDisplayerMock
         ];
         $this->requestHandler->setRequestHandlers($handlers);
         $requestHandlers = $this->requestHandler->getRequestHandlers();
@@ -149,6 +153,7 @@ class RequestHandlerTest extends PHPUnit_Framework_TestCase
         assert($requestHandlers[Request::CLOSE_TRADE] == $handlers[5]);
         assert($requestHandlers[Request::CANCEL_TRADE] == $handlers[6]);
         assert($requestHandlers[Request::NEXT_ACTION] == $handlers[7]);
+        assert($requestHandlers[Request::GUI] == $handlers[8]);
     }
     
     public function testExecuteSucces(){

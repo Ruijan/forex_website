@@ -1,7 +1,7 @@
 <?php
 
 require_once('RequestHandlerBuilder.php');
-require_once('../connect.php');
+require_once('connect.php');
 
 $action = null;
 if(isset($_POST["action"])){
