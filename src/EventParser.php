@@ -38,7 +38,7 @@ class EventParser
             if  ($line->hasAttribute('event_attr_id') && $line->hasAttribute('id')){
                 $event = $this->createEventFromLine($line);
                 $this->setActualValueIfExists($event);
-                $this->setNextEventTime($previousEvent, $event);
+                $this->setNextPreviousEventTime($previousEvent, $event);
                 $previousEvent = $event;
                 
                 $this->events[] = $event;
@@ -47,7 +47,7 @@ class EventParser
         $this->setNextEventTimeToDiffToMidnight($event);
     }
     
-    private function setNextEventTime($previousEvent, $event)
+    private function setNextPreviousEventTime($previousEvent, $event)
     {
         if(!is_null($previousEvent)){
             $timeDiff = $event->getAnnouncedTime()->diff($previousEvent->getAnnouncedTime());
@@ -56,6 +56,7 @@ class EventParser
                 $timeDiff->h*60*60 +
                 $timeDiff->d*24*60*60;
             $previousEvent->setNextEvent($timeDiff);
+            $event->setPreviousEvent(-$timeDiff);
             if($timeDiff == 0){
                 $event->setNextEvent($timeDiff);
             }
@@ -88,7 +89,9 @@ class EventParser
             if($column->getAttribute('class') == "sentiment"){
                 $extensionNodes = $column->getElementsByTagName("i");
                 foreach($extensionNodes as $extension){
-                    $strength += 1;
+                    if(strpos($extension->getAttribute('class'), "grayFullBullishIcon") !== FALSE){
+                        $strength += 1;
+                    }
                 }
             }
         }

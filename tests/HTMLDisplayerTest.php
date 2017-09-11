@@ -65,8 +65,9 @@ class SimpleHTMLDisplayerTest extends PHPUnit_Framework_TestCase
         $marketInfos = "0.00050;-0.00010;";
         $prediction = "1;0.75;";
         $gain = "0.56;0.12;";
+        $currency = "EUR_USD;";
         $state = "4";
-        $stringDisplay = $idsStr.$dates.$marketInfos.$prediction.$gain.$state;
+        $stringDisplay = $idsStr.$dates.$marketInfos.$prediction.$gain.$currency.$state;
         return $stringDisplay;
     }
 
