@@ -78,6 +78,7 @@ class SimpleHTMLDisplayer
         ";".$trade->getPProba().
         ";".$trade->getGain().
         ";".$trade->getCommission().
+        ";".$trade->getCurrency().
         ";".$trade->getState();
         return $tradeString;
     }
@@ -121,6 +122,7 @@ class SimpleHTMLDisplayer
             <th>Id Event</th>
             <th>Id News</th>
             <th>Speech</th>
+            <th>Strength</th>
             <th>Announced Time</th>
             <th>Released Time</th>
             <th>Actual</th>

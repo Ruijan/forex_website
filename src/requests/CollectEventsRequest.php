@@ -51,7 +51,7 @@ class CollectEventsRequest extends ForexRequest
             $todayUTC = new \DateTime();
             $todayUTC = $todayUTC->createFromFormat('Y-m-d',gmdate('Y-m-d', time()));
             $this->tradeDBHandler->tryAddingTrade(
-                new Trade($event->getId(), $event->getEventId(), $todayUTC, "EUR_USD"));
+                new Trade($event->getNewsId(), $event->getId(), $todayUTC, "EUR_USD"));
         }
     }
     
@@ -72,13 +72,11 @@ class CollectEventsRequest extends ForexRequest
         $groupOfEvents = [];
         $isInGroup = false;
         $allUpdated = true;
-        $groupId = "";
-        $newsId = "";
         foreach($dbEvents as $dbEvent){
             if($dbEvent->getAnnouncedTime() == $event->getAnnouncedTime() and $dbEvent->getStrength() > 1){
                 $groupOfEvents[] = $dbEvent;
-                $groupId .= $dbEvent->getEventId()."_";
-                $newsId .= $dbEvent->getId()."_";
+                $groupId .= $dbEvent->getId()."_";
+                $newsId .= $dbEvent->getNewsId()."_";
                 if($dbEvent == $event){
                     $isInGroup = true;
                 }
